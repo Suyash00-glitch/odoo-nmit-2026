@@ -92,5 +92,5 @@ hr_system/
 
 ---
 
-## ⚙️ Environment Configuration
+
 
