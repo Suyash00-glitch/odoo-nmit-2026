@@ -1,5 +1,5 @@
 import { AppError } from '../utils/helpers.js';
-
+//error handling middleware
 export const errorMiddleware = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
