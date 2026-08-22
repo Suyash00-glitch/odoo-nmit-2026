@@ -94,17 +94,3 @@ hr_system/
 
 ## ⚙️ Environment Configuration
 
-### Backend (`backend/.env`)
-```env
-DATABASE_URL="postgresql://neondb_owner:npg_UCaj1P9RGdwg@ep-still-bird-b31npzb4-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
-PORT=5000
-NODE_ENV=development
-JWT_ACCESS_SECRET="dayflow-super-secret-access-token-jwt-key-2026-secure-32chars"
-JWT_REFRESH_SECRET="dayflow-super-secret-refresh-token-jwt-key-2026-secure-32chars"
-FRONTEND_URL="http://localhost:5173"
-```
-
-### Frontend (`frontend/.env`)
-```env
-VITE_API_URL=http://localhost:5000/api
-```
