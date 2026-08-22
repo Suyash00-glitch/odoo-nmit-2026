@@ -1,6 +1,6 @@
 # ⚡ Dayflow HRMS — Modern Workforce & People Operations Platform
 
-A production-ready, full-stack **Human Resource Management System (HRMS)** with an ultra-sleek UI, employee self-service, real-time attendance tracking, leave approval workflows, payroll configuration, interactive analytics, and automated notification workflows.
+Full-stack **Human Resource Management System (HRMS)** with an ultra-sleek UI, employee self-service, real-time attendance tracking, leave approval workflows, payroll configuration, interactive analytics, and automated notification workflows.
 
 ---
 
