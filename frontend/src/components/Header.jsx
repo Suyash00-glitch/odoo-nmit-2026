@@ -1,127 +1,119 @@
 import React, { useState, useEffect } from "react";
-import AppLogo from "./ui/AppLogo.jsx";
+import { Link } from "react-router-dom";
+import { Sparkles, Shield, ArrowRight, Menu, X } from "lucide-react";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { label: "The Problem", href: "#problem" },
-    { label: "How It Works", href: "#solution" },
-    { label: "Results", href: "#proof" },
+    { label: "Features", href: "#features" },
+    { label: "Attendance & Leaves", href: "#workflow" },
+    { label: "Payroll & Analytics", href: "#analytics" },
+    { label: "Transformation", href: "#transformation" },
   ];
 
   return (
     <nav
-      className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
-        scrolled ? "py-3" : "py-5"
+      className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
+        scrolled ? "py-2.5 bg-black/80 backdrop-blur-xl border-b border-neutral-900" : "py-4 bg-transparent"
       }`}
     >
-      <div
-        className={`max-w-6xl mx-auto px-6 flex items-center justify-between rounded-2xl transition-all duration-500 ${
-          scrolled ? "glass-panel py-3 mx-4 md:mx-8" : "py-0"
-        }`}
-      >
-        {/* Logo */}
-        <a
-          href="/"
-          className="flex items-center gap-2 group"
-          aria-label="Dayflow HRMS Home"
-        >
-          <AppLogo
-            text="Dayflow"
-            iconName="SparklesIcon"
-            size={36}
-            className="text-white"
-          />
-        </a>
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-purple-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/35 transition-all duration-300">
+            <div className="w-full h-full bg-[#0d111d] rounded-[11px] flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+            </div>
+          </div>
 
-        {/* Desktop Nav */}
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-white tracking-tight">
+                Dayflow <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">HRMS</span>
+              </span>
+              <span className="hidden sm:inline-flex px-2 py-0.5 text-[9px] font-semibold tracking-wider uppercase rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/25">
+                v2.4
+              </span>
+            </div>
+          </div>
+        </Link>
+
+        {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-white/60 hover:text-white transition-colors duration-200"
+              className="text-xs font-medium text-neutral-400 hover:text-white transition-colors duration-200"
             >
               {link.label}
             </a>
           ))}
-          <a
-            href="/signin"
-            className="text-sm font-semibold text-neutral-300 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 transition-all"
+        </div>
+
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            to="/signin"
+            className="text-xs font-semibold text-neutral-300 hover:text-white px-3.5 py-2 rounded-lg hover:bg-white/5 transition-all"
           >
             Sign In
-          </a>
-          <a
-            href="/signup"
-            className="bg-white text-black hover:bg-neutral-200 px-4 py-2 text-sm font-semibold rounded-lg transition-colors"
+          </Link>
+          <Link
+            to="/signup"
+            className="px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-lg shadow-md shadow-purple-600/20 transition-all flex items-center gap-1.5"
           >
-            Sign Up
-          </a>
+            <span>Get Started</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-white/70 hover:text-white transition-colors p-2"
+          className="md:hidden text-neutral-400 hover:text-white p-1.5 rounded-lg bg-neutral-900 border border-neutral-800"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            {menuOpen ? (
-              <path d="M18 6L6 18M6 6l12 12" />
-            ) : (
-              <>
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </>
-            )}
-          </svg>
+          {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Dropdown */}
       {menuOpen && (
-        <div className="md:hidden mx-4 mt-2 glass-panel rounded-xl p-5 flex flex-col gap-4">
+        <div className="md:hidden mx-4 mt-3 bg-neutral-950 border border-neutral-800 rounded-xl p-4 flex flex-col gap-3 shadow-2xl">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-white/70 hover:text-white py-2 border-b border-white/5 last:border-0"
+              className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-neutral-900"
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
             </a>
           ))}
-          <div className="flex flex-col gap-2 pt-2 border-t border-white/10">
-            <a
-              href="/signin"
-              className="text-center py-2.5 text-sm font-semibold text-neutral-300 hover:text-white rounded-lg bg-white/5"
+          <div className="flex flex-col gap-2 pt-2">
+            <Link
+              to="/signin"
+              className="text-center py-2 text-xs font-semibold text-neutral-300 rounded-lg bg-neutral-900 border border-neutral-800"
               onClick={() => setMenuOpen(false)}
             >
-              Sign In
-            </a>
-            <a
-              href="/signup"
-              className="bg-white text-black hover:bg-neutral-200 px-6 py-2.5 text-sm font-semibold rounded-lg text-center"
+              Sign In to Portal
+            </Link>
+            <Link
+              to="/signup"
+              className="text-center py-2 text-xs font-semibold text-white bg-purple-600 rounded-lg"
               onClick={() => setMenuOpen(false)}
             >
-              Sign Up
-            </a>
+              Register Workspace
+            </Link>
           </div>
         </div>
       )}

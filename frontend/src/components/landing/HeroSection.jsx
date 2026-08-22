@@ -1,310 +1,229 @@
-"use client";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+  Calendar,
+  CreditCard,
+  Users,
+  Building2,
+  TrendingUp,
+  Hash,
+} from "lucide-react";
 
-import React, { useEffect, useRef, useState } from "react";
-import AppImage from "@/components/ui/AppImage";
-
-const TYPEWRITER_TEXT = "Your expertise is real. Your online presence isn't.";
-
-const channelPanels = [
-  {
-    channel: "LinkedIn",
-    handle: "@MercerCPAGroup",
-    stat: "0 posts this quarter",
-    statLabel: "Last active: Q3 2023",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-[#74B9FF]"
-      >
-        <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
-        <circle cx="4" cy="4" r="2" />
-      </svg>
-    ),
-
-    image:
-      "https://img.rocket.new/generatedImages/rocket_gen_img_184282c67-1772174157546.png",
-    imageAlt:
-      "Professional accountant headshot, man in navy suit with neutral expression",
-    accentColor: "rgba(116, 185, 255, 0.12)",
-    rotate: "-4deg",
-    delay: "0s",
-    floatClass: "animate-float-slow",
-    badge: {
-      text: "0 posts",
-      color: "bg-red-500/20 text-red-300 border-red-500/30",
-    },
-  },
-  {
-    channel: "Instagram",
-    handle: "@hartford_tax_advisors",
-    stat: "12 stock photos",
-    statLabel: "Last post: 847 days ago",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        className="text-[#74B9FF]"
-      >
-        <rect x="2" y="2" width="20" height="20" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-
-    image:
-      "https://img.rocket.new/generatedImages/rocket_gen_img_13e809c13-1772174157370.png",
-    imageAlt: "Generic stock photo of a calculator and spreadsheet on a desk",
-    accentColor: "rgba(116, 185, 255, 0.08)",
-    rotate: "2deg",
-    delay: "0.15s",
-    floatClass: "animate-float-mid",
-    badge: {
-      text: "847 days",
-      color: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-    },
-  },
-  {
-    channel: "Google Business",
-    handle: "Pinnacle Financial CPA",
-    stat: "2 reviews • 3.5★",
-    statLabel: "No response to reviews",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-[#74B9FF]"
-      >
-        <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064c1.498 0 2.866.549 3.921 1.453l2.814-2.814A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748l-9.426-.013z" />
-      </svg>
-    ),
-
-    image:
-      "https://img.rocket.new/generatedImages/rocket_gen_img_1371b5e66-1772174156975.png",
-    imageAlt:
-      "Empty office lobby with no signage, beige walls and a reception desk",
-    accentColor: "rgba(116, 185, 255, 0.06)",
-    rotate: "-1deg",
-    delay: "0.3s",
-    floatClass: "animate-float-fast",
-    badge: {
-      text: "3.5★ only",
-      color: "bg-orange-500/20 text-orange-300 border-orange-500/30",
-    },
-  },
+const TYPEWRITER_TEXTS = [
+  "Automated Login ID Provisioning.",
+  "Real-Time Attendance & Leave Governance.",
+  "Transparent Compensation & Payroll Breakdown.",
+  "Executive Workforce Intelligence.",
 ];
 
-const HeroSection = () => {
-  const [displayedText, setDisplayedText] = useState("");
-  const [typewriterDone, setTypewriterDone] = useState(false);
-  const [heroVisible, setHeroVisible] = useState(false);
-  const indexRef = useRef(0);
+export default function HeroSection() {
+  const [textIndex, setTextIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [activeCheckIn, setActiveCheckIn] = useState(false);
 
   useEffect(() => {
-    // Trigger hero entrance
-    const t = setTimeout(() => setHeroVisible(true), 100);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    if (!heroVisible) return;
-    // Start typewriter after panels animate in
-    const startDelay = setTimeout(() => {
-      const interval = setInterval(() => {
-        indexRef.current += 1;
-        setDisplayedText(TYPEWRITER_TEXT.slice(0, indexRef.current));
-        if (indexRef.current >= TYPEWRITER_TEXT.length) {
-          clearInterval(interval);
-          setTypewriterDone(true);
+    const current = TYPEWRITER_TEXTS[textIndex];
+    const timer = setTimeout(
+      () => {
+        if (!isDeleting) {
+          if (displayText.length < current.length) {
+            setDisplayText(current.slice(0, displayText.length + 1));
+          } else {
+            setTimeout(() => setIsDeleting(true), 2000);
+          }
+        } else {
+          if (displayText.length > 0) {
+            setDisplayText(current.slice(0, displayText.length - 1));
+          } else {
+            setIsDeleting(false);
+            setTextIndex((prev) => (prev + 1) % TYPEWRITER_TEXTS.length);
+          }
         }
-      }, 38);
-      return () => clearInterval(interval);
-    }, 900);
-    return () => clearTimeout(startDelay);
-  }, [heroVisible]);
+      },
+      isDeleting ? 30 : 60
+    );
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, textIndex]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-20 overflow-hidden">
-      {/* Atmospheric background */}
-      <div className="absolute inset-0 bg-ledger-black" aria-hidden="true" />
-      <div
-        className="absolute inset-0 opacity-30"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(116,185,255,0.12) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
+    <section className="relative min-h-[90vh] flex flex-col justify-center pt-28 pb-16 px-6 overflow-hidden bg-black text-white">
+      {/* Subtle Background Radial Gradients */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-      {/* Grid lines */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(250,250,250,1) 1px, transparent 1px), linear-gradient(to bottom, rgba(250,250,250,1) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-        aria-hidden="true"
-      />
-
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-6">
-        {/* Overline */}
-        <div
-          className="flex items-center justify-center gap-3 mb-10"
-          style={{
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
-          }}
-        >
-          <span className="w-6 h-px bg-sky" />
-          <span className="text-sky text-xs font-bold uppercase tracking-[0.3em]">
-            Social Media for Accounting Firms
-          </span>
-          <span className="w-6 h-px bg-sky" />
+      <div className="max-w-5xl mx-auto text-center space-y-8">
+        {/* Top Feature Pill */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-900/90 border border-neutral-800 text-xs text-neutral-300 shadow-xl">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-medium text-neutral-300">Intelligent Workforce Operating System</span>
+          <span className="text-neutral-500">•</span>
+          <span className="text-purple-400 font-semibold">PostgreSQL & Neon Cloud</span>
         </div>
 
-        {/* Headline with typewriter */}
-        <h1
-          className="font-display text-center mb-4 text-ledger-white"
-          style={{
-            fontSize: "clamp(2.4rem, 5.5vw, 5rem)",
-            lineHeight: "1.08",
-            letterSpacing: "-0.03em",
-            opacity: heroVisible ? 1 : 0,
-            transition: "opacity 0.6s ease 0.3s",
-          }}
-        >
-          <span className={!typewriterDone ? "typewriter-cursor" : ""}>
-            {displayedText}
-          </span>
-        </h1>
+        {/* Main Headline */}
+        <div className="space-y-4">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+            Manage your workforce with <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-300 to-purple-400">
+              effortless clarity.
+            </span>
+          </h1>
 
-        {/* Subheadline */}
-        <p
-          className="text-center text-ledger-white/50 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
-          style={{
-            opacity: typewriterDone ? 1 : 0,
-            transform: typewriterDone ? "translateY(0)" : "translateY(16px)",
-            transition:
-              "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
-          }}
-        >
-          Ledger writes, schedules, and publishes your firm's content across
-          LinkedIn, Instagram, and Google Business — while you focus on billable
-          hours.
-        </p>
+          {/* Typewriter Subheading */}
+          <p className="text-lg sm:text-xl text-neutral-400 max-w-2xl mx-auto h-8 font-mono">
+            {displayText}
+            <span className="animate-pulse text-purple-400">|</span>
+          </p>
+        </div>
 
         {/* CTA Buttons */}
-        <div
-          className="flex flex-col sm:flex-row gap-4 justify-center mb-20"
-          style={{
-            opacity: typewriterDone ? 1 : 0,
-            transform: typewriterDone ? "translateY(0)" : "translateY(16px)",
-            transition:
-              "opacity 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s, transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s",
-          }}
-        >
-          <a
-            href="#audit"
-            className="btn-sky px-8 py-4 text-base font-bold rounded-lg text-center"
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <Link
+            to="/signin"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white text-black hover:bg-neutral-200 font-semibold text-sm transition-all shadow-lg flex items-center justify-center gap-2 group"
           >
-            Get Your Free Content Audit →
-          </a>
-          <a
-            href="#problem"
-            className="btn-outline-sky px-8 py-4 text-base rounded-lg text-center"
+            <span>Launch Employee Portal</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          <Link
+            to="/signup"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-200 hover:text-white font-medium text-sm transition-all flex items-center justify-center gap-2"
           >
-            See the Problem First
-          </a>
+            <Building2 className="w-4 h-4 text-purple-400" />
+            <span>Create HR Workspace</span>
+          </Link>
         </div>
 
-        {/* Three floating glass channel panels */}
-        <div className="relative flex flex-col md:flex-row items-center justify-center gap-6 md:gap-5 w-full">
-          {channelPanels.map((panel, i) => (
-            <div
-              key={panel.channel}
-              className={`channel-card glass-panel rounded-2xl p-5 w-full md:w-72 flex-shrink-0 ${panel.floatClass}`}
-              style={{
-                transform: `rotate(${panel.rotate})`,
-                opacity: heroVisible ? 1 : 0,
-                transition: `opacity 0.9s cubic-bezier(0.16,1,0.3,1) ${parseFloat(panel.delay) + 0.6}s`,
-                background: `linear-gradient(135deg, rgba(30,34,36,0.85) 0%, ${panel.accentColor} 100%)`,
-              }}
-              aria-label={`${panel.channel} profile panel`}
-            >
-              {/* Panel Header */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  {panel.icon}
-                  <span className="text-sm font-semibold text-ledger-white">
-                    {panel.channel}
-                  </span>
-                </div>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${panel.badge.color}`}
-                >
-                  {panel.badge.text}
+        {/* Key Trust Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 text-left">
+          <div className="p-4 rounded-xl bg-neutral-950/60 border border-neutral-900">
+            <p className="text-2xl font-bold text-white font-mono">100%</p>
+            <p className="text-xs text-neutral-400 mt-0.5">Automated Login ID Provisioning</p>
+          </div>
+          <div className="p-4 rounded-xl bg-neutral-950/60 border border-neutral-900">
+            <p className="text-2xl font-bold text-emerald-400 font-mono">1-Click</p>
+            <p className="text-xs text-neutral-400 mt-0.5">Live Attendance Check-In</p>
+          </div>
+          <div className="p-4 rounded-xl bg-neutral-950/60 border border-neutral-900">
+            <p className="text-2xl font-bold text-indigo-400 font-mono">Real-Time</p>
+            <p className="text-xs text-neutral-400 mt-0.5">Leave Approvals & Comments</p>
+          </div>
+          <div className="p-4 rounded-xl bg-neutral-950/60 border border-neutral-900">
+            <p className="text-2xl font-bold text-purple-400 font-mono">Transparent</p>
+            <p className="text-xs text-neutral-400 mt-0.5">Salary, Allowances & PF Deductions</p>
+          </div>
+        </div>
+
+        {/* Interactive Interactive HR Visual Dashboard Card */}
+        <div className="pt-8 max-w-4xl mx-auto">
+          <div className="p-6 rounded-2xl bg-[#0d1017] border border-neutral-800 shadow-2xl text-left space-y-6">
+            
+            {/* Top Toolbar */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-800 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <span className="text-xs text-neutral-400 font-mono pl-2">dayflow.internal/hrms/live-control</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-emerald-400 flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> 8 Seeded Employees Online
                 </span>
               </div>
+            </div>
 
-              {/* Profile Image */}
-              <div className="w-full h-32 rounded-xl overflow-hidden mb-4">
-                <AppImage
-                  src={panel.image}
-                  alt={panel.imageAlt}
-                  className="w-full h-full object-cover grayscale opacity-60"
-                />
+            {/* 3 Live Control Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              {/* Attendance Card */}
+              <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800/80 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-neutral-400 mb-2">
+                    <span className="font-semibold text-white flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-emerald-400" /> Attendance Action
+                    </span>
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                      Live
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-400 mb-3">
+                    Daily check-in / check-out with automatic duration calculation.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveCheckIn(!activeCheckIn)}
+                  className={`w-full py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+                    activeCheckIn
+                      ? "bg-emerald-600 text-white shadow-emerald-600/20 shadow-md"
+                      : "bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-700"
+                  }`}
+                >
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>{activeCheckIn ? "Checked In (09:00 AM)" : "Click to Check In"}</span>
+                </button>
               </div>
 
-              {/* Handle & Stats */}
-              <p className="text-xs font-mono text-ledger-white/40 mb-1">
-                {panel.handle}
-              </p>
-              <p className="text-sm font-semibold text-ledger-white/80 mb-1">
-                {panel.stat}
-              </p>
-              <p className="text-xs text-ledger-white/30">{panel.statLabel}</p>
+              {/* Dynamic Login ID Card */}
+              <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800/80 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-neutral-400 mb-2">
+                    <span className="font-semibold text-white flex items-center gap-1.5">
+                      <Hash className="w-3.5 h-3.5 text-purple-400" /> Auto-Generated ID
+                    </span>
+                    <span className="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded">
+                      Standard
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-400 mb-2">
+                    Zero collision deterministic format based on company & name codes.
+                  </p>
+                </div>
+                <div className="bg-black/60 p-2 rounded-lg border border-purple-500/20 font-mono text-xs text-center text-purple-300 font-bold tracking-wider">
+                  EMP2026-IT-0042
+                </div>
+              </div>
 
-              {/* Sky blue edge glow */}
-              <div
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{
-                  boxShadow:
-                    "inset 0 0 0 1px rgba(116,185,255,0.15), 0 0 20px rgba(116,185,255,0.08)",
-                }}
-                aria-hidden="true"
-              />
+              {/* Leave Balances Card */}
+              <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800/80 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-neutral-400 mb-2">
+                    <span className="font-semibold text-white flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-indigo-400" /> Leave Balances
+                    </span>
+                    <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded">
+                      2026 Quota
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-xs text-neutral-300 pt-1">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Paid Leaves:</span>
+                      <span className="font-mono text-emerald-400 font-semibold">14 Days</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Sick Leaves:</span>
+                      <span className="font-mono text-yellow-400 font-semibold">7 Days</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-2 text-[10px] text-neutral-500 text-right">
+                  1-click instant approval flow
+                </div>
+              </div>
+
             </div>
-          ))}
-        </div>
 
-        {/* Scroll hint */}
-        <div
-          className="flex flex-col items-center gap-2 mt-14"
-          style={{
-            opacity: typewriterDone ? 0.5 : 0,
-            transition: "opacity 1s ease 0.5s",
-          }}
-          aria-hidden="true"
-        >
-          <span className="text-xs text-ledger-white/40 uppercase tracking-[0.25em] font-medium">
-            Scroll to see the gap
-          </span>
-          <div className="w-px h-8 bg-gradient-to-b from-sky/40 to-transparent" />
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default HeroSection;
-
+}
