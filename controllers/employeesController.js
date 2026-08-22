@@ -84,7 +84,7 @@ export const updateEmployee = asyncHandler(async (req, res) => {
       }),
     },
   });
-
+//new updation way
   const updated = await prisma.user.findUnique({
     where: { id: req.params.id },
     select: selectSafeUser,
