@@ -1,6 +1,6 @@
 # ⚡ Dayflow HRMS — Modern Workforce & People Operations Platform
 
-A production-ready, full-stack **Human Resource Management System (HRMS)** with an ultra-sleek UI, employee self-service, real-time attendance tracking, leave approval workflows, payroll configuration, interactive analytics, and automated email notifications.
+A production-ready, full-stack **Human Resource Management System (HRMS)** with an ultra-sleek UI, employee self-service, real-time attendance tracking, leave approval workflows, payroll configuration, interactive analytics, and automated notification workflows.
 
 ---
 
@@ -19,11 +19,6 @@ A production-ready, full-stack **Human Resource Management System (HRMS)** with 
 - **Leave Request Hub**: Apply for Paid, Sick, or Unpaid leaves with balance checking and approval timeline.
 - **Digital Payslips**: Itemized monthly salary breakdown with printable slip layout.
 - **Personal Profile**: Update phone, address, and view employment metadata.
-
-### 📧 3. Automated Email Notification Workflows
-- **Account Verification & Welcome**: Branded onboarding emails with employee ID and secure activation links.
-- **Leave Application Receipt**: Instant confirmation emails sent to employees upon submitting leave requests.
-- **Leave Decision Alerts**: Instant HTML email notifications with approval/rejection status and HR notes.
 
 ---
 
@@ -45,7 +40,6 @@ Before running the project locally, ensure you have:
 - **NPM**: `v9.0.0` or higher
 - **Git**: Installed on your system ([Download Git](https://git-scm.com/))
 - **Neon Cloud Account**: Free serverless PostgreSQL ([Sign up at Neon](https://neon.tech/))
-- **Gmail Account (or any SMTP Provider)**: For automated workflow emails
 
 ---
 
@@ -60,11 +54,11 @@ cd odoo-nmit-2026
 
 ---
 
-### 2. Set Up a Free PostgreSQL Database on Neon
+### 2. Set Up PostgreSQL Database on Neon
 
 1. Navigate to **[neon.tech](https://neon.tech/)** and sign up for a free account.
 2. Click **"New Project"**, name it `dayflow-hrms`, and select your preferred AWS region.
-3. In your project's **Dashboard**, locate the **Connection Details** card.
+3. In your project's **Dashboard**, locate the **Connection Details** widget.
 4. Select **Prisma** or **PostgreSQL (Connection string)** from the dropdown.
 5. Copy the connection URL. It will look like:
    ```
@@ -73,55 +67,7 @@ cd odoo-nmit-2026
 
 ---
 
-### 3. Set Up Email & SMTP Workflows (Step-by-Step)
-
-Dayflow HRMS uses **Nodemailer** to automatically dispatch transaction and workflow emails. You can use **Gmail (Google App Password)**, **Outlook**, **SendGrid**, **Brevo**, or **Mailtrap** (for local development).
-
-#### Option A: Gmail SMTP Setup (Recommended & Free)
-
-> ⚠️ **Important:** Google does **not** allow regular Gmail account passwords for third-party SMTP. You **must** generate a 16-character **App Password**.
-
-Follow these exact steps:
-
-1. **Enable 2-Step Verification**:
-   - Go to your **[Google Account Security](https://myaccount.google.com/security)** page.
-   - Under *"How you sign in to Google"*, click on **2-Step Verification** and turn it **ON** (if not already enabled).
-
-2. **Generate an App Password**:
-   - Go directly to **[Google App Passwords](https://myaccount.google.com/apppasswords)**.
-   - If prompted, enter your Google account password.
-   - In the **"App name"** text box, enter: `Dayflow HRMS`.
-   - Click **Create**.
-   - A modal will pop up with a **16-character code** (e.g. `srky buui ojaw uoql` or `abcd efgh ijkl mnop`).
-   - Copy this 16-character code.
-
-3. **Add Credentials to `backend/.env`**:
-   ```env
-   SMTP_HOST="smtp.gmail.com"
-   SMTP_PORT=587
-   SMTP_USER="your-exact-gmail-address@gmail.com"
-   SMTP_PASS="your-16-character-app-password"
-   SMTP_FROM="Dayflow HRMS <your-exact-gmail-address@gmail.com>"
-   ```
-   *(Note: Spaces in `SMTP_PASS` are automatically handled by the system).*
-
----
-
-#### Option B: Other SMTP Providers
-
-If you prefer using an alternate service, configure your `backend/.env` with these settings:
-
-| Provider | `SMTP_HOST` | `SMTP_PORT` | `SMTP_USER` | `SMTP_PASS` |
-| :--- | :--- | :--- | :--- | :--- |
-| **Gmail** | `smtp.gmail.com` | `587` | Your Gmail address | 16-character App Password |
-| **Outlook / Office 365** | `smtp.office365.com` | `587` | Your Outlook email | Your Outlook App Password |
-| **SendGrid** | `smtp.sendgrid.net` | `587` | `apikey` | Your SendGrid API Key |
-| **Brevo (Sendinblue)** | `smtp-relay.brevo.com` | `587` | Your Brevo login email | Your Master SMTP Key |
-| **Mailtrap (Testing)** | `live.smtp.mailtrap.io` | `587` | `api` | Your Mailtrap API Token |
-
----
-
-### 4. Configure Environment Files
+### 3. Configure Environment Files
 
 #### A. Backend Configuration (`backend/.env`)
 Create a file named `.env` inside the `backend/` directory:
@@ -141,12 +87,12 @@ JWT_REFRESH_SECRET="dayflow-hrms-refresh-token-secret-key-super-secure-2026"
 # 4. Frontend Origin URL
 FRONTEND_URL="http://localhost:5173"
 
-# 5. SMTP Email Configuration
+# 5. SMTP Email Configuration (Optional)
 SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
-SMTP_USER="your-email@gmail.com"
-SMTP_PASS="your-16-character-app-password"
-SMTP_FROM="Dayflow HRMS <your-email@gmail.com>"
+SMTP_USER=""
+SMTP_PASS=""
+SMTP_FROM="Dayflow HRMS <noreply@dayflow.dev>"
 ```
 
 #### B. Frontend Configuration (`frontend/.env`)
@@ -158,7 +104,7 @@ VITE_API_URL="http://localhost:5000/api"
 
 ---
 
-### 5. Install Dependencies
+### 4. Install Dependencies
 
 Install all root, backend, and frontend packages with one command from the project root:
 
@@ -168,12 +114,12 @@ npm install
 
 ---
 
-### 6. Initialize Database Schema & Seed Demo Data
+### 5. Initialize Database Schema & Seed Demo Data
 
 Push the database models to your Neon PostgreSQL instance and populate all demo users, departments, 14 days of attendance, and sample leave requests:
 
 ```bash
-# Push Prisma schema to your Neon database
+# Push Prisma schema to your database
 npm --prefix backend run db:push
 
 # Populate sample data (1 Admin + 5 Employees + 14-day attendance logs)
@@ -182,7 +128,7 @@ npm --prefix backend run db:seed
 
 ---
 
-### 7. Run the Application
+### 6. Run the Application
 
 Launch both the backend API server and frontend client concurrently:
 
@@ -194,13 +140,6 @@ Your system is now live at:
 - 🌐 **Frontend Application**: [http://localhost:5173](http://localhost:5173)
 - 🔌 **Backend REST API**: [http://localhost:5000/api](http://localhost:5000/api)
 - 🩺 **Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
-
-When the server starts with valid SMTP credentials, you will see this confirmation in your terminal:
-```bash
-[BACKEND] ✅ Database connected
-[BACKEND] 🚀 Dayflow API running on http://localhost:5000
-[BACKEND] ✅ [Mailer] SMTP Server connected ready to send emails via: your-email@gmail.com
-```
 
 ---
 
@@ -229,7 +168,7 @@ odoo-nmit-2026/
 │   │   ├── schema.prisma         # Prisma ORM Database Models
 │   │   └── seed.js               # Database Seeder (Users, Attendance, Leaves)
 │   ├── src/
-│   │   ├── config/               # Database, Environment & Nodemailer Mailer Config
+│   │   ├── config/               # Database, Environment & Mailer Config
 │   │   ├── controllers/          # Business Logic (Auth, Employees, Leaves, Payroll, Analytics)
 │   │   ├── middlewares/          # JWT Verification, Role Authorization, Zod Validation
 │   │   ├── routes/               # Express API Route Definitions
@@ -266,7 +205,7 @@ odoo-nmit-2026/
 ## 🔌 API Reference Overview
 
 ### 🔐 Authentication (`/api/auth`)
-- `POST /api/auth/signup` — Register new account and send activation/verification email.
+- `POST /api/auth/signup` — Register new account.
 - `POST /api/auth/login` — Sign in with email and password (returns JWT & sets refresh cookie).
 - `POST /api/auth/refresh` — Refresh expired access token.
 - `POST /api/auth/logout` — Revoke refresh token and clear session cookies.
@@ -274,7 +213,7 @@ odoo-nmit-2026/
 
 ### 👥 Employees (`/api/employees`)
 - `GET /api/employees` — List all employees (supports search, department filtering, pagination).
-- `POST /api/employees` — Add new employee and dispatch invitation email.
+- `POST /api/employees` — Add new employee.
 - `GET /api/employees/:id` — Get single employee profile with documents and payroll structure.
 - `PUT /api/employees/:id` — Update employee job details, department, or contact information.
 - `DELETE /api/employees/:id` — Delete employee and cascade-delete all linked records.
@@ -286,10 +225,10 @@ odoo-nmit-2026/
 - `GET /api/attendance/today` — Real-time company attendance count and status summary (Admin).
 
 ### 🏖️ Leave Management (`/api/leaves`)
-- `POST /api/leaves` — Submit a leave request (Paid, Sick, Unpaid) and dispatch receipt email.
+- `POST /api/leaves` — Submit a leave request (Paid, Sick, Unpaid).
 - `GET /api/leaves/me` — Retrieve logged-in employee's leave requests.
 - `GET /api/leaves` — List all company leave requests (Admin).
-- `PATCH /api/leaves/:id/decision` — Approve or Reject a leave request and send notification email.
+- `PATCH /api/leaves/:id/decision` — Approve or Reject a leave request.
 
 ### 💵 Payroll (`/api/payroll`)
 - `GET /api/payroll/me` — Get itemized payslip for logged-in employee.
@@ -305,16 +244,7 @@ odoo-nmit-2026/
 ## ❓ Troubleshooting & FAQs
 
 <details>
-<summary><b>1. SMTP Error: "535 5.7.8 Username and Password not accepted"</b></summary>
-Google rejects normal account passwords for automated SMTP. To fix:
-1. Turn ON **2-Step Verification** on your Google Account: https://myaccount.google.com/security
-2. Generate an **App Password** from https://myaccount.google.com/apppasswords
-3. Copy the 16-character password and paste it into `SMTP_PASS` in `backend/.env`.
-4. Ensure `SMTP_USER` matches the exact Gmail address that generated the App Password.
-</details>
-
-<details>
-<summary><b>2. Port 5000 or 5173 is already in use (EADDRINUSE)</b></summary>
+<summary><b>1. Port 5000 or 5173 is already in use (EADDRINUSE)</b></summary>
 If port 5000 is occupied, you can kill the existing process on Windows:
 
 ```powershell
@@ -324,16 +254,16 @@ netstat -ano | findstr :5000
 # Kill process by PID
 taskkill /F /PID <PID_NUMBER>
 ```
-Or simply change `PORT=5001` in `backend/.env` and update `VITE_API_URL="http://localhost:5001/api"` in `frontend/.env`.
+Or change `PORT=5001` in `backend/.env` and update `VITE_API_URL="http://localhost:5001/api"` in `frontend/.env`.
 </details>
 
 <details>
-<summary><b>3. Prisma Database Connection Timeout</b></summary>
+<summary><b>2. Prisma Database Connection Timeout</b></summary>
 Ensure your Neon PostgreSQL connection string ends with `?sslmode=require`. If you are using a pooled connection, verify you are using the pooled endpoint URL provided in the Neon console.
 </details>
 
 <details>
-<summary><b>4. How to inspect the database visually?</b></summary>
+<summary><b>3. How to inspect the database visually?</b></summary>
 Run the built-in Prisma Studio GUI:
 
 ```bash
