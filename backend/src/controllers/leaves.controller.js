@@ -1,5 +1,5 @@
 import { prisma } from '../config/db.js';
-import { sendMail } from '../config/mailer.js';
+import { sendLeaveApplicationEmail, sendLeaveDecisionEmail } from '../config/mailer.js';
 import { AppError, asyncHandler, sendSuccess } from '../utils/helpers.js';
 
 // POST /api/leaves
@@ -38,6 +38,27 @@ export const applyLeave = asyncHandler(async (req, res) => {
     },
     include: { employee: { include: { profile: true } } },
   });
+
+  // Automated Email Notification to Employee
+  try {
+    const employeeEmail = leave.employee?.email || req.user.email;
+    const employeeName = leave.employee?.profile
+      ? `${leave.employee.profile.firstName} ${leave.employee.profile.lastName}`
+      : 'Employee';
+
+    if (employeeEmail) {
+      await sendLeaveApplicationEmail({
+        to: employeeEmail,
+        employeeName,
+        leaveType,
+        startDate,
+        endDate,
+        remarks,
+      });
+    }
+  } catch (err) {
+    console.error('[Leaves] Failed to send application email (non-fatal):', err.message);
+  }
 
   sendSuccess(res, leave, 'Leave request submitted successfully', 201);
 });
@@ -139,20 +160,26 @@ export const makeLeaveDecision = asyncHandler(async (req, res) => {
     return updated;
   });
 
+  // Automated Email Notification on Leave Decision
   try {
-    const statusText = status === 'APPROVED' ? 'approved' : 'rejected';
-    const firstName = leave.employee.profile?.firstName ?? 'Employee';
-    await sendMail({
-      to: leave.employee.email,
-      subject: `Your leave request has been ${statusText}`,
-      html: `
-        <h2>Leave Request ${status === 'APPROVED' ? 'Approved ✅' : 'Rejected ❌'}</h2>
-        <p>Hi ${firstName}, your ${leave.leaveType.toLowerCase()} leave has been <strong>${statusText}</strong>.</p>
-        ${reviewComments ? `<p><strong>Comment:</strong> ${reviewComments}</p>` : ''}
-      `,
-    });
+    const employeeEmail = leave.employee?.email;
+    const employeeName = leave.employee?.profile
+      ? `${leave.employee.profile.firstName} ${leave.employee.profile.lastName}`
+      : 'Employee';
+
+    if (employeeEmail) {
+      await sendLeaveDecisionEmail({
+        to: employeeEmail,
+        employeeName,
+        leaveType: leave.leaveType,
+        startDate: leave.startDate,
+        endDate: leave.endDate,
+        status,
+        reviewComments,
+      });
+    }
   } catch (err) {
-    console.error('[Leaves] Email send failed (non-fatal):', err);
+    console.error('[Leaves] Failed to send decision email (non-fatal):', err.message);
   }
 
   sendSuccess(res, updatedLeave, `Leave request ${status === 'APPROVED' ? 'approved' : 'rejected'}`);

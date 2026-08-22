@@ -146,3 +146,31 @@ export const updateEmployee = asyncHandler(async (req, res) => {
 
   sendSuccess(res, updated, 'Employee updated successfully');
 });
+
+// DELETE /api/employees/:id (Admin)
+export const deleteEmployee = asyncHandler(async (req, res) => {
+  const employee = await prisma.user.findUnique({
+    where: { id: req.params.id },
+  });
+  if (!employee) throw new AppError('Employee not found', 404, 'NOT_FOUND');
+  if (employee.role === 'ADMIN') {
+    throw new AppError('Admin accounts cannot be deleted directly.', 403, 'FORBIDDEN');
+  }
+
+  await prisma.$transaction([
+    prisma.leaveRequest.updateMany({
+      where: { reviewedById: req.params.id },
+      data: { reviewedById: null },
+    }),
+    prisma.employeeProfile.updateMany({
+      where: { managerId: req.params.id },
+      data: { managerId: null },
+    }),
+    prisma.user.delete({
+      where: { id: req.params.id },
+    }),
+  ]);
+
+  sendSuccess(res, null, 'Employee deleted successfully');
+});
+

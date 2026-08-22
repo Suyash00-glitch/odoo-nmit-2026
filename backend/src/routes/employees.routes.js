@@ -37,5 +37,6 @@ router.get('/', validate(employeeQuerySchema, 'query'), employees.getEmployees);
 router.post('/', validate(createEmployeeSchema), employees.createEmployee);
 router.get('/:id', employees.getEmployee);
 router.put('/:id', validate(updateEmployeeSchema), employees.updateEmployee);
+router.delete('/:id', employees.deleteEmployee);
 
 export default router;

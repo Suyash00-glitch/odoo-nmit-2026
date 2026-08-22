@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +10,7 @@ import { attendanceApi } from '../../api/attendance.api.js';
 import { Loader } from '../../components/common/Loader.jsx';
 import { ErrorState } from '../../components/common/ErrorState.jsx';
 import { attendanceStatusBadge } from '../../components/common/Badge.jsx';
+import Modal from '../../components/common/Modal.jsx';
 import toast from 'react-hot-toast';
 import {
   ArrowLeft,
@@ -25,6 +26,8 @@ import {
   ExternalLink,
   ShieldCheck,
   CheckCircle2,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 
 const empSchema = z.object({
@@ -50,10 +53,12 @@ const payrollSchema = z.object({
 
 const AdminEmployeeDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const qc = useQueryClient();
   const [editingProfile, setEditingProfile] = useState(false);
   const [editingPayroll, setEditingPayroll] = useState(false);
   const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'attendance' | 'documents'
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { data: emp, isLoading, isError, refetch } = useQuery({
     queryKey: ['employee', id],
@@ -103,6 +108,19 @@ const AdminEmployeeDetail = () => {
     onError: (err) => toast.error(err?.response?.data?.error?.message ?? 'Payroll update failed'),
   });
 
+  const deleteMut = useMutation({
+    mutationFn: () => employeesApi.delete(id),
+    onSuccess: () => {
+      toast.success('Employee deleted successfully');
+      qc.invalidateQueries({ queryKey: ['employees'] });
+      qc.invalidateQueries({ queryKey: ['dashboard-analytics'] });
+      navigate('/admin/employees');
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.error?.message || 'Failed to delete employee');
+    },
+  });
+
   const startEditProfile = () => {
     empForm.reset({
       firstName: emp.profile?.firstName,
@@ -127,22 +145,81 @@ const AdminEmployeeDetail = () => {
 
   return (
     <div className="space-y-7 animate-slide-up pb-14 font-sans">
-      <div className="flex items-center gap-3">
-        <Link to="/admin/employees" className="btn-secondary p-2.5 rounded-2xl shadow-2xs">
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-black text-slate-950 tracking-tight">
-              {emp.profile?.firstName} {emp.profile?.lastName}
-            </h1>
-            <ShieldCheck size={20} className="text-emerald-600" />
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Link to="/admin/employees" className="btn-secondary p-2.5 rounded-2xl shadow-2xs">
+            <ArrowLeft size={16} />
+          </Link>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-black text-slate-950 tracking-tight">
+                {emp.profile?.firstName} {emp.profile?.lastName}
+              </h1>
+              <ShieldCheck size={20} className="text-emerald-600" />
+            </div>
+            <p className="text-slate-400 font-mono text-xs mt-0.5">
+              {emp.employeeId} · {emp.email} · Role: {emp.role}
+            </p>
           </div>
-          <p className="text-slate-400 font-mono text-xs mt-0.5">
-            {emp.employeeId} · {emp.email} · Role: {emp.role}
-          </p>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setShowDeleteModal(true)}
+          className="btn-danger py-2 px-3.5 text-xs font-black flex items-center gap-1.5 shrink-0 shadow-2xs"
+        >
+          <Trash2 size={14} />
+          <span>Delete Employee</span>
+        </button>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <Modal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          title="Delete Employee"
+        >
+          <div className="space-y-4 pt-2">
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <div className="text-xs text-rose-800 space-y-1">
+                <p className="font-bold">Are you sure you want to permanently delete this employee?</p>
+                <p>
+                  This will remove <strong className="text-rose-950">{emp.profile?.firstName} {emp.profile?.lastName}</strong> ({emp.employeeId}) and all their linked records (attendance logs, leave requests, and payroll records) from the system.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="btn-secondary py-2 px-4 text-xs font-bold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={deleteMut.isPending}
+                onClick={() => deleteMut.mutate()}
+                className="btn-danger py-2 px-4 text-xs font-extrabold flex items-center gap-1.5"
+              >
+                {deleteMut.isPending ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={14} />
+                    <span>Confirm Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 bg-white p-1 rounded-2xl w-fit border border-slate-200 shadow-2xs">
