@@ -1,110 +1,304 @@
-# ⚡ Dayflow HRMS
+# ⚡ Dayflow HRMS — Modern Workforce & People Operations Platform
 
-A modern, full-stack **Human Resource Management System** built with **React (JavaScript) + Node/Express (JavaScript) + Prisma + PostgreSQL (Neon)**.
+A production-ready, full-stack **Human Resource Management System (HRMS)** with an ultra-sleek UI, employee self-service, real-time attendance tracking, leave approval workflows, payroll configuration, interactive analytics, and automated email notifications.
 
 ---
 
-## 🚀 Quick Start (Just 2 Steps)
+## 🌟 Key Features
 
-From the project root directory:
+### 🏢 1. Executive Admin Portal
+- **Live Metrics Dashboard**: Real-time headcount, today's attendance percentage, and pending leave queue.
+- **Employee Directory**: Paginated directory with instant search, department filtering, and detailed profile inspector.
+- **Employee Management**: Create, edit, and **permanently delete** employees with cascading database cleanup.
+- **Leave Decision Center**: Review pending leave applications with 1-click **Approve** / **Reject** and custom reviewer notes.
+- **Dynamic Compensation & Payroll**: Base salary, customizable allowances (HRA, transport, medical), and deductions (Tax, PF) with automatic net pay calculation.
+- **14-Day Analytics & Reports**: Trend charts for attendance rate, department breakdown, and leave distribution powered by Recharts.
+
+### 👤 2. Employee Self-Service Portal
+- **Interactive Check-In / Check-Out**: 1-click attendance logger with real-time shift duration counter.
+- **Leave Request Hub**: Apply for Paid, Sick, or Unpaid leaves with balance checking and approval timeline.
+- **Digital Payslips**: Itemized monthly salary breakdown with printable slip layout.
+- **Personal Profile**: Update phone, address, and view employment metadata.
+
+### 📧 3. Automated Email Notification Workflows
+- **Account Activation**: Branded onboarding emails with employee ID and secure login links.
+- **Leave Receipts**: Instant confirmation emails sent to employees upon submitting leave requests.
+- **Leave Decision Alerts**: Instant HTML email notifications when HR approves or rejects a leave request.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, Tailwind CSS, Lucide Icons, TanStack Query, React Hook Form, Zod, Recharts, React Hot Toast |
+| **Backend** | Node.js, Express.js (ES Modules), Prisma ORM, JSON Web Tokens (JWT), Bcrypt, Nodemailer |
+| **Database** | Serverless PostgreSQL via **Neon Cloud** |
+| **Monorepo** | NPM Workspaces + Concurrently |
+
+---
+
+## 📋 Prerequisites
+
+Before running the project locally, ensure you have:
+- **Node.js**: `v18.0.0` or higher ([Download Node.js](https://nodejs.org/))
+- **NPM**: `v9.0.0` or higher
+- **Git**: Installed on your system ([Download Git](https://git-scm.com/))
+- **Neon Cloud Account**: Free serverless PostgreSQL ([Sign up at Neon](https://neon.tech/))
+- **Gmail Account (Optional)**: For automated workflow emails
+
+---
+
+## 🚀 Step-by-Step Setup Guide
+
+### 1. Clone the Repository
 
 ```bash
-# 1. Install all dependencies for Root, Backend & Frontend:
-npm install
+git clone https://github.com/Suyash00-glitch/odoo-nmit-2026.git
+cd odoo-nmit-2026
+```
 
-# 2. Start both Backend & Frontend concurrently:
+---
+
+### 2. Set Up a Free PostgreSQL Database on Neon
+
+1. Navigate to **[neon.tech](https://neon.tech/)** and create a free account.
+2. Click **"New Project"**, name it `dayflow-hrms`, and select your nearest AWS region.
+3. Once the database is provisioned, go to the **Dashboard** and find the **Connection Details** widget.
+4. Select **Prisma** or **PostgreSQL** connection string and copy the URL. It will look like:
+   ```
+   postgresql://<user>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require
+   ```
+
+---
+
+### 3. Set Up Gmail SMTP for Workflow Emails (Optional)
+
+To enable automated email notifications (welcome emails, leave application receipts, approval alerts):
+
+1. Go to your **[Google Account Security](https://myaccount.google.com/security)** page.
+2. Ensure **2-Step Verification** is turned **ON**.
+3. Go to **[App Passwords](https://myaccount.google.com/apppasswords)** (`Google Account > Security > 2-Step Verification > App Passwords`).
+4. Enter an App name (e.g. `Dayflow HRMS`) and click **Create**.
+5. Copy the generated **16-character password** (e.g., `abcd efgh ijkl mnop`).
+
+---
+
+### 4. Configure Environment Variables
+
+#### Backend (`backend/.env`)
+Create a file named `.env` inside the `backend/` directory:
+
+```env
+# Database Connection (Replace with your Neon connection string)
+DATABASE_URL="postgresql://<user>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require"
+
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# JWT Authentication Secrets (Generate any 32+ character random strings)
+JWT_ACCESS_SECRET="your-super-secure-jwt-access-token-secret-key-2026"
+JWT_REFRESH_SECRET="your-super-secure-jwt-refresh-token-secret-key-2026"
+
+# Frontend Origin URL
+FRONTEND_URL="http://localhost:5173"
+
+# SMTP Email Configuration (Gmail App Password)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="your-email@gmail.com"
+SMTP_PASS="your-16-character-app-password"
+SMTP_FROM="Dayflow HRMS <your-email@gmail.com>"
+```
+
+#### Frontend (`frontend/.env`)
+Create a file named `.env` inside the `frontend/` directory:
+
+```env
+VITE_API_URL="http://localhost:5000/api"
+```
+
+---
+
+### 5. Install Dependencies
+
+Install all root, backend, and frontend packages with one command from the project root:
+
+```bash
+npm install
+```
+
+---
+
+### 6. Initialize Database Schema & Seed Demo Data
+
+Run Prisma to push the database schema and populate all demo users, departments, 14 days of attendance, and sample leave requests:
+
+```bash
+# Push schema to your Neon PostgreSQL database
+npm --prefix backend run db:push
+
+# Seed database with Admin and Employee accounts
+npm --prefix backend run db:seed
+```
+
+---
+
+### 7. Run the Full-Stack Application
+
+Launch both the backend API server and frontend client concurrently:
+
+```bash
 npm run dev
 ```
 
-- **Frontend App**: `http://localhost:5173`
-- **Backend API**: `http://localhost:5000`
-- **API Health**: `http://localhost:5000/health`
+Your app will be live at:
+- 🌐 **Frontend Application**: [http://localhost:5173](http://localhost:5173)
+- 🔌 **Backend REST API**: [http://localhost:5000/api](http://localhost:5000/api)
+- 🩺 **Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
 
 ---
 
-## 🔑 Demo Logins
+## 🔑 Demo Login Accounts
 
-| Role | Email | Password |
-|---|---|---|
-| 👑 **Admin** | `admin@dayflow.dev` | `password123` |
-| 👤 **Employee** | `alice.johnson@dayflow.dev` | `password123` |
-| 👤 **Employee 2** | `bob.williams@dayflow.dev` | `password123` |
+All seeded demo accounts use the standard password: **`password123`**
 
-*(All 8 seeded employees use password: `password123`)*
+| Role | Name | Email | Password | Department |
+| :--- | :--- | :--- | :--- | :--- |
+| 🛡️ **Admin / HR** | Sarah Connor | `admin@dayflow.dev` | `password123` | HR Director |
+| 👤 **Employee** | Alice Johnson | `alice.johnson@dayflow.dev` | `password123` | Engineering |
+| 👤 **Employee** | Bob Williams | `bob.williams@dayflow.dev` | `password123` | Product |
+| 👤 **Employee** | Carol Davis | `carol.davis@dayflow.dev` | `password123` | Design |
+| 👤 **Employee** | David Martinez | `david.martinez@dayflow.dev` | `password123` | Marketing |
 
----
-
-## ✨ Features
-
-### 👤 Employee Portal
-- **Dashboard**: Live attendance status, quick Check-In / Check-Out, and personal metrics.
-- **My Profile**: View and edit phone, address, and profile photo.
-- **Attendance**: Daily and weekly attendance logs with duration calculation.
-- **Leaves**: Apply for leave (Paid, Sick, Unpaid) and track approval status.
-- **Payroll**: Read-only salary breakdown (Base salary, allowances, and deductions).
-
-### 👑 Admin Portal
-- **Executive Dashboard**: Real-time headcount by department, today's attendance rate, and pending leaves.
-- **Employee Directory**: Paginated list of employees with search and department filters.
-- **Employee Profile & Salary Editor**: Edit employee details and adjust salary structures.
-- **Leave Approvals**: One-click approve/reject leave requests with reviewer comments.
-- **Payroll Management**: Manage salary, allowances (HRA, transport, medical), and deductions (tax, PF).
-- **Analytics Dashboard**: Interactive charts powered by Recharts (attendance rate trends, breakdown, and leave distribution).
-
----
-
-## 🛠️ Handy Commands (Run from Root)
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Runs backend (`:5000`) and frontend (`:5173`) together |
-| `npm run build` | Builds the frontend for production |
-| `npm run db:seed` | Seeds database with 1 admin + 8 employees + 14 days attendance + leaves |
-| `npm run db:studio` | Opens Prisma Studio GUI to view/edit database records |
-| `npm run db:migrate` | Runs database migrations |
+> 💡 **Quick Demo Fill:** On the **[Sign In Page](http://localhost:5173/signin)**, click the **"Admin Demo"** or **"Employee Demo"** pill buttons to instantly autofill credentials!
 
 ---
 
 ## 📂 Project Structure
 
 ```
-hr_system/
-├── backend/                  # Node.js + Express API (Pure JavaScript)
-│   ├── prisma/               # Database schema & seed script
-│   │   ├── schema.prisma
-│   │   └── seed.js
-│   └── src/
-│       ├── config/           # Database, env & mailer config
-│       ├── middlewares/      # Auth, role check, validation & error handling
-│       ├── modules/          # Auth, users, employees, attendance, leaves, payroll, dashboard, analytics
-│       ├── utils/            # Async handler, JWT, hash & response helpers
-│       ├── app.js            # Express app configuration
-│       └── server.js         # Server entrypoint
-├── frontend/                 # React + Vite (Pure JavaScript + JSX)
-│   └── src/
-│       ├── api/              # Axios API clients
-│       ├── components/       # UI components, modals, badges, layout & sidebar
-│       ├── context/          # Auth context (token & session management)
-│       ├── pages/            # Auth, Employee & Admin portal pages
-│       └── routes/           # Role-based protected router
-└── package.json              # Root workspace orchestration
+odoo-nmit-2026/
+├── backend/                      # Node.js + Express Backend API
+│   ├── prisma/
+│   │   ├── schema.prisma         # Prisma ORM Database Models
+│   │   └── seed.js               # Database Seeder (Users, Attendance, Leaves)
+│   ├── src/
+│   │   ├── config/               # Database, Environment & Mailer Config
+│   │   ├── controllers/          # Business Logic (Auth, Employees, Leaves, Payroll, Analytics)
+│   │   ├── middlewares/          # JWT Verification, Role Authorization, Zod Validation
+│   │   ├── routes/               # Express API Route Definitions
+│   │   ├── utils/                # Password Hash, JWT Helpers, Response Formatter
+│   │   ├── app.js                # Express App Middleware & CORS Configuration
+│   │   └── server.js             # HTTP Server Entry Point
+│   └── package.json
+│
+├── frontend/                     # React + Vite Client Application
+│   ├── src/
+│   │   ├── api/                  # Axios HTTP Client Modules
+│   │   ├── components/
+│   │   │   ├── common/           # Modal, Loader, Badge, Error State
+│   │   │   ├── landing/          # Hero, BentoGrid, Workflows, Integrations, Testimonials
+│   │   │   ├── layout/           # Admin/Employee Sidebar & Navigation Shell
+│   │   │   └── ui/               # Pill Auth Modal & Form Components
+│   │   ├── context/              # Authentication & Session Context
+│   │   ├── pages/
+│   │   │   ├── admin/            # Dashboard, Employees, Leaves, Payroll, Analytics
+│   │   │   ├── employee/         # Dashboard, Attendance, Leaves, Payslip, Profile
+│   │   │   ├── auth/             # Sign In, Sign Up, Verify Email, Activate Account
+│   │   │   └── landing/          # Landing Page
+│   │   ├── routes/               # Protected Role-Based Router
+│   │   ├── index.css             # Tailwind Design System & Custom Gradients
+│   │   └── main.jsx              # React DOM Entry
+│   └── package.json
+│
+├── package.json                  # Root Monorepo Orchestrator
+└── README.md                     # Documentation
 ```
 
 ---
 
-## ⚙️ Environment Configuration
+## 🔌 API Reference Overview
 
-### Backend (`backend/.env`)
-```env
-DATABASE_URL="postgresql://neondb_owner:npg_UCaj1P9RGdwg@ep-still-bird-b31npzb4-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
-PORT=5000
-NODE_ENV=development
-JWT_ACCESS_SECRET="dayflow-super-secret-access-token-jwt-key-2026-secure-32chars"
-JWT_REFRESH_SECRET="dayflow-super-secret-refresh-token-jwt-key-2026-secure-32chars"
-FRONTEND_URL="http://localhost:5173"
-```
+### 🔐 Authentication (`/api/auth`)
+- `POST /api/auth/signup` — Create a new employee workforce account.
+- `POST /api/auth/login` — Sign in with email and password (returns JWT & sets refresh cookie).
+- `POST /api/auth/refresh` — Refresh expired access token.
+- `POST /api/auth/logout` — Revoke refresh token and clear cookies.
+- `POST /api/auth/verify-email` — Verify email verification token.
 
-### Frontend (`frontend/.env`)
-```env
-VITE_API_URL=http://localhost:5000/api
+### 👥 Employees (`/api/employees`)
+- `GET /api/employees` — List all employees (supports search, department filtering, pagination).
+- `POST /api/employees` — Add new employee and dispatch invitation email.
+- `GET /api/employees/:id` — Get single employee profile with documents and payroll structure.
+- `PUT /api/employees/:id` — Update employee job details, department, or contact information.
+- `DELETE /api/employees/:id` — Delete employee and cascade-delete all linked records.
+
+### ⏱️ Attendance (`/api/attendance`)
+- `POST /api/attendance/check-in` — Clock in for today's shift.
+- `POST /api/attendance/check-out` — Clock out and record total shift duration.
+- `GET /api/attendance/me` — Fetch current user's attendance log history.
+- `GET /api/attendance/today` — Real-time company attendance count and status summary (Admin).
+
+### 🏖️ Leave Management (`/api/leaves`)
+- `POST /api/leaves` — Submit a leave request (Paid, Sick, Unpaid) with date validation.
+- `GET /api/leaves/me` — Retrieve logged-in employee's leave requests.
+- `GET /api/leaves` — List all company leave requests (Admin).
+- `PATCH /api/leaves/:id/decision` — Approve or Reject a leave request with review comments.
+
+### 💵 Payroll (`/api/payroll`)
+- `GET /api/payroll/me` — Get itemized payslip for logged-in employee.
+- `GET /api/payroll` — List all employees' salary structures (Admin).
+- `PUT /api/payroll/:id` — Update base salary, allowances (HRA, transport, medical), and deductions.
+
+### 📊 Analytics (`/api/analytics`)
+- `GET /api/analytics/dashboard` — Live headcount, present today, on-leave count, and pending approvals.
+- `GET /api/analytics/attendance-trend` — 14-day company attendance trend for interactive charts.
+
+---
+
+## ❓ Frequently Asked Questions & Troubleshooting
+
+<details>
+<summary><b>1. Port 5000 or 5173 is already in use (EADDRINUSE)</b></summary>
+If port 5000 is occupied, you can kill the existing process on Windows:
+
+```powershell
+# Find process using port 5000
+netstat -ano | findstr :5000
+
+# Kill process by PID
+taskkill /F /PID <PID_NUMBER>
 ```
+Or simply change `PORT=5001` in `backend/.env` and update `VITE_API_URL="http://localhost:5001/api"` in `frontend/.env`.
+</details>
+
+<details>
+<summary><b>2. SMTP Error: "535 5.7.8 Username and Password not accepted"</b></summary>
+Google rejects normal account passwords for automated SMTP. You must:
+1. Turn ON 2-Step Verification on your Google Account.
+2. Generate an **App Password** from https://myaccount.google.com/apppasswords.
+3. Paste the 16-character code into `SMTP_PASS` in `backend/.env`.
+</details>
+
+<details>
+<summary><b>3. Prisma Database Connection Timeout</b></summary>
+Ensure your Neon PostgreSQL connection string ends with `?sslmode=require`. If you are using a pooled connection, verify you are using the pooled endpoint URL provided in the Neon console.
+</details>
+
+<details>
+<summary><b>4. How to inspect the database visually?</b></summary>
+Run the built-in Prisma Studio GUI:
+
+```bash
+npm --prefix backend run db:studio
+```
+Open [http://localhost:5555](http://localhost:5555) in your browser to view, edit, and filter database tables visually.
+</details>
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. Feel free to use, modify, and distribute for personal or commercial projects.
