@@ -45,7 +45,7 @@ const Header: React.FC = () => {
         </a>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -56,10 +56,16 @@ const Header: React.FC = () => {
             </a>
           ))}
           <a
-            href="#audit"
-            className="btn-sky px-6 py-2.5 text-sm font-bold rounded-lg"
+            href="/login"
+            className="text-sm font-semibold text-purple-300 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 transition-all"
           >
-            Free Content Audit
+            Sign In
+          </a>
+          <a
+            href="/signup"
+            className="btn-purple-gradient px-5 py-2.5 text-sm font-bold rounded-lg"
+          >
+            Sign Up (HR)
           </a>
         </div>
 
@@ -103,13 +109,22 @@ const Header: React.FC = () => {
               {link.label}
             </a>
           ))}
-          <a
-            href="#audit"
-            className="btn-sky px-6 py-3 text-sm font-bold rounded-lg text-center mt-2"
-            onClick={() => setMenuOpen(false)}
-          >
-            Free Content Audit
-          </a>
+          <div className="flex flex-col gap-2 pt-2 border-t border-white/10">
+            <a
+              href="/login"
+              className="text-center py-2.5 text-sm font-semibold text-purple-300 hover:text-white rounded-lg bg-white/5"
+              onClick={() => setMenuOpen(false)}
+            >
+              Sign In
+            </a>
+            <a
+              href="/signup"
+              className="btn-purple-gradient px-6 py-2.5 text-sm font-bold rounded-lg text-center"
+              onClick={() => setMenuOpen(false)}
+            >
+              Sign Up (HR)
+            </a>
+          </div>
         </div>
       )}
     </nav>

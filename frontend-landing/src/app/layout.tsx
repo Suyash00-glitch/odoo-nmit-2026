@@ -8,12 +8,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Ledger — Social Media for Accounting Firms",
+  title: "Dayflow HRMS — Modern Human Resource Management System",
   description:
-    "Ledger turns overlooked CPA firms into discoverable, trusted voices on LinkedIn, Instagram, and Google Business — we write the content you never have time to post.",
-  icons: {
-    icon: [{ url: "/assets/images/app_logo.png", type: "image/x-icon" }],
-  },
+    "Intelligent Human Resource Management System with automated Login ID generation, attendance, leave tracking, and payroll.",
 };
 
 export default function RootLayout({
