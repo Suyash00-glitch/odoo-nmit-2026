@@ -301,6 +301,15 @@ Open [http://localhost:5555](http://localhost:5555) in your browser to view, edi
 
 ---
 
+## 👥 Authors & Contributors
+
+- **Abhijeet**
+- **Suyash**
+- **Azmal**
+- **Pratham**
+
+---
+
 ## 📄 License
 
 This project is licensed under the **MIT License**. Feel free to use, modify, and distribute for personal or commercial projects.
