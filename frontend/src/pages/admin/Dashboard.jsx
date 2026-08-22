@@ -334,52 +334,47 @@ const AdminDashboard = () => {
         {/* Right Column: 3 Stacked Widgets (4 cols) */}
         <div className="lg:col-span-4 space-y-7">
           
-          {/* Widget 1: System Status Banner in Crisp White Card with Lime Accent */}
+          {/* Widget 1: HR Quick Actions & Operations */}
           <div className="card space-y-4 border-slate-200">
             <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase tracking-wider">
-                System Connected
+              <h3 className="text-base font-black text-slate-950 tracking-tight">Quick Operations</h3>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider">
+                HR Hub
               </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <div>
-              <h3 className="text-xl font-black text-slate-950 tracking-tight">PostgreSQL Database</h3>
-              <p className="text-xs text-slate-500 leading-relaxed font-medium mt-1">
-                Live database synced with automated backup, cryptographic JWT auth, and active Prisma ORM.
-              </p>
+            
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                to="/admin/employees"
+                className="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition-all flex flex-col items-center text-center gap-1.5 group shadow-2xs"
+              >
+                <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Users size={16} />
+                </div>
+                <span className="text-xs font-extrabold text-slate-800">Directory</span>
+              </Link>
+
+              <Link
+                to="/admin/leaves"
+                className="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition-all flex flex-col items-center text-center gap-1.5 group shadow-2xs"
+              >
+                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Calendar size={16} />
+                </div>
+                <span className="text-xs font-extrabold text-slate-800">Leaves ({data.pendingLeaves})</span>
+              </Link>
             </div>
 
             <Link
               to="/admin/analytics"
-              className="btn-primary w-full py-3 text-xs font-black flex items-center justify-center gap-1.5"
+              className="btn-primary w-full py-2.5 text-xs font-black flex items-center justify-center gap-1.5 shadow-2xs"
             >
-              <span>Explore Telemetry & Reports</span>
+              <span>View Analytics & Reports</span>
               <ArrowUpRight size={14} />
             </Link>
           </div>
 
-          {/* Widget 2: Daily Standup */}
-          <div className="card space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shadow-2xs">
-                <Video size={18} />
-              </div>
-              <div>
-                <h4 className="text-sm font-black text-slate-950 leading-tight">Daily Standup</h4>
-                <p className="text-xs text-slate-400 font-semibold">10:00 AM • Google Meet</p>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-500 font-medium">
-              Daily morning sync for department heads and workforce leads.
-            </p>
-
-            <button className="btn-secondary w-full py-2.5 text-xs font-bold">
-              Meeting Link Active
-            </button>
-          </div>
-
-          {/* Widget 3: Team Members List */}
+          {/* Team Members List */}
           <div className="card space-y-5">
             <div className="flex items-center justify-between">
               <h4 className="text-base font-black text-slate-950">Team Members</h4>

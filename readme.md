@@ -21,9 +21,9 @@ A production-ready, full-stack **Human Resource Management System (HRMS)** with 
 - **Personal Profile**: Update phone, address, and view employment metadata.
 
 ### 📧 3. Automated Email Notification Workflows
-- **Account Activation**: Branded onboarding emails with employee ID and secure login links.
-- **Leave Receipts**: Instant confirmation emails sent to employees upon submitting leave requests.
-- **Leave Decision Alerts**: Instant HTML email notifications when HR approves or rejects a leave request.
+- **Account Verification & Welcome**: Branded onboarding emails with employee ID and secure activation links.
+- **Leave Application Receipt**: Instant confirmation emails sent to employees upon submitting leave requests.
+- **Leave Decision Alerts**: Instant HTML email notifications with approval/rejection status and HR notes.
 
 ---
 
@@ -45,7 +45,7 @@ Before running the project locally, ensure you have:
 - **NPM**: `v9.0.0` or higher
 - **Git**: Installed on your system ([Download Git](https://git-scm.com/))
 - **Neon Cloud Account**: Free serverless PostgreSQL ([Sign up at Neon](https://neon.tech/))
-- **Gmail Account (Optional)**: For automated workflow emails
+- **Gmail Account (or any SMTP Provider)**: For automated workflow emails
 
 ---
 
@@ -62,49 +62,86 @@ cd odoo-nmit-2026
 
 ### 2. Set Up a Free PostgreSQL Database on Neon
 
-1. Navigate to **[neon.tech](https://neon.tech/)** and create a free account.
-2. Click **"New Project"**, name it `dayflow-hrms`, and select your nearest AWS region.
-3. Once the database is provisioned, go to the **Dashboard** and find the **Connection Details** widget.
-4. Select **Prisma** or **PostgreSQL** connection string and copy the URL. It will look like:
+1. Navigate to **[neon.tech](https://neon.tech/)** and sign up for a free account.
+2. Click **"New Project"**, name it `dayflow-hrms`, and select your preferred AWS region.
+3. In your project's **Dashboard**, locate the **Connection Details** card.
+4. Select **Prisma** or **PostgreSQL (Connection string)** from the dropdown.
+5. Copy the connection URL. It will look like:
    ```
-   postgresql://<user>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require
+   postgresql://<username>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require
    ```
 
 ---
 
-### 3. Set Up Gmail SMTP for Workflow Emails (Optional)
+### 3. Set Up Email & SMTP Workflows (Step-by-Step)
 
-To enable automated email notifications (welcome emails, leave application receipts, approval alerts):
+Dayflow HRMS uses **Nodemailer** to automatically dispatch transaction and workflow emails. You can use **Gmail (Google App Password)**, **Outlook**, **SendGrid**, **Brevo**, or **Mailtrap** (for local development).
 
-1. Go to your **[Google Account Security](https://myaccount.google.com/security)** page.
-2. Ensure **2-Step Verification** is turned **ON**.
-3. Go to **[App Passwords](https://myaccount.google.com/apppasswords)** (`Google Account > Security > 2-Step Verification > App Passwords`).
-4. Enter an App name (e.g. `Dayflow HRMS`) and click **Create**.
-5. Copy the generated **16-character password** (e.g., `abcd efgh ijkl mnop`).
+#### Option A: Gmail SMTP Setup (Recommended & Free)
+
+> ⚠️ **Important:** Google does **not** allow regular Gmail account passwords for third-party SMTP. You **must** generate a 16-character **App Password**.
+
+Follow these exact steps:
+
+1. **Enable 2-Step Verification**:
+   - Go to your **[Google Account Security](https://myaccount.google.com/security)** page.
+   - Under *"How you sign in to Google"*, click on **2-Step Verification** and turn it **ON** (if not already enabled).
+
+2. **Generate an App Password**:
+   - Go directly to **[Google App Passwords](https://myaccount.google.com/apppasswords)**.
+   - If prompted, enter your Google account password.
+   - In the **"App name"** text box, enter: `Dayflow HRMS`.
+   - Click **Create**.
+   - A modal will pop up with a **16-character code** (e.g. `srky buui ojaw uoql` or `abcd efgh ijkl mnop`).
+   - Copy this 16-character code.
+
+3. **Add Credentials to `backend/.env`**:
+   ```env
+   SMTP_HOST="smtp.gmail.com"
+   SMTP_PORT=587
+   SMTP_USER="your-exact-gmail-address@gmail.com"
+   SMTP_PASS="your-16-character-app-password"
+   SMTP_FROM="Dayflow HRMS <your-exact-gmail-address@gmail.com>"
+   ```
+   *(Note: Spaces in `SMTP_PASS` are automatically handled by the system).*
 
 ---
 
-### 4. Configure Environment Variables
+#### Option B: Other SMTP Providers
 
-#### Backend (`backend/.env`)
+If you prefer using an alternate service, configure your `backend/.env` with these settings:
+
+| Provider | `SMTP_HOST` | `SMTP_PORT` | `SMTP_USER` | `SMTP_PASS` |
+| :--- | :--- | :--- | :--- | :--- |
+| **Gmail** | `smtp.gmail.com` | `587` | Your Gmail address | 16-character App Password |
+| **Outlook / Office 365** | `smtp.office365.com` | `587` | Your Outlook email | Your Outlook App Password |
+| **SendGrid** | `smtp.sendgrid.net` | `587` | `apikey` | Your SendGrid API Key |
+| **Brevo (Sendinblue)** | `smtp-relay.brevo.com` | `587` | Your Brevo login email | Your Master SMTP Key |
+| **Mailtrap (Testing)** | `live.smtp.mailtrap.io` | `587` | `api` | Your Mailtrap API Token |
+
+---
+
+### 4. Configure Environment Files
+
+#### A. Backend Configuration (`backend/.env`)
 Create a file named `.env` inside the `backend/` directory:
 
 ```env
-# Database Connection (Replace with your Neon connection string)
+# 1. Neon PostgreSQL Database URL
 DATABASE_URL="postgresql://<user>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require"
 
-# Server Configuration
+# 2. Server Configuration
 PORT=5000
 NODE_ENV=development
 
-# JWT Authentication Secrets (Generate any 32+ character random strings)
-JWT_ACCESS_SECRET="your-super-secure-jwt-access-token-secret-key-2026"
-JWT_REFRESH_SECRET="your-super-secure-jwt-refresh-token-secret-key-2026"
+# 3. JWT Authentication Secrets (Generate any 32+ character random strings)
+JWT_ACCESS_SECRET="dayflow-hrms-access-token-secret-key-super-secure-2026"
+JWT_REFRESH_SECRET="dayflow-hrms-refresh-token-secret-key-super-secure-2026"
 
-# Frontend Origin URL
+# 4. Frontend Origin URL
 FRONTEND_URL="http://localhost:5173"
 
-# SMTP Email Configuration (Gmail App Password)
+# 5. SMTP Email Configuration
 SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
 SMTP_USER="your-email@gmail.com"
@@ -112,7 +149,7 @@ SMTP_PASS="your-16-character-app-password"
 SMTP_FROM="Dayflow HRMS <your-email@gmail.com>"
 ```
 
-#### Frontend (`frontend/.env`)
+#### B. Frontend Configuration (`frontend/.env`)
 Create a file named `.env` inside the `frontend/` directory:
 
 ```env
@@ -133,19 +170,19 @@ npm install
 
 ### 6. Initialize Database Schema & Seed Demo Data
 
-Run Prisma to push the database schema and populate all demo users, departments, 14 days of attendance, and sample leave requests:
+Push the database models to your Neon PostgreSQL instance and populate all demo users, departments, 14 days of attendance, and sample leave requests:
 
 ```bash
-# Push schema to your Neon PostgreSQL database
+# Push Prisma schema to your Neon database
 npm --prefix backend run db:push
 
-# Seed database with Admin and Employee accounts
+# Populate sample data (1 Admin + 5 Employees + 14-day attendance logs)
 npm --prefix backend run db:seed
 ```
 
 ---
 
-### 7. Run the Full-Stack Application
+### 7. Run the Application
 
 Launch both the backend API server and frontend client concurrently:
 
@@ -153,10 +190,17 @@ Launch both the backend API server and frontend client concurrently:
 npm run dev
 ```
 
-Your app will be live at:
+Your system is now live at:
 - 🌐 **Frontend Application**: [http://localhost:5173](http://localhost:5173)
 - 🔌 **Backend REST API**: [http://localhost:5000/api](http://localhost:5000/api)
 - 🩺 **Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
+
+When the server starts with valid SMTP credentials, you will see this confirmation in your terminal:
+```bash
+[BACKEND] ✅ Database connected
+[BACKEND] 🚀 Dayflow API running on http://localhost:5000
+[BACKEND] ✅ [Mailer] SMTP Server connected ready to send emails via: your-email@gmail.com
+```
 
 ---
 
@@ -172,7 +216,7 @@ All seeded demo accounts use the standard password: **`password123`**
 | 👤 **Employee** | Carol Davis | `carol.davis@dayflow.dev` | `password123` | Design |
 | 👤 **Employee** | David Martinez | `david.martinez@dayflow.dev` | `password123` | Marketing |
 
-> 💡 **Quick Demo Fill:** On the **[Sign In Page](http://localhost:5173/signin)**, click the **"Admin Demo"** or **"Employee Demo"** pill buttons to instantly autofill credentials!
+> 💡 **Quick Demo Autofill:** On the **[Sign In Page](http://localhost:5173/signin)**, click the **"Admin Demo"** or **"Employee Demo"** pill buttons to autofill credentials with one click!
 
 ---
 
@@ -185,7 +229,7 @@ odoo-nmit-2026/
 │   │   ├── schema.prisma         # Prisma ORM Database Models
 │   │   └── seed.js               # Database Seeder (Users, Attendance, Leaves)
 │   ├── src/
-│   │   ├── config/               # Database, Environment & Mailer Config
+│   │   ├── config/               # Database, Environment & Nodemailer Mailer Config
 │   │   ├── controllers/          # Business Logic (Auth, Employees, Leaves, Payroll, Analytics)
 │   │   ├── middlewares/          # JWT Verification, Role Authorization, Zod Validation
 │   │   ├── routes/               # Express API Route Definitions
@@ -222,11 +266,11 @@ odoo-nmit-2026/
 ## 🔌 API Reference Overview
 
 ### 🔐 Authentication (`/api/auth`)
-- `POST /api/auth/signup` — Create a new employee workforce account.
+- `POST /api/auth/signup` — Register new account and send activation/verification email.
 - `POST /api/auth/login` — Sign in with email and password (returns JWT & sets refresh cookie).
 - `POST /api/auth/refresh` — Refresh expired access token.
-- `POST /api/auth/logout` — Revoke refresh token and clear cookies.
-- `POST /api/auth/verify-email` — Verify email verification token.
+- `POST /api/auth/logout` — Revoke refresh token and clear session cookies.
+- `POST /api/auth/verify-email` — Verify email token.
 
 ### 👥 Employees (`/api/employees`)
 - `GET /api/employees` — List all employees (supports search, department filtering, pagination).
@@ -242,10 +286,10 @@ odoo-nmit-2026/
 - `GET /api/attendance/today` — Real-time company attendance count and status summary (Admin).
 
 ### 🏖️ Leave Management (`/api/leaves`)
-- `POST /api/leaves` — Submit a leave request (Paid, Sick, Unpaid) with date validation.
+- `POST /api/leaves` — Submit a leave request (Paid, Sick, Unpaid) and dispatch receipt email.
 - `GET /api/leaves/me` — Retrieve logged-in employee's leave requests.
 - `GET /api/leaves` — List all company leave requests (Admin).
-- `PATCH /api/leaves/:id/decision` — Approve or Reject a leave request with review comments.
+- `PATCH /api/leaves/:id/decision` — Approve or Reject a leave request and send notification email.
 
 ### 💵 Payroll (`/api/payroll`)
 - `GET /api/payroll/me` — Get itemized payslip for logged-in employee.
@@ -258,10 +302,19 @@ odoo-nmit-2026/
 
 ---
 
-## ❓ Frequently Asked Questions & Troubleshooting
+## ❓ Troubleshooting & FAQs
 
 <details>
-<summary><b>1. Port 5000 or 5173 is already in use (EADDRINUSE)</b></summary>
+<summary><b>1. SMTP Error: "535 5.7.8 Username and Password not accepted"</b></summary>
+Google rejects normal account passwords for automated SMTP. To fix:
+1. Turn ON **2-Step Verification** on your Google Account: https://myaccount.google.com/security
+2. Generate an **App Password** from https://myaccount.google.com/apppasswords
+3. Copy the 16-character password and paste it into `SMTP_PASS` in `backend/.env`.
+4. Ensure `SMTP_USER` matches the exact Gmail address that generated the App Password.
+</details>
+
+<details>
+<summary><b>2. Port 5000 or 5173 is already in use (EADDRINUSE)</b></summary>
 If port 5000 is occupied, you can kill the existing process on Windows:
 
 ```powershell
@@ -272,14 +325,6 @@ netstat -ano | findstr :5000
 taskkill /F /PID <PID_NUMBER>
 ```
 Or simply change `PORT=5001` in `backend/.env` and update `VITE_API_URL="http://localhost:5001/api"` in `frontend/.env`.
-</details>
-
-<details>
-<summary><b>2. SMTP Error: "535 5.7.8 Username and Password not accepted"</b></summary>
-Google rejects normal account passwords for automated SMTP. You must:
-1. Turn ON 2-Step Verification on your Google Account.
-2. Generate an **App Password** from https://myaccount.google.com/apppasswords.
-3. Paste the 16-character code into `SMTP_PASS` in `backend/.env`.
 </details>
 
 <details>

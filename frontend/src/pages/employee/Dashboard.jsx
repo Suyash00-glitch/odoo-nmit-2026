@@ -388,28 +388,7 @@ const EmployeeDashboard = () => {
             </Link>
           </div>
 
-          {/* Widget 2: Standup Meeting */}
-          <div className="card space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shadow-2xs">
-                <Video size={18} />
-              </div>
-              <div>
-                <h4 className="text-sm font-black text-slate-950 leading-tight">Daily Standup</h4>
-                <p className="text-xs text-slate-400 font-semibold">10:00 AM • Google Meet</p>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-500 font-medium">
-              Join your team's sync call to coordinate daily tasks and blockers.
-            </p>
-
-            <button className="btn-secondary w-full py-2.5 text-xs font-bold">
-              Meeting Link Active
-            </button>
-          </div>
-
-          {/* Widget 3: Quick Navigation Shortcuts */}
+          {/* Quick Navigation Shortcuts */}
           <div className="card space-y-4">
             <h4 className="text-base font-black text-slate-950">Quick Portals</h4>
 
