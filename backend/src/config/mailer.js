@@ -1,6 +1,11 @@
 import nodemailer from 'nodemailer';
 import { env } from './env.js';
 
+
+// email verification
+
+
+
 const isMailConfigured =
   env.SMTP_HOST && env.SMTP_PORT && env.SMTP_USER && env.SMTP_PASS;
 
