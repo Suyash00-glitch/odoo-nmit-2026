@@ -1,39 +1,37 @@
 import React from "react";
+import { Users, Clock, Calendar, DollarSign, ShieldCheck, CheckCircle2, BarChart3 } from "lucide-react";
 
-const items = [
-  "LinkedIn Presence",
-  "Instagram Strategy",
-  "Google Business",
-  "Content Calendar",
-  "Tax Season Coverage",
-  "CPA Thought Leadership",
-  "Review Management",
-  "Post Scheduling",
-  "100% Done-For-You",
-  "Zero Time Required",
-];
+export default function MarqueeBar() {
+  const capabilities = [
+    { name: "Employee Management", icon: Users },
+    { name: "Attendance Tracking", icon: Clock },
+    { name: "Leave Management", icon: Calendar },
+    { name: "Payroll Visibility", icon: DollarSign },
+    { name: "Role-Based Access", icon: ShieldCheck },
+    { name: "Approval Workflows", icon: CheckCircle2 },
+    { name: "HR Analytics", icon: BarChart3 },
+  ];
 
-const MarqueeBar = () => {
-  const doubled = [...items, ...items];
   return (
-    <div
-      className="relative overflow-hidden border-y border-sky/20 py-4"
-      style={{ background: "rgba(116,185,255,0.06)" }}
-      aria-hidden="true"
-    >
-      <div className="flex animate-marquee whitespace-nowrap">
-        {doubled.map((item, i) => (
-          <span key={i} className="flex items-center gap-4 mx-6">
-            <span className="text-sky text-xs font-bold uppercase tracking-[0.2em]">
-              {item}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-sky/40" />
-          </span>
-        ))}
+    <div className="py-8 bg-white border-y border-gray-100 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+          {capabilities.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <div
+                key={i}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50/80 border border-purple-100 text-[#6B42EF] text-xs font-bold hover:bg-purple-100 transition-colors shadow-2xs cursor-default"
+              >
+                <div className="w-4 h-4 rounded-full bg-[#6B42EF] flex items-center justify-center text-white">
+                  <Icon size={10} />
+                </div>
+                <span>{p.name}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
-};
-
-export default MarqueeBar;
-
+}

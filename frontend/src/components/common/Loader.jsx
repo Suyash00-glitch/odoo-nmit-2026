@@ -4,9 +4,9 @@ import { Loader2 } from 'lucide-react';
 const sizeMap = { sm: 16, md: 24, lg: 40 };
 
 export const Loader = ({ text = 'Loading...', size = 'md' }) => (
-  <div className="flex flex-col items-center justify-center gap-3 py-16 text-white/40">
-    <Loader2 size={sizeMap[size]} className="animate-spin text-primary-400" />
-    <span className="text-sm">{text}</span>
+  <div className="flex flex-col items-center justify-center gap-3 py-16 text-gray-400">
+    <Loader2 size={sizeMap[size]} className="animate-spin text-neutral-900" />
+    <span className="text-xs font-medium text-gray-500">{text}</span>
   </div>
 );
 

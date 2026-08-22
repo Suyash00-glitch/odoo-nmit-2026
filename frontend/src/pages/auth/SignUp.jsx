@@ -73,11 +73,11 @@ const SignUp = () => {
 
   return (
     <AuthUI isSignIn={false}>
-      <form onSubmit={handleSubmit(onSubmit)} autoComplete="on" className="flex flex-col gap-6" id="signup-form">
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="on" className="flex flex-col gap-5" id="signup-form">
         {/* Centered Heading */}
-        <div className="flex flex-col items-center gap-1.5 text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-white">Create an account</h1>
-          <p className="text-sm text-neutral-400">Enter your details below to sign up</p>
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h1 className="text-xl font-bold tracking-tight text-neutral-900">Create your account</h1>
+          <p className="text-xs text-gray-500">Enter your details below to register your profile</p>
         </div>
 
         {/* Inputs */}
@@ -92,7 +92,7 @@ const SignUp = () => {
               autoComplete="name"
             />
             {errors.name && (
-              <p className="text-red-400 text-xs mt-0.5">{errors.name.message}</p>
+              <p className="text-red-600 text-xs mt-0.5">{errors.name.message}</p>
             )}
           </div>
 
@@ -102,18 +102,18 @@ const SignUp = () => {
               id="email"
               type="email"
               {...register("email")}
-              placeholder="m@example.com"
+              placeholder="name@company.com"
               autoComplete="email"
             />
             {errors.email && (
-              <p className="text-red-400 text-xs mt-0.5">{errors.email.message}</p>
+              <p className="text-red-600 text-xs mt-0.5">{errors.email.message}</p>
             )}
           </div>
 
           {/* Dynamic Generated Login ID pill */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs">
-            <span className="text-neutral-400">Assigned System ID:</span>
-            <span className="font-mono font-bold text-neutral-200">{idBreakdown.fullId}</span>
+          <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-xs">
+            <span className="text-gray-500">Assigned System ID:</span>
+            <span className="font-mono font-bold text-neutral-900">{idBreakdown.fullId}</span>
           </div>
 
           <div className="grid gap-1.5">
@@ -127,13 +127,13 @@ const SignUp = () => {
             />
             {password && (
               <div className="mt-1 flex items-center gap-2">
-                <div className="flex-1 h-1 bg-neutral-900 rounded-full overflow-hidden">
+                <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
                   <div
                     className={`h-full ${pwdStrength.color} transition-all duration-300`}
                     style={{ width: `${pwdStrength.score}%` }}
                   />
                 </div>
-                <span className="text-[10px] text-neutral-400 font-mono">{pwdStrength.label}</span>
+                <span className="text-[10px] text-gray-500 font-mono">{pwdStrength.label}</span>
               </div>
             )}
           </div>
@@ -142,14 +142,14 @@ const SignUp = () => {
             <Label>Role</Label>
             <select
               {...register("role")}
-              className="flex h-10 w-full rounded-lg border border-neutral-800 bg-neutral-950/80 px-3 py-2 text-sm text-neutral-100 focus-visible:border-neutral-600 focus-visible:outline-none"
+              className="flex h-10 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-neutral-900 focus-visible:border-neutral-900 focus-visible:outline-none shadow-2xs"
             >
               <option value="EMPLOYEE">Employee</option>
               <option value="ADMIN">HR Admin</option>
             </select>
           </div>
 
-          <Button type="submit" variant="outline" className="mt-2 w-full py-2.5 bg-neutral-900 border-neutral-800 hover:bg-neutral-800 text-white font-medium" disabled={isSubmitting}>
+          <Button type="submit" variant="default" className="mt-1 w-full py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white font-medium shadow-xs" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -162,9 +162,9 @@ const SignUp = () => {
         </div>
 
         {/* Switch Link */}
-        <div className="text-center text-sm text-neutral-400">
+        <div className="text-center text-xs text-gray-500">
           Already have an account?{" "}
-          <Link to="/signin" className="text-white hover:underline font-medium">
+          <Link to="/signin" className="text-neutral-900 hover:underline font-semibold">
             Sign in
           </Link>
         </div>

@@ -30,17 +30,17 @@ export default function SocialProofSection() {
   ];
 
   return (
-    <section id="proof" className="py-24 px-6 bg-white dark:bg-black text-slate-900 dark:text-white border-t border-slate-200 dark:border-neutral-900 transition-colors duration-200">
-      <div className="max-w-6xl mx-auto space-y-16">
+    <section id="proof" className="py-24 px-6 bg-white text-neutral-900 border-t border-gray-200/80">
+      <div className="max-w-6xl mx-auto space-y-14">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 dark:text-yellow-400 text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 border border-gray-200 text-neutral-800 text-xs font-semibold uppercase tracking-wider">
             <span>Verified Customer Reviews</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-950">
             Loved by HR leaders and employees alike.
           </h2>
-          <p className="text-slate-600 dark:text-neutral-400 text-sm">
+          <p className="text-gray-500 text-sm">
             Empowering modern high-performance organizations to manage their human capital with confidence.
           </p>
         </div>
@@ -50,28 +50,28 @@ export default function SocialProofSection() {
           {testimonials.map((item, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-2xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800 flex flex-col justify-between space-y-6 hover:border-slate-300 dark:hover:border-neutral-700 transition-all shadow-sm"
+              className="p-6 rounded-2xl bg-[#F7F7F5] border border-gray-200/90 flex flex-col justify-between space-y-5 shadow-2xs hover:border-gray-300 transition-all"
             >
               <div className="space-y-3">
-                <div className="flex text-amber-400 dark:text-yellow-400 gap-1">
+                <div className="flex text-amber-500 gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 dark:fill-yellow-400" />
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-xs text-slate-700 dark:text-neutral-300 leading-relaxed font-sans">
+                <p className="text-xs text-gray-700 leading-relaxed">
                   “{item.quote}”
                 </p>
               </div>
 
-              <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-neutral-900">
+              <div className="flex items-center gap-3 pt-3 border-t border-gray-200">
                 <img
                   src={item.avatar}
                   alt={item.name}
-                  className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-neutral-700"
+                  className="w-9 h-9 rounded-full object-cover border border-gray-300"
                 />
                 <div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{item.name}</p>
-                  <p className="text-[11px] text-slate-500 dark:text-neutral-400">{item.role} • {item.company}</p>
+                  <p className="text-xs font-bold text-neutral-900">{item.name}</p>
+                  <p className="text-[11px] text-gray-500">{item.role} • {item.company}</p>
                 </div>
               </div>
             </div>

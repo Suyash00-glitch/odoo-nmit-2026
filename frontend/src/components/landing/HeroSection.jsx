@@ -1,225 +1,365 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
-  Sparkles,
-  ArrowRight,
-  CheckCircle2,
+  ArrowUpRight,
+  Star,
+  Search,
+  Bell,
+  Plus,
+  LayoutDashboard,
+  FolderKanban,
+  CheckSquare,
   Clock,
-  Calendar,
-  Building2,
-  Hash,
+  TrendingUp,
+  Users,
+  CheckCircle2,
+  ChevronDown,
 } from "lucide-react";
 
-const TYPEWRITER_TEXTS = [
-  "Automated Login ID Provisioning.",
-  "Real-Time Attendance & Leave Governance.",
-  "Transparent Compensation & Payroll Breakdown.",
-  "Executive Workforce Intelligence.",
-];
-
 export default function HeroSection() {
-  const [textIndex, setTextIndex] = useState(0);
-  const [displayText, setDisplayText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [activeCheckIn, setActiveCheckIn] = useState(false);
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const current = TYPEWRITER_TEXTS[textIndex];
-    const timer = setTimeout(
-      () => {
-        if (!isDeleting) {
-          if (displayText.length < current.length) {
-            setDisplayText(current.slice(0, displayText.length + 1));
-          } else {
-            setTimeout(() => setIsDeleting(true), 2000);
-          }
-        } else {
-          if (displayText.length > 0) {
-            setDisplayText(current.slice(0, displayText.length - 1));
-          } else {
-            setIsDeleting(false);
-            setTextIndex((prev) => (prev + 1) % TYPEWRITER_TEXTS.length);
-          }
-        }
-      },
-      isDeleting ? 30 : 60
-    );
+  const handleStart = (e) => {
+    e.preventDefault();
+    navigate(`/signup?email=${encodeURIComponent(email)}`);
+  };
 
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, textIndex]);
+  const avatars = [
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80",
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=120&q=80",
+  ];
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center pt-28 pb-16 px-6 overflow-hidden bg-slate-50 dark:bg-black text-slate-900 dark:text-white transition-colors duration-200">
-      {/* Subtle Background Radial Gradients */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-purple-500/10 dark:bg-purple-900/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+    <section className="relative pt-32 pb-24 overflow-hidden bg-hero-gradient text-white">
+      
+      {/* Background Soft Cloud/Star Glows */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-10 w-96 h-96 bg-[#D4FF00]/10 rounded-full blur-3xl" />
+      </div>
 
-      <div className="max-w-5xl mx-auto text-center space-y-8">
-        {/* Top Feature Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 text-xs text-slate-700 dark:text-neutral-300 shadow-sm dark:shadow-xl">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
-          <span className="font-medium text-slate-800 dark:text-neutral-300">Intelligent Workforce Operating System</span>
-          <span className="text-slate-400 dark:text-neutral-500">•</span>
-          <span className="text-purple-600 dark:text-purple-400 font-semibold">PostgreSQL & Neon Cloud</span>
+      <div className="max-w-6xl mx-auto px-6 text-center relative z-10 space-y-8">
+        
+        {/* 1. Customer Social Proof Pill */}
+        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-pill shadow-lg shadow-black/5">
+          {/* Overlapping Avatar circles */}
+          <div className="flex -space-x-2">
+            {avatars.map((url, i) => (
+              <img
+                key={i}
+                src={url}
+                alt="HR Team"
+                className="w-7 h-7 rounded-full object-cover border-2 border-white shadow-xs"
+              />
+            ))}
+          </div>
+          {/* Supporting text */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-bold text-white tracking-wide">Built for HR teams and employees</span>
+          </div>
         </div>
 
-        {/* Main Headline */}
-        <div className="space-y-4">
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
-            Manage your workforce with <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 dark:from-purple-400 dark:via-indigo-300 dark:to-purple-400">
-              effortless clarity.
-            </span>
+        {/* 2. Main Headline with Floating Badges */}
+        <div className="relative max-w-4xl mx-auto space-y-4">
+          
+          {/* Floating User Pin Left: "Attendance & Leave" */}
+          <div className="hidden lg:flex items-center gap-2 absolute -left-12 top-6 animate-float">
+            <div className="w-10 h-10 rounded-full bg-purple-900 border-2 border-white/80 p-0.5 shadow-xl">
+              <img
+                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"
+                alt="User"
+                className="w-full h-full rounded-full object-cover"
+              />
+            </div>
+            <div className="relative">
+              {/* Pointer triangle */}
+              <div className="w-2.5 h-2.5 bg-white/20 backdrop-blur-md rotate-45 absolute -left-1 top-3 border-l border-b border-white/30" />
+              <div className="px-4 py-2 rounded-full glass-pill text-xs font-semibold text-white shadow-lg whitespace-nowrap">
+                Attendance &amp; Leave
+              </div>
+            </div>
+          </div>
+
+          {/* Floating User Pin Right: "Payroll & Approvals" */}
+          <div className="hidden lg:flex items-center gap-2 absolute -right-12 top-12 animate-float-delayed flex-row-reverse">
+            <div className="w-10 h-10 rounded-full bg-purple-900 border-2 border-white/80 p-0.5 shadow-xl">
+              <img
+                src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&q=80"
+                alt="User"
+                className="w-full h-full rounded-full object-cover"
+              />
+            </div>
+            <div className="relative">
+              {/* Pointer triangle */}
+              <div className="w-2.5 h-2.5 bg-white/20 backdrop-blur-md rotate-45 absolute -right-1 top-3 border-r border-t border-white/30" />
+              <div className="px-4 py-2 rounded-full glass-pill text-xs font-semibold text-white shadow-lg whitespace-nowrap">
+                Payroll &amp; Approvals
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs font-bold tracking-widest text-[#D4FF00] uppercase">
+            HR MANAGEMENT • ATTENDANCE • PAYROLL
+          </p>
+
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+            Everything your{" "}
+            <span className="inline-block px-4 py-0.5 rounded-3xl border border-white/30 bg-white/10 backdrop-blur-md font-extrabold">
+              people need.
+            </span>{" "}
+            <br />
+            One place for HR.
           </h1>
 
-          {/* Typewriter Subheading */}
-          <p className="text-lg sm:text-xl text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto h-8 font-mono">
-            {displayText}
-            <span className="animate-pulse text-purple-600 dark:text-purple-400">|</span>
+          <p className="text-base sm:text-lg text-white/90 max-w-2xl mx-auto font-medium">
+            Dayflow brings employee management, attendance, leave requests, approvals, and salary information into one simple, secure HR workspace.
           </p>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-          <Link
-            to="/signin"
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-neutral-200 font-semibold text-sm transition-all shadow-lg flex items-center justify-center gap-2 group"
-          >
-            <span>Launch Employee Portal</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-
-          <Link
-            to="/signup"
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-slate-300 dark:border-neutral-800 hover:border-slate-400 dark:hover:border-neutral-700 text-slate-800 dark:text-neutral-200 font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
-          >
-            <Building2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span>Create HR Workspace</span>
-          </Link>
+        {/* 3. Hero Email Input Bar with Electric Lime Button */}
+        <div className="pt-2 max-w-lg mx-auto">
+          <form onSubmit={handleStart} className="p-1.5 rounded-full bg-white shadow-2xl flex items-center gap-2">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your work email"
+              className="flex-1 pl-6 pr-2 py-3 text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 bg-transparent focus:outline-none font-medium"
+            />
+            <button
+              type="submit"
+              className="btn-lime px-6 py-3.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-2 shadow-lime"
+            >
+              <span>Start Free</span>
+              <div className="w-4 h-4 rounded-full bg-black/10 flex items-center justify-center">
+                <ArrowUpRight className="w-3 h-3 text-black stroke-[2.5]" />
+              </div>
+            </button>
+          </form>
         </div>
 
-        {/* Key Trust Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 text-left">
-          <div className="p-4 rounded-xl bg-white dark:bg-neutral-950/60 border border-slate-200 dark:border-neutral-900 shadow-sm">
-            <p className="text-2xl font-bold text-slate-900 dark:text-white font-mono">100%</p>
-            <p className="text-xs text-slate-600 dark:text-neutral-400 mt-0.5">Automated Login ID Provisioning</p>
-          </div>
-          <div className="p-4 rounded-xl bg-white dark:bg-neutral-950/60 border border-slate-200 dark:border-neutral-900 shadow-sm">
-            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">1-Click</p>
-            <p className="text-xs text-slate-600 dark:text-neutral-400 mt-0.5">Live Attendance Check-In</p>
-          </div>
-          <div className="p-4 rounded-xl bg-white dark:bg-neutral-950/60 border border-slate-200 dark:border-neutral-900 shadow-sm">
-            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 font-mono">Real-Time</p>
-            <p className="text-xs text-slate-600 dark:text-neutral-400 mt-0.5">Leave Approvals & Comments</p>
-          </div>
-          <div className="p-4 rounded-xl bg-white dark:bg-neutral-950/60 border border-slate-200 dark:border-neutral-900 shadow-sm">
-            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 font-mono">Transparent</p>
-            <p className="text-xs text-slate-600 dark:text-neutral-400 mt-0.5">Salary, Allowances & PF Deductions</p>
-          </div>
-        </div>
-
-        {/* Interactive HR Visual Dashboard Card */}
-        <div className="pt-8 max-w-4xl mx-auto">
-          <div className="p-6 rounded-2xl bg-white dark:bg-[#0d1017] border border-slate-200 dark:border-neutral-800 shadow-xl dark:shadow-2xl text-left space-y-6">
+        {/* 4. Large Floating Hero Dashboard Mockup (Exact Match to Screenshot) */}
+        <div className="pt-10 max-w-5xl mx-auto relative">
+          
+          {/* Main Dashboard Card */}
+          <div className="rounded-3xl bg-white/95 text-neutral-900 shadow-2xl border border-white/60 p-6 md:p-8 text-left space-y-6 relative z-10 backdrop-blur-xl">
             
-            {/* Top Toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-neutral-800 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <span className="text-xs text-slate-500 dark:text-neutral-400 font-mono pl-2">dayflow.internal/hrms/live-control</span>
+            {/* Top Bar inside mockup */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-5">
+              <div className="flex items-center gap-8">
+                {/* Brand in Mockup */}
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-[#6B42EF] flex items-center justify-center">
+                    <div className="w-3 h-3 bg-[#D4FF00] rounded-xs rotate-45" />
+                  </div>
+                  <span className="font-extrabold text-sm tracking-wider text-neutral-900">DAYFLOW</span>
+                </div>
+                <h2 className="text-xl font-bold text-neutral-900 hidden sm:block">Workforce Overview</h2>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> 8 Seeded Employees Online
-                </span>
+
+              <div className="flex items-center gap-4">
+                {/* Search in mockup */}
+                <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-400 w-60">
+                  <Search size={14} />
+                  <span>Search employees, requests...</span>
+                </div>
+                {/* Bell */}
+                <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-600">
+                  <Bell size={15} />
+                </div>
+                {/* User */}
+                <div className="flex items-center gap-2.5 pl-2 border-l border-gray-200">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
+                    alt="Alex Rivera"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <div className="hidden sm:block text-left">
+                    <p className="text-xs font-bold text-neutral-900 leading-tight">Alex Rivera</p>
+                    <p className="text-[10px] text-gray-400 font-medium">HR Administrator</p>
+                  </div>
+                  <ChevronDown size={14} className="text-gray-400" />
+                </div>
               </div>
             </div>
 
-            {/* 3 Live Control Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Dashboard Body Grid: Sidebar Mockup + Content Mockup */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               
-              {/* Attendance Card */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs text-slate-600 dark:text-neutral-400 mb-2">
-                    <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Attendance Action
-                    </span>
-                    <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                      Live
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-600 dark:text-neutral-400 mb-3">
-                    Daily check-in / check-out with automatic duration calculation.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveCheckIn(!activeCheckIn)}
-                  className={`w-full py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
-                    activeCheckIn
-                      ? "bg-emerald-600 text-white shadow-emerald-600/20 shadow-md"
-                      : "bg-white dark:bg-neutral-900 hover:bg-slate-100 dark:hover:bg-neutral-800 text-slate-800 dark:text-neutral-200 border border-slate-300 dark:border-neutral-700"
-                  }`}
-                >
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>{activeCheckIn ? "Checked In (09:00 AM)" : "Click to Check In"}</span>
+              {/* Left Sidebar Mockup */}
+              <div className="hidden md:block md:col-span-3 space-y-4 pr-3 border-r border-gray-100">
+                <button className="w-full py-2.5 px-3 rounded-xl bg-[#6B42EF] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
+                  <Plus size={15} />
+                  <span>Add Employee</span>
                 </button>
+
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#6B42EF] text-white text-xs font-bold">
+                    <LayoutDashboard size={15} />
+                    <span>Workforce</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-500 hover:text-neutral-900 text-xs font-medium">
+                    <Users size={15} />
+                    <span>Employees</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-500 hover:text-neutral-900 text-xs font-medium">
+                    <Clock size={15} />
+                    <span>Attendance</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-500 hover:text-neutral-900 text-xs font-medium">
+                    <CheckSquare size={15} />
+                    <span>Leave Requests</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-500 hover:text-neutral-900 text-xs font-medium">
+                    <FolderKanban size={15} />
+                    <span>Payroll</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Dynamic Login ID Card */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs text-slate-600 dark:text-neutral-400 mb-2">
-                    <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Hash className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" /> Auto-Generated ID
-                    </span>
-                    <span className="text-[10px] font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded">
-                      Standard
-                    </span>
+              {/* Main Content Area */}
+              <div className="md:col-span-9 space-y-5">
+                
+                {/* 4 Metric Overview Cards */}
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-sm text-neutral-900">Workforce Overview</h3>
+                  <div className="text-[11px] font-semibold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-200 flex items-center gap-1">
+                    <span>Today</span>
+                    <ChevronDown size={12} />
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-neutral-400 mb-2">
-                    Zero collision deterministic format based on company & name codes.
-                  </p>
                 </div>
-                <div className="bg-slate-100 dark:bg-black/60 p-2 rounded-lg border border-purple-500/30 font-mono text-xs text-center text-purple-600 dark:text-purple-300 font-bold tracking-wider">
-                  EMP2026-IT-0042
-                </div>
-              </div>
 
-              {/* Leave Balances Card */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs text-slate-600 dark:text-neutral-400 mb-2">
-                    <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" /> Leave Balances
-                    </span>
-                    <span className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded">
-                      2026 Quota
-                    </span>
-                  </div>
-                  <div className="space-y-1.5 text-xs text-slate-700 dark:text-neutral-300 pt-1">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 dark:text-neutral-400">Paid Leaves:</span>
-                      <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">14 Days</span>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  {/* Metric 1 */}
+                  <div className="p-3.5 rounded-2xl bg-white border border-gray-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-xl bg-purple-100 flex items-center justify-center text-[#6B42EF] mb-2">
+                      <Users size={15} />
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 dark:text-neutral-400">Sick Leaves:</span>
-                      <span className="font-mono text-amber-600 dark:text-yellow-400 font-semibold">7 Days</span>
+                    <p className="text-[11px] text-gray-400 font-medium">Total Employees</p>
+                    <p className="text-base font-extrabold text-neutral-900 font-mono">128</p>
+                    <p className="text-[10px] text-emerald-600 font-semibold mt-0.5">↗ 4 onboarded this month</p>
+                  </div>
+
+                  {/* Metric 2 */}
+                  <div className="p-3.5 rounded-2xl bg-white border border-gray-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-2">
+                      <CheckCircle2 size={15} />
+                    </div>
+                    <p className="text-[11px] text-gray-400 font-medium">Present Today</p>
+                    <p className="text-base font-extrabold text-neutral-900 font-mono">114 <span className="text-xs text-gray-400">/128</span></p>
+                    <p className="text-[10px] text-emerald-600 font-semibold mt-0.5">↗ 89% on-time check-in</p>
+                  </div>
+
+                  {/* Metric 3 */}
+                  <div className="p-3.5 rounded-2xl bg-white border border-gray-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 mb-2">
+                      <Clock size={15} />
+                    </div>
+                    <p className="text-[11px] text-gray-400 font-medium">On Leave</p>
+                    <p className="text-base font-extrabold text-neutral-900 font-mono">8 <span className="text-xs text-gray-400">/128</span></p>
+                    <p className="text-[10px] text-blue-600 font-semibold mt-0.5">6 Planned • 2 Sick</p>
+                  </div>
+
+                  {/* Metric 4 */}
+                  <div className="p-3.5 rounded-2xl bg-white border border-gray-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 mb-2">
+                      <CheckSquare size={15} />
+                    </div>
+                    <p className="text-[11px] text-gray-400 font-medium">Pending Requests</p>
+                    <p className="text-base font-extrabold text-neutral-900 font-mono">6 <span className="text-xs text-gray-400">/12</span></p>
+                    <p className="text-[10px] text-amber-600 font-semibold mt-0.5">4 Leaves • 2 Approvals</p>
+                  </div>
+                </div>
+
+                {/* Table Summary inside Mockup */}
+                <div className="rounded-2xl border border-gray-100 overflow-hidden bg-gray-50/40">
+                  <div className="p-3 bg-white border-b border-gray-100 flex items-center justify-between">
+                    <span className="text-xs font-bold text-neutral-900">Recent Activity</span>
+                    <span className="text-[11px] text-gray-400 font-medium">Live Updates</span>
+                  </div>
+                  <div className="p-3 space-y-2 text-xs">
+                    <div className="flex items-center justify-between py-1 border-b border-gray-100 text-gray-600">
+                      <span className="font-semibold text-neutral-900">Aarav Sharma</span>
+                      <span>Check-in</span>
+                      <span className="text-gray-400 font-mono">09:02 AM</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Present</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1 border-b border-gray-100 text-gray-600">
+                      <span className="font-semibold text-neutral-900">Priya Nair</span>
+                      <span>Leave Request</span>
+                      <span className="text-gray-400 font-mono">May 25 – 27</span>
+                      <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">Pending</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1 border-b border-gray-100 text-gray-600">
+                      <span className="font-semibold text-neutral-900">Rahul Kumar</span>
+                      <span>Check-out</span>
+                      <span className="text-gray-400 font-mono">06:15 PM</span>
+                      <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold">Completed</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1 text-gray-600">
+                      <span className="font-semibold text-neutral-900">Sneha Rao</span>
+                      <span>Leave Request</span>
+                      <span className="text-gray-400 font-mono">Sick Leave</span>
+                      <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold">Approved</span>
                     </div>
                   </div>
                 </div>
-                <div className="pt-2 text-[10px] text-slate-400 dark:text-neutral-500 text-right">
-                  1-click instant approval flow
-                </div>
+
               </div>
 
             </div>
 
           </div>
+
+          {/* Floating Overlay Mini-Card 1 (Left): Attendance Overview */}
+          <div className="hidden lg:block absolute -left-8 -bottom-6 w-48 p-3.5 rounded-2xl bg-white text-neutral-900 shadow-2xl border border-gray-200/90 z-20 animate-float">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-bold text-[#6B42EF]">Attendance Overview</span>
+              <div className="flex gap-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              </div>
+            </div>
+            <p className="text-[10px] text-gray-400">Today's presence rate</p>
+            <p className="text-lg font-bold text-neutral-900 font-mono">92% <span className="text-[10px] text-emerald-600 font-semibold">+3.2%</span></p>
+            {/* Mini chart visual */}
+            <div className="h-10 mt-2 bg-gradient-to-t from-purple-100 to-transparent rounded-lg flex items-end justify-between px-2 pb-1">
+              <div className="w-1.5 h-4 bg-purple-400 rounded-xs" />
+              <div className="w-1.5 h-7 bg-purple-500 rounded-xs" />
+              <div className="w-1.5 h-5 bg-purple-400 rounded-xs" />
+              <div className="w-1.5 h-8 bg-[#6B42EF] rounded-xs" />
+            </div>
+          </div>
+
+          {/* Floating Overlay Mini-Card 2 (Right): Employee Distribution Donut */}
+          <div className="hidden lg:block absolute -right-6 -bottom-4 w-52 p-4 rounded-2xl bg-white text-neutral-900 shadow-2xl border border-gray-200/90 z-20 animate-float-delayed">
+            <p className="text-xs font-bold text-neutral-900 mb-2">Employee Distribution</p>
+            <div className="flex items-center justify-between">
+              <div className="relative w-16 h-16 rounded-full border-4 border-[#6B42EF] border-t-cyan-400 flex items-center justify-center">
+                <span className="text-xs font-bold text-neutral-900 font-mono">89%</span>
+              </div>
+              <div className="text-[10px] space-y-1">
+                <p className="text-neutral-700 font-semibold flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-[#6B42EF]" /> Full-Time (85%)
+                </p>
+                <p className="text-gray-500 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" /> Contract (15%)
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
+
+      {/* Cloud Bottom Transition Wave */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
     </section>
   );
 }

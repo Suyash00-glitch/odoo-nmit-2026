@@ -30,13 +30,13 @@ const AdminEmployeeList = () => {
   return (
     <div className="space-y-6 animate-slide-up">
       <div>
-        <h1 className="text-2xl font-bold text-white">Employees</h1>
-        <p className="text-white/50 text-sm mt-1">Manage all employees in your organization</p>
+        <h1 className="text-2xl font-bold text-neutral-950">Employees</h1>
+        <p className="text-gray-500 text-xs mt-0.5">Manage all employees in your organization</p>
       </div>
 
       <div className="flex gap-3 flex-wrap">
         <div className="relative flex-1 min-w-48">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={15} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
           <input
             id="employee-search"
             value={search}
@@ -80,22 +80,22 @@ const AdminEmployeeList = () => {
                   <tr key={emp.id}>
                     <td>
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-xl bg-primary-600/30 flex items-center justify-center text-primary-300 font-bold text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-neutral-900 font-bold text-xs shrink-0">
                           {emp.profile?.firstName?.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-white font-medium">{emp.profile?.firstName} {emp.profile?.lastName}</p>
-                          <p className="text-white/40 text-xs">{emp.email}</p>
+                          <p className="text-neutral-900 font-medium text-xs">{emp.profile?.firstName} {emp.profile?.lastName}</p>
+                          <p className="text-gray-400 text-[11px]">{emp.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td><span className="badge-gray">{emp.employeeId}</span></td>
-                    <td className="text-white/60">{emp.profile?.department ?? '—'}</td>
-                    <td className="text-white/60">{emp.profile?.jobTitle ?? '—'}</td>
-                    <td className="text-white/60">{emp.profile?.employmentType ?? '—'}</td>
-                    <td className="text-white/50 text-xs">{emp.profile?.dateOfJoining ? new Date(emp.profile.dateOfJoining).toLocaleDateString() : '—'}</td>
+                    <td><span className="badge-gray font-mono text-[11px]">{emp.employeeId}</span></td>
+                    <td className="text-gray-600 text-xs">{emp.profile?.department ?? '—'}</td>
+                    <td className="text-gray-600 text-xs">{emp.profile?.jobTitle ?? '—'}</td>
+                    <td className="text-gray-600 text-xs">{emp.profile?.employmentType ?? '—'}</td>
+                    <td className="text-gray-500 text-xs font-mono">{emp.profile?.dateOfJoining ? new Date(emp.profile.dateOfJoining).toLocaleDateString() : '—'}</td>
                     <td>
-                      <Link to={`/admin/employees/${emp.id}`} className="text-primary-400 hover:text-primary-300 text-xs font-medium">
+                      <Link to={`/admin/employees/${emp.id}`} className="text-neutral-900 font-semibold hover:underline text-xs">
                         View →
                       </Link>
                     </td>
@@ -106,17 +106,23 @@ const AdminEmployeeList = () => {
           </div>
         )}
 
-        {pagination && pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-4">
-            <span className="text-sm text-white/40">
-              Showing {(page - 1) * 10 + 1}–{Math.min(page * 10, pagination.total)} of {pagination.total}
-            </span>
+        {pagination && pagination.pages > 1 && (
+          <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs text-gray-500">
+            <p>Showing {(page - 1) * 10 + 1}–{Math.min(page * 10, pagination.total)} of {pagination.total}</p>
             <div className="flex gap-2">
-              <button onClick={() => setPage(p => p - 1)} disabled={page <= 1} className="btn-secondary text-xs px-3 py-1.5">
-                <ChevronLeft size={14} />
+              <button
+                disabled={page <= 1}
+                onClick={() => setPage(p => p - 1)}
+                className="btn-secondary py-1.5 px-3 text-xs"
+              >
+                <ChevronLeft size={14} /> Previous
               </button>
-              <button onClick={() => setPage(p => p + 1)} disabled={page >= pagination.totalPages} className="btn-secondary text-xs px-3 py-1.5">
-                <ChevronRight size={14} />
+              <button
+                disabled={page >= pagination.pages}
+                onClick={() => setPage(p => p + 1)}
+                className="btn-secondary py-1.5 px-3 text-xs"
+              >
+                Next <ChevronRight size={14} />
               </button>
             </div>
           </div>

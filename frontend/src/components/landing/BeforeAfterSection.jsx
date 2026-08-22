@@ -32,44 +32,44 @@ export default function BeforeAfterSection() {
   ];
 
   return (
-    <section id="transformation" className="py-24 px-6 bg-slate-50 dark:bg-black text-slate-900 dark:text-white border-t border-slate-200 dark:border-neutral-900 transition-colors duration-200">
-      <div className="max-w-5xl mx-auto space-y-14">
+    <section id="transformation" className="py-24 px-6 bg-[#F7F7F5] text-neutral-900 border-t border-gray-200/80">
+      <div className="max-w-5xl mx-auto space-y-12">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-gray-200 text-neutral-800 text-xs font-semibold uppercase tracking-wider shadow-2xs">
             <span>The Transformation</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-950">
             Before vs. After Dayflow HRMS
           </h2>
-          <p className="text-slate-600 dark:text-neutral-400 text-sm">
+          <p className="text-gray-500 text-sm">
             See the measurable impact of replacing disjointed tools with a unified HR workspace.
           </p>
         </div>
 
-        {/* Comparison Table / Cards */}
+        {/* Comparison Cards */}
         <div className="space-y-3">
           {comparisonItems.map((item, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 md:grid-cols-12 gap-4 p-5 rounded-xl bg-white dark:bg-neutral-950 border border-slate-200 dark:border-neutral-900 hover:border-slate-300 dark:hover:border-neutral-800 transition-all items-center shadow-sm"
+              className="grid grid-cols-1 md:grid-cols-12 gap-3 p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs items-center"
             >
               {/* Category */}
               <div className="md:col-span-3">
-                <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
                   {item.metric}
                 </span>
               </div>
 
               {/* Before */}
-              <div className="md:col-span-4 flex items-start gap-2.5 text-xs text-red-700 dark:text-neutral-400 bg-red-50 dark:bg-red-950/10 p-3 rounded-lg border border-red-200 dark:border-red-900/20">
-                <X className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
+              <div className="md:col-span-4 flex items-start gap-2.5 text-xs text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-200/60">
+                <X className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                 <span>{item.before}</span>
               </div>
 
               {/* After */}
-              <div className="md:col-span-5 flex items-start gap-2.5 text-xs text-emerald-800 dark:text-neutral-100 bg-emerald-50 dark:bg-emerald-950/10 p-3 rounded-lg border border-emerald-200 dark:border-emerald-500/20">
-                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <div className="md:col-span-5 flex items-start gap-2.5 text-xs text-neutral-900 font-medium bg-emerald-50/70 p-3 rounded-xl border border-emerald-200/70">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span>{item.after}</span>
               </div>
             </div>
@@ -77,17 +77,17 @@ export default function BeforeAfterSection() {
         </div>
 
         {/* Summary Card */}
-        <div className="p-8 rounded-2xl bg-white dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800 text-center space-y-4 max-w-2xl mx-auto shadow-sm dark:shadow-xl">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+        <div className="p-8 rounded-2xl bg-white border border-gray-200/90 text-center space-y-4 max-w-2xl mx-auto shadow-sm">
+          <h3 className="text-xl font-bold text-neutral-950">
             Ready to upgrade your workforce operations?
           </h3>
-          <p className="text-xs text-slate-600 dark:text-neutral-400">
+          <p className="text-xs text-gray-500">
             Join modern organizations managing headcount, leaves, attendance, and payroll in one place.
           </p>
           <div className="pt-2 flex justify-center gap-3">
             <Link
               to="/signin"
-              className="px-6 py-2.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-black font-semibold text-xs hover:bg-slate-800 dark:hover:bg-neutral-200 transition-colors shadow-md"
+              className="px-6 py-2.5 rounded-xl bg-neutral-900 text-white font-semibold text-xs hover:bg-neutral-800 transition-colors shadow-xs active:scale-95"
             >
               Test with Demo Account
             </Link>

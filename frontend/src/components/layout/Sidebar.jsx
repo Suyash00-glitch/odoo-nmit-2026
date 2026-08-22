@@ -3,27 +3,37 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useQuery } from '@tanstack/react-query';
 import { notificationsApi } from '../../api/notifications.api.js';
-import ThemeToggle from '../common/ThemeToggle.jsx';
 import {
-  LayoutDashboard, User, Clock, CalendarDays, DollarSign,
-  Users, CheckSquare, BarChart3, LogOut, Bell, ChevronLeft, ChevronRight,
-  Zap
+  LayoutDashboard,
+  BarChart2,
+  Receipt,
+  Users,
+  FileCheck2,
+  Settings,
+  LogOut,
+  User,
+  Clock,
+  CalendarDays,
+  DollarSign,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 
 const employeeLinks = [
   { to: '/employee/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/employee/profile', icon: User, label: 'My Profile' },
-  { to: '/employee/attendance', icon: Clock, label: 'Attendance' },
+  { to: '/employee/attendance', icon: Clock, label: 'Statistics' },
+  { to: '/employee/payroll', icon: Receipt, label: 'Transaction' },
   { to: '/employee/leaves', icon: CalendarDays, label: 'Leaves' },
-  { to: '/employee/payroll', icon: DollarSign, label: 'Payroll' },
+  { to: '/employee/profile', icon: User, label: 'My Profile' },
 ];
 
 const adminLinks = [
   { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/admin/employees', icon: Users, label: 'Employees' },
-  { to: '/admin/leaves', icon: CheckSquare, label: 'Leave Approvals' },
-  { to: '/admin/payroll', icon: DollarSign, label: 'Payroll' },
-  { to: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
+  { to: '/admin/analytics', icon: BarChart2, label: 'Statistics' },
+  { to: '/admin/payroll', icon: Receipt, label: 'Transaction' },
+  { to: '/admin/employees', icon: Users, label: 'My Team' },
+  { to: '/admin/leaves', icon: FileCheck2, label: 'Sell Reports' },
 ];
 
 const Sidebar = ({ role }) => {
@@ -38,7 +48,6 @@ const Sidebar = ({ role }) => {
   });
 
   const links = role === 'ADMIN' ? adminLinks : employeeLinks;
-  const unread = notifData?.unreadCount ?? 0;
 
   const handleLogout = async () => {
     await logout();
@@ -47,100 +56,111 @@ const Sidebar = ({ role }) => {
 
   const displayName = user?.profile
     ? `${user.profile.firstName} ${user.profile.lastName}`
-    : user?.email;
+    : (user?.email?.split('@')[0] || 'Nora Watson');
+
+  const displayRole = user?.profile?.jobTitle || (user?.role === 'ADMIN' ? 'HR Director' : 'Sales Manager');
 
   return (
     <aside
-      className={`flex flex-col bg-surface-100 border-r border-slate-200 dark:border-white/5 transition-all duration-300 ${
-        collapsed ? 'w-16' : 'w-64'
-      } min-h-screen shrink-0`}
+      className={`flex flex-col bg-white border-r border-gray-100 transition-all duration-300 ${
+        collapsed ? 'w-20' : 'w-64'
+      } min-h-screen shrink-0 p-5 justify-between select-none z-30`}
     >
-      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-slate-200 dark:border-white/5 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shrink-0 shadow-md">
-            <Zap className="w-5 h-5 text-white" />
+      {/* Top Logo & Navigation */}
+      <div className="space-y-8">
+        
+        {/* Brand Logo matching reference */}
+        <div className={`flex items-center gap-3 ${collapsed ? 'justify-center' : 'px-2'}`}>
+          <div className="w-8 h-8 rounded-full bg-neutral-950 flex items-center justify-center text-[#D4FF00] shadow-sm">
+            {/* Geometric brand stripes */}
+            <div className="flex gap-1 items-center rotate-45">
+              <div className="w-1 h-3.5 bg-[#D4FF00] rounded-full" />
+              <div className="w-1 h-3.5 bg-white rounded-full" />
+            </div>
           </div>
           {!collapsed && (
-            <div>
-              <span className="font-bold text-slate-900 dark:text-white text-base leading-tight block">Dayflow</span>
-              <span className="text-[10px] text-slate-500 dark:text-white/40 uppercase tracking-widest">HRMS</span>
-            </div>
+            <span className="text-xl font-extrabold tracking-tight text-neutral-950">
+              Niond
+            </span>
           )}
         </div>
-        {!collapsed && <ThemeToggle size="sm" />}
+
+        {/* Navigation Items */}
+        <nav className="space-y-2">
+          {links.map(({ to, icon: Icon, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 ${
+                  isActive
+                    ? 'bg-[#D4FF00] text-black shadow-xs font-extrabold scale-[1.02]'
+                    : 'text-neutral-500 hover:text-neutral-950 hover:bg-gray-50'
+                } ${collapsed ? 'justify-center px-2' : ''}`
+              }
+              title={collapsed ? label : undefined}
+            >
+              <Icon size={18} className="shrink-0 stroke-[2.2]" />
+              {!collapsed && <span>{label}</span>}
+            </NavLink>
+          ))}
+
+          {/* Settings Nav item */}
+          <button
+            onClick={() => {}}
+            className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold text-neutral-500 hover:text-neutral-950 hover:bg-gray-50 transition-all ${
+              collapsed ? 'justify-center px-2' : ''
+            }`}
+          >
+            <Settings size={18} className="shrink-0 stroke-[2.2]" />
+            {!collapsed && <span>Settings</span>}
+          </button>
+        </nav>
       </div>
 
-      <nav className="flex-1 px-2 py-4 space-y-1">
-        {links.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'active' : ''} ${collapsed ? 'justify-center px-2' : ''}`
-            }
-            title={collapsed ? label : undefined}
-          >
-            <Icon className="w-4.5 h-4.5 shrink-0" size={18} />
-            {!collapsed && <span>{label}</span>}
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="p-2 border-t border-slate-200 dark:border-white/5 space-y-1">
-        {collapsed && (
-          <div className="flex justify-center py-1">
-            <ThemeToggle size="sm" />
-          </div>
-        )}
-
-        <NavLink
-          to={role === 'ADMIN' ? '/admin/dashboard' : '/employee/dashboard'}
-          className={`sidebar-link ${collapsed ? 'justify-center px-2' : ''} relative`}
-          title={collapsed ? 'Notifications' : undefined}
-          onClick={(e) => { e.preventDefault(); }}
-        >
-          <Bell size={18} className="shrink-0" />
-          {unread > 0 && (
-            <span className="absolute top-1.5 left-6 w-4 h-4 bg-red-500 rounded-full text-[9px] font-bold flex items-center justify-center text-white">
-              {unread > 9 ? '9+' : unread}
-            </span>
-          )}
-          {!collapsed && <span>Notifications</span>}
-          {!collapsed && unread > 0 && (
-            <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-              {unread}
-            </span>
-          )}
-        </NavLink>
-
+      {/* Bottom User Info & Logout */}
+      <div className="pt-6 border-t border-gray-100 space-y-4">
+        
+        {/* Collapse toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className={`sidebar-link w-full ${collapsed ? 'justify-center px-2' : ''}`}
+          className={`flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-neutral-950 transition-colors w-full ${
+            collapsed ? 'justify-center' : 'px-2'
+          }`}
         >
-          {collapsed ? <ChevronRight size={18} /> : <><ChevronLeft size={18} /><span>Collapse</span></>}
+          {collapsed ? <ChevronRight size={16} /> : <><ChevronLeft size={16} /><span>Collapse</span></>}
         </button>
 
+        {/* User Card */}
         {!collapsed && (
-          <div className="px-3 py-3 rounded-xl bg-slate-100 dark:bg-surface-300/50 mt-2 border border-slate-200 dark:border-transparent">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-primary-600/20 text-primary-700 dark:text-primary-300 font-bold text-xs flex items-center justify-center">
-                {displayName?.charAt(0).toUpperCase()}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{displayName}</p>
-                <p className="text-[11px] text-slate-500 dark:text-white/40 capitalize">{user?.role?.toLowerCase()}</p>
-              </div>
+          <div className="flex items-center gap-3 px-2 py-2">
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+              alt={displayName}
+              className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-2xs"
+            />
+            <div className="min-w-0 flex-1">
+              <h4 className="text-xs font-extrabold text-neutral-950 truncate leading-tight">
+                {displayName}
+              </h4>
+              <p className="text-[11px] text-gray-400 font-medium truncate mt-0.5">
+                {displayRole}
+              </p>
             </div>
-            <button onClick={handleLogout} className="flex items-center gap-2 text-xs text-slate-500 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 transition-colors w-full">
-              <LogOut size={13} /> Sign out
-            </button>
           </div>
         )}
-        {collapsed && (
-          <button onClick={handleLogout} className="sidebar-link w-full justify-center px-2 text-red-500 dark:text-red-400/60 hover:text-red-600 dark:hover:text-red-400" title="Sign out">
-            <LogOut size={18} />
-          </button>
-        )}
+
+        {/* Log Out Button */}
+        <button
+          onClick={handleLogout}
+          className={`flex items-center gap-2.5 px-2 py-1 text-xs font-bold text-neutral-700 hover:text-red-600 transition-colors w-full ${
+            collapsed ? 'justify-center' : ''
+          }`}
+        >
+          <LogOut size={16} className="shrink-0 stroke-[2]" />
+          {!collapsed && <span>Log Out</span>}
+        </button>
+
       </div>
     </aside>
   );
