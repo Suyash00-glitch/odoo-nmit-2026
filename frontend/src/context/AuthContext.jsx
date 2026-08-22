@@ -56,6 +56,7 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(token);
     setToken(token);
     setUser(userData);
+    return userData;
   };
 
   const updateUser = (updatedUser) => setUser(updatedUser);

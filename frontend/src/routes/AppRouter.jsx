@@ -24,10 +24,20 @@ import AdminLeaveApprovals from '../pages/admin/LeaveApprovals.jsx';
 import AdminPayroll from '../pages/admin/Payroll.jsx';
 import AdminAnalytics from '../pages/admin/Analytics.jsx';
 
+import { Loader2 } from 'lucide-react';
+
 const RoleRedirect = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-7 h-7 animate-spin text-slate-900" />
+      </div>
+    );
+  }
   if (user?.role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
-  return <Navigate to="/employee/dashboard" replace />;
+  if (user?.role === 'EMPLOYEE') return <Navigate to="/employee/dashboard" replace />;
+  return <Navigate to="/signin" replace />;
 };
 
 const AppRouter = () => {

@@ -31,9 +31,13 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email.trim(), data.password);
+      const loggedUser = await login(data.email.trim(), data.password);
       toast.success("Welcome back!");
-      navigate("/dashboard");
+      if (loggedUser?.role === 'ADMIN') {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/employee/dashboard", { replace: true });
+      }
     } catch (err) {
       if (err?.response?.data?.error?.code === "EMAIL_NOT_VERIFIED") {
         navigate("/verify-email", { state: { email: data.email.trim() } });
