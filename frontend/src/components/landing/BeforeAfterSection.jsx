@@ -1,15 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  Check,
-  X,
-  Clock,
-  FileSpreadsheet,
-  Zap,
-  TrendingUp,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import { Check, X } from "lucide-react";
 
 export default function BeforeAfterSection() {
   const comparisonItems = [
@@ -41,17 +32,17 @@ export default function BeforeAfterSection() {
   ];
 
   return (
-    <section id="transformation" className="py-24 px-6 bg-black text-white border-t border-neutral-900">
+    <section id="transformation" className="py-24 px-6 bg-slate-50 dark:bg-black text-slate-900 dark:text-white border-t border-slate-200 dark:border-neutral-900 transition-colors duration-200">
       <div className="max-w-5xl mx-auto space-y-14">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-semibold uppercase tracking-wider">
             <span>The Transformation</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
             Before vs. After Dayflow HRMS
           </h2>
-          <p className="text-neutral-400 text-sm">
+          <p className="text-slate-600 dark:text-neutral-400 text-sm">
             See the measurable impact of replacing disjointed tools with a unified HR workspace.
           </p>
         </div>
@@ -61,24 +52,24 @@ export default function BeforeAfterSection() {
           {comparisonItems.map((item, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 md:grid-cols-12 gap-4 p-5 rounded-xl bg-neutral-950 border border-neutral-900 hover:border-neutral-800 transition-all items-center"
+              className="grid grid-cols-1 md:grid-cols-12 gap-4 p-5 rounded-xl bg-white dark:bg-neutral-950 border border-slate-200 dark:border-neutral-900 hover:border-slate-300 dark:hover:border-neutral-800 transition-all items-center shadow-sm"
             >
               {/* Category */}
               <div className="md:col-span-3">
-                <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider">
+                <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider">
                   {item.metric}
                 </span>
               </div>
 
               {/* Before */}
-              <div className="md:col-span-4 flex items-start gap-2.5 text-xs text-neutral-400 bg-red-950/10 p-3 rounded-lg border border-red-900/20">
-                <X className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+              <div className="md:col-span-4 flex items-start gap-2.5 text-xs text-red-700 dark:text-neutral-400 bg-red-50 dark:bg-red-950/10 p-3 rounded-lg border border-red-200 dark:border-red-900/20">
+                <X className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
                 <span>{item.before}</span>
               </div>
 
               {/* After */}
-              <div className="md:col-span-5 flex items-start gap-2.5 text-xs text-neutral-100 bg-emerald-950/10 p-3 rounded-lg border border-emerald-500/20">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="md:col-span-5 flex items-start gap-2.5 text-xs text-emerald-800 dark:text-neutral-100 bg-emerald-50 dark:bg-emerald-950/10 p-3 rounded-lg border border-emerald-200 dark:border-emerald-500/20">
+                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <span>{item.after}</span>
               </div>
             </div>
@@ -86,17 +77,17 @@ export default function BeforeAfterSection() {
         </div>
 
         {/* Summary Card */}
-        <div className="p-8 rounded-2xl bg-neutral-950 border border-neutral-800 text-center space-y-4 max-w-2xl mx-auto">
-          <h3 className="text-xl font-bold text-white">
+        <div className="p-8 rounded-2xl bg-white dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800 text-center space-y-4 max-w-2xl mx-auto shadow-sm dark:shadow-xl">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
             Ready to upgrade your workforce operations?
           </h3>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-slate-600 dark:text-neutral-400">
             Join modern organizations managing headcount, leaves, attendance, and payroll in one place.
           </p>
           <div className="pt-2 flex justify-center gap-3">
             <Link
               to="/signin"
-              className="px-6 py-2.5 rounded-lg bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-colors"
+              className="px-6 py-2.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-black font-semibold text-xs hover:bg-slate-800 dark:hover:bg-neutral-200 transition-colors shadow-md"
             >
               Test with Demo Account
             </Link>

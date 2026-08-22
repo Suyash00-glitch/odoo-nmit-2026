@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -11,6 +12,11 @@ export default {
         display: ['Fraunces', 'serif'],
       },
       colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
           50:  '#eef2ff',
           100: '#e0e7ff',
@@ -25,13 +31,12 @@ export default {
           950: '#1e1b4b',
         },
         surface: {
-          DEFAULT: '#0f0f1a',
-          100: '#161625',
-          200: '#1e1e30',
-          300: '#252538',
-          400: '#2e2e45',
+          DEFAULT: 'var(--surface-bg)',
+          100: 'var(--surface-100)',
+          200: 'var(--surface-200)',
+          300: 'var(--surface-300)',
+          400: 'var(--surface-400)',
         },
-        slate: "#2d3436",
         graphite: "#636e72",
         sky: "#74b9ff",
         "sky-light": "#a8d4ff",

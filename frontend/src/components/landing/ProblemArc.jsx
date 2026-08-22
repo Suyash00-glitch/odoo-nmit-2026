@@ -85,31 +85,31 @@ export default function ProblemArc() {
   const current = problems[activeTab];
 
   return (
-    <section id="workflow" className="py-24 px-6 bg-black text-white border-t border-neutral-900">
+    <section id="workflow" className="py-24 px-6 bg-white dark:bg-black text-slate-900 dark:text-white border-t border-slate-200 dark:border-neutral-900 transition-colors duration-200">
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-semibold uppercase tracking-wider">
             <span>Workforce Challenges vs Dayflow Modern Solution</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
             Built to replace broken HR spreadsheets.
           </h2>
-          <p className="text-neutral-400 text-sm sm:text-base">
+          <p className="text-slate-600 dark:text-neutral-400 text-sm sm:text-base">
             Every HR process is streamlined into an intuitive, high-speed dashboard designed for both employees and HR leaders.
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto p-1.5 rounded-xl bg-neutral-950 border border-neutral-800">
+        <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto p-1.5 rounded-xl bg-slate-100 dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800">
           {problems.map((item, idx) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(idx)}
               className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-lg text-xs font-semibold transition-all text-center ${
                 activeTab === idx
-                  ? "bg-white text-black shadow-md"
-                  : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+                  ? "bg-white dark:bg-white text-slate-900 dark:text-black shadow-md"
+                  : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-neutral-900"
               }`}
             >
               {item.id === "identity" && "01. Onboarding & IDs"}
@@ -123,25 +123,25 @@ export default function ProblemArc() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           
           {/* Left: The Old Broken Way */}
-          <div className="p-8 rounded-2xl bg-neutral-950/80 border border-red-900/30 flex flex-col justify-between space-y-6">
+          <div className="p-8 rounded-2xl bg-red-50/50 dark:bg-neutral-950/80 border border-red-200 dark:border-red-900/30 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-red-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider">
                 <XCircle className="w-4 h-4" />
                 <span>{current.problemTag}</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-snug">
                 {current.problemTitle}
               </h3>
-              <p className="text-sm text-neutral-400 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-neutral-400 leading-relaxed">
                 {current.problemDesc}
               </p>
             </div>
 
-            <div className="space-y-3 pt-4 border-t border-neutral-900">
-              <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Common Pain Points:</p>
+            <div className="space-y-3 pt-4 border-t border-red-100 dark:border-neutral-900">
+              <p className="text-xs font-semibold text-slate-700 dark:text-neutral-400 uppercase tracking-wider">Common Pain Points:</p>
               {current.badPoints.map((point, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-xs text-neutral-300">
-                  <XCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <div key={i} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-neutral-300">
+                  <XCircle className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
                   <span>{point}</span>
                 </div>
               ))}
@@ -149,27 +149,27 @@ export default function ProblemArc() {
           </div>
 
           {/* Right: The Dayflow Solution */}
-          <div className="p-8 rounded-2xl bg-gradient-to-br from-neutral-950 via-[#0f1422] to-neutral-950 border border-purple-500/30 flex flex-col justify-between space-y-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-50/50 via-white to-indigo-50/50 dark:from-neutral-950 dark:via-[#0f1422] dark:to-neutral-950 border border-purple-300 dark:border-purple-500/30 flex flex-col justify-between space-y-6 shadow-xl dark:shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="space-y-4 relative z-10">
-              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>{current.solutionTag}</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-snug">
                 {current.solutionTitle}
               </h3>
-              <p className="text-sm text-neutral-300 leading-relaxed">
+              <p className="text-sm text-slate-700 dark:text-neutral-300 leading-relaxed">
                 {current.solutionDesc}
               </p>
             </div>
 
-            <div className="space-y-3 pt-4 border-t border-white/10 relative z-10">
-              <p className="text-xs font-semibold text-purple-300 uppercase tracking-wider">Dayflow Advantage:</p>
+            <div className="space-y-3 pt-4 border-t border-purple-200/60 dark:border-white/10 relative z-10">
+              <p className="text-xs font-semibold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Dayflow Advantage:</p>
               {current.goodPoints.map((point, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-xs text-white">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <div key={i} className="flex items-start gap-2.5 text-xs text-slate-800 dark:text-white">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                   <span>{point}</span>
                 </div>
               ))}
@@ -182,7 +182,7 @@ export default function ProblemArc() {
         <div className="text-center pt-4">
           <Link
             to="/signup"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
           >
             <span>Experience the workflow in action</span>
             <ArrowRight className="w-3.5 h-3.5" />

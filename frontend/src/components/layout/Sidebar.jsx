@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useQuery } from '@tanstack/react-query';
 import { notificationsApi } from '../../api/notifications.api.js';
+import ThemeToggle from '../common/ThemeToggle.jsx';
 import {
   LayoutDashboard, User, Clock, CalendarDays, DollarSign,
   Users, CheckSquare, BarChart3, LogOut, Bell, ChevronLeft, ChevronRight,
@@ -50,20 +51,23 @@ const Sidebar = ({ role }) => {
 
   return (
     <aside
-      className={`flex flex-col bg-surface-100 border-r border-white/5 transition-all duration-300 ${
+      className={`flex flex-col bg-surface-100 border-r border-slate-200 dark:border-white/5 transition-all duration-300 ${
         collapsed ? 'w-16' : 'w-64'
       } min-h-screen shrink-0`}
     >
-      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-white/5 ${collapsed ? 'justify-center' : ''}`}>
-        <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shrink-0">
-          <Zap className="w-5 h-5 text-white" />
-        </div>
-        {!collapsed && (
-          <div>
-            <span className="font-bold text-white text-base leading-tight block">Dayflow</span>
-            <span className="text-[10px] text-white/40 uppercase tracking-widest">HRMS</span>
+      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-slate-200 dark:border-white/5 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shrink-0 shadow-md">
+            <Zap className="w-5 h-5 text-white" />
           </div>
-        )}
+          {!collapsed && (
+            <div>
+              <span className="font-bold text-slate-900 dark:text-white text-base leading-tight block">Dayflow</span>
+              <span className="text-[10px] text-slate-500 dark:text-white/40 uppercase tracking-widest">HRMS</span>
+            </div>
+          )}
+        </div>
+        {!collapsed && <ThemeToggle size="sm" />}
       </div>
 
       <nav className="flex-1 px-2 py-4 space-y-1">
@@ -82,7 +86,13 @@ const Sidebar = ({ role }) => {
         ))}
       </nav>
 
-      <div className="p-2 border-t border-white/5 space-y-1">
+      <div className="p-2 border-t border-slate-200 dark:border-white/5 space-y-1">
+        {collapsed && (
+          <div className="flex justify-center py-1">
+            <ThemeToggle size="sm" />
+          </div>
+        )}
+
         <NavLink
           to={role === 'ADMIN' ? '/admin/dashboard' : '/employee/dashboard'}
           className={`sidebar-link ${collapsed ? 'justify-center px-2' : ''} relative`}
@@ -91,7 +101,7 @@ const Sidebar = ({ role }) => {
         >
           <Bell size={18} className="shrink-0" />
           {unread > 0 && (
-            <span className="absolute top-1.5 left-6 w-4 h-4 bg-red-500 rounded-full text-[9px] font-bold flex items-center justify-center">
+            <span className="absolute top-1.5 left-6 w-4 h-4 bg-red-500 rounded-full text-[9px] font-bold flex items-center justify-center text-white">
               {unread > 9 ? '9+' : unread}
             </span>
           )}
@@ -111,23 +121,23 @@ const Sidebar = ({ role }) => {
         </button>
 
         {!collapsed && (
-          <div className="px-3 py-3 rounded-xl bg-surface-300/50 mt-2">
+          <div className="px-3 py-3 rounded-xl bg-slate-100 dark:bg-surface-300/50 mt-2 border border-slate-200 dark:border-transparent">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-primary-600/40 flex items-center justify-center text-primary-300 font-bold text-xs">
+              <div className="w-8 h-8 rounded-xl bg-primary-600/20 text-primary-700 dark:text-primary-300 font-bold text-xs flex items-center justify-center">
                 {displayName?.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-white truncate">{displayName}</p>
-                <p className="text-[11px] text-white/40 capitalize">{user?.role?.toLowerCase()}</p>
+                <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{displayName}</p>
+                <p className="text-[11px] text-slate-500 dark:text-white/40 capitalize">{user?.role?.toLowerCase()}</p>
               </div>
             </div>
-            <button onClick={handleLogout} className="flex items-center gap-2 text-xs text-white/40 hover:text-red-400 transition-colors w-full">
+            <button onClick={handleLogout} className="flex items-center gap-2 text-xs text-slate-500 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 transition-colors w-full">
               <LogOut size={13} /> Sign out
             </button>
           </div>
         )}
         {collapsed && (
-          <button onClick={handleLogout} className="sidebar-link w-full justify-center px-2 text-red-400/60 hover:text-red-400" title="Sign out">
+          <button onClick={handleLogout} className="sidebar-link w-full justify-center px-2 text-red-500 dark:text-red-400/60 hover:text-red-600 dark:hover:text-red-400" title="Sign out">
             <LogOut size={18} />
           </button>
         )}
