@@ -7,7 +7,7 @@ import * as auth from '../controllers/auth.controller.js';
 const router = Router();
 
 const signupSchema = z.object({
-  employeeId: z.string().optional(),
+  employeeId: z.string().min(1, 'Employee ID is required'),
   name: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),

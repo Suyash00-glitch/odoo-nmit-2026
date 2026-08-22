@@ -60,12 +60,21 @@ export const signup = asyncHandler(async (req, res) => {
   firstName = (firstName || 'User').trim();
   lastName = (lastName || '').trim();
 
-  // Check if email is already in use
+  // An HR-created employee claims their assigned ID here, then completes
+  // the same email-verification flow as every other account.
   const existingUser = await prisma.user.findUnique({
     where: { email: normalizedEmail },
   });
   if (existingUser) {
-    throw new AppError('Email already in use', 409, 'EMAIL_TAKEN');
+    if (existingUser.employeeId !== employeeId?.trim() || existingUser.isEmailVerified) {
+      throw new AppError('Email already in use', 409, 'EMAIL_TAKEN');
+    }
+    const claimed = await prisma.user.update({
+      where: { id: existingUser.id },
+      data: { passwordHash: await hashPassword(password), role: 'EMPLOYEE' },
+    });
+    await sendVerificationEmail(claimed);
+    return sendSuccess(res, { user: sanitizeUser(claimed) }, 'Account claimed. Check your inbox to verify your email address.');
   }
 
   // Generate unique employee ID if not provided or ensure uniqueness
@@ -99,7 +108,8 @@ export const signup = asyncHandler(async (req, res) => {
         employeeId,
         email: normalizedEmail,
         passwordHash,
-        // Public registration never grants administrative access.
+        // HR privileges are provisioned by an existing administrator, never by
+        // an unauthenticated public registration request.
         role: 'EMPLOYEE',
         isEmailVerified: false,
       },

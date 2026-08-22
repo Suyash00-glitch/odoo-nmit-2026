@@ -36,8 +36,29 @@
 
 /* SAASI Brand Background Gradients */
 .bg-hero-gradient {
-  background: radial-gradient(130% 90% at 50% 0%, #764DF6 0%, #683EE8 32%, #8561F6 65%, #BFABFF 88%, #F2F4FF 100%) !important;
+  background:
+    radial-gradient(50rem 34rem at 95% -10%, rgba(216, 112, 71, .35), transparent 62%),
+    radial-gradient(44rem 28rem at -10% 95%, rgba(62, 124, 124, .30), transparent 65%),
+    #1B2C33 !important;
 }
+
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .58;
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,.38) .8px, transparent 1px),
+    radial-gradient(rgba(0,0,0,.36) .55px, transparent .8px);
+  background-size: 48px 48px, 48px 48px, 7px 7px, 13px 13px;
+  mix-blend-mode: soft-light;
+}
+
+.hero-orbit { position: absolute; border: 1px solid rgba(250, 190, 151, .28); border-radius: 999px; pointer-events: none; }
+.hero-orbit-one { width: 44rem; height: 44rem; right: -15rem; top: -25rem; transform: rotate(-18deg); }
+.hero-orbit-two { width: 33rem; height: 33rem; left: -22rem; bottom: 2rem; border-color: rgba(171, 219, 211, .22); transform: rotate(28deg); }
 
 .bg-purple-section {
   background: linear-gradient(180deg, #5B32E5 0%, #6B42EF 50%, #7950F8 100%) !important;

@@ -37,35 +37,30 @@ export default function HeroSection() {
     <section
       className="relative pt-36 pb-28 overflow-hidden bg-hero-gradient text-white"
       style={{
-        background: "radial-gradient(130% 90% at 50% 0%, #764DF6 0%, #683EE8 32%, #8561F6 65%, #BFABFF 88%, #F2F4FF 100%)",
+        background: "radial-gradient(85% 100% at 88% -8%, #5E7F91 0%, transparent 58%), radial-gradient(60% 80% at -8% 82%, #B85D45 0%, transparent 54%), linear-gradient(118deg, #15232D 0%, #1D3039 52%, #27424A 100%)",
       }}
     >
+      <div className="hero-grain" aria-hidden="true" />
+      <div className="hero-orbit hero-orbit-one" aria-hidden="true" />
+      <div className="hero-orbit hero-orbit-two" aria-hidden="true" />
       
       {/* Background Soft Cloud/Star Glows */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-10 w-96 h-96 bg-[#D4FF00]/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-10 w-72 h-72 bg-[#E9A27E]/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-10 w-96 h-96 bg-[#B8D4D5]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 text-center relative z-10 space-y-8">
+        <div className="hidden lg:flex absolute -left-8 top-10 flex-col items-start gap-2 text-left">
+          <span className="text-[10px] tracking-[.24em] font-bold text-white/55 uppercase">Dayflow / 01</span>
+          <span className="w-20 h-px bg-[#F5B38B]/70" />
+          <span className="text-[10px] tracking-wider text-white/40 uppercase">People operations</span>
+        </div>
         
         {/* 1. Customer Social Proof Pill */}
-        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-pill shadow-lg shadow-black/5">
-          {/* Overlapping Avatar circles */}
-          <div className="flex -space-x-2">
-            {avatars.map((url, i) => (
-              <img
-                key={i}
-                src={url}
-                alt="HR Team"
-                className="w-7 h-7 rounded-full object-cover border-2 border-white shadow-xs"
-              />
-            ))}
-          </div>
-          {/* Supporting text */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-bold text-white tracking-wide">Built for HR teams and employees</span>
-          </div>
+        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-pill shadow-lg shadow-black/5">
+          <span className="flex w-6 h-6 rounded-full border border-[#F5B38B]/70 items-center justify-center text-[9px] font-black text-[#F5B38B]">01</span>
+          <span className="text-xs font-bold text-white tracking-wide">The operating system for people work</span>
         </div>
 
         {/* 2. Main Headline with Floating Badges */}
@@ -107,21 +102,21 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <p className="text-xs font-bold tracking-widest text-[#D4FF00] uppercase">
+          <p className="text-xs font-bold tracking-widest text-[#F5B38B] uppercase">
             HR MANAGEMENT • ATTENDANCE • PAYROLL
           </p>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
-            Everything your{" "}
+            Work should feel{" "}
             <span className="inline-block px-4 py-0.5 rounded-3xl border border-white/30 bg-white/10 backdrop-blur-md font-extrabold">
-              people need.
+              less scattered.
             </span>{" "}
             <br />
-            One place for HR.
+            One clear place for people.
           </h1>
 
           <p className="text-base sm:text-lg text-white/90 max-w-2xl mx-auto font-medium">
-            Dayflow brings employee management, attendance, leave requests, approvals, and salary information into one simple, secure HR workspace.
+            A calm, connected workspace for employee records, attendance, leave, approvals, and payroll.
           </p>
         </div>
 
@@ -140,7 +135,7 @@ export default function HeroSection() {
               type="submit"
               className="btn-lime px-6 py-3.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-2 shadow-lime"
             >
-              <span>Start Free</span>
+              <span>Explore Dayflow</span>
               <div className="w-4 h-4 rounded-full bg-black/10 flex items-center justify-center">
                 <ArrowUpRight className="w-3 h-3 text-black stroke-[2.5]" />
               </div>
@@ -159,8 +154,8 @@ export default function HeroSection() {
               <div className="flex items-center gap-8">
                 {/* Brand in Mockup */}
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#6B42EF] flex items-center justify-center">
-                    <div className="w-3 h-3 bg-[#D4FF00] rounded-xs rotate-45" />
+                  <div className="w-7 h-7 rounded-lg bg-[#18313A] flex items-center justify-center">
+                    <div className="w-3 h-3 bg-[#E98E64] rounded-xs rotate-45" />
                   </div>
                   <span className="font-extrabold text-sm tracking-wider text-neutral-900">DAYFLOW</span>
                 </div>
@@ -359,6 +354,10 @@ export default function HeroSection() {
             </div>
           </div>
 
+        </div>
+
+        <div className="flex items-center justify-center gap-5 text-[10px] font-bold tracking-[.16em] uppercase text-white/55 pt-2">
+          <span>Built for the workday</span><span className="w-1 h-1 rounded-full bg-[#F5B38B]" /><span>Private by design</span><span className="w-1 h-1 rounded-full bg-[#F5B38B]" /><span>Always in sync</span>
         </div>
 
       </div>

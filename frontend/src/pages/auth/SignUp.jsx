@@ -11,6 +11,7 @@ import { Loader2 } from "lucide-react";
 
 const schema = z.object({
   name: z.string().min(1, "Full name is required"),
+  employeeId: z.string().min(1, "Employee ID is required"),
   email: z.string().email("Valid email is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
@@ -27,6 +28,7 @@ const SignUp = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
+      employeeId: "",
       email: "",
       password: "",
     },
@@ -46,6 +48,7 @@ const SignUp = () => {
 
       await authApi.signup({
         name: data.name.trim(),
+        employeeId: data.employeeId.trim(),
         firstName,
         lastName,
         email: data.email.trim(),
@@ -80,6 +83,8 @@ const SignUp = () => {
           {...register("name")}
         />
 
+        <CustomPillInput label="Employee ID" type="text" placeholder="EMP-2026-ABC123" autoComplete="username" error={errors.employeeId?.message} {...register("employeeId")} />
+
         {/* Email Pill Input */}
         <CustomPillInput
           label="Email"
@@ -89,6 +94,7 @@ const SignUp = () => {
           error={errors.email?.message}
           {...register("email")}
         />
+
 
         {/* Password Pill Input */}
         <div>
