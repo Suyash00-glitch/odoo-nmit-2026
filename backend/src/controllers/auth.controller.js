@@ -1,7 +1,5 @@
 import crypto from 'crypto';
 import { prisma } from '../config/db.js';
-import { sendMail } from '../config/mailer.js';
-import { env } from '../config/env.js';
 import {
   AppError,
   asyncHandler,
@@ -14,36 +12,96 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from '../utils/helpers.js';
+import { sendMail } from '../config/mailer.js';
+import { env } from '../config/env.js';
+
+const VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
+const digestVerificationToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
+
+const sendVerificationEmail = async (user) => {
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiresAt = new Date(Date.now() + VERIFICATION_TTL_MS);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { emailVerificationToken: digestVerificationToken(token), emailVerificationExpiresAt: expiresAt },
+  });
+
+  const verificationUrl = `${env.FRONTEND_URL}/verify-email?token=${token}`;
+  await sendMail({
+    to: user.email,
+    subject: 'Verify your Dayflow account',
+    text: `Welcome to Dayflow. Verify your email within 24 hours: ${verificationUrl}`,
+    html: `<p>Welcome to <strong>Dayflow</strong>.</p><p>Verify your email to activate your workforce account:</p><p><a href="${verificationUrl}">Verify email address</a></p><p>This link expires in 24 hours.</p>`,
+  });
+};
 
 // Helper to strip sensitive fields
 const sanitizeUser = (user) => {
-  const { passwordHash, refreshToken, emailVerificationToken, ...safe } = user;
+  const { passwordHash, refreshToken, emailVerificationToken, emailVerificationExpiresAt, ...safe } = user;
   return safe;
 };
 
 // 1. Sign Up
 export const signup = asyncHandler(async (req, res) => {
-  const { employeeId, email, password, role = 'EMPLOYEE', firstName, lastName } = req.body;
+  let { employeeId, email, password, firstName, lastName, name } = req.body;
 
-  const existing = await prisma.user.findFirst({
-    where: { OR: [{ email }, { employeeId }] },
+  if (!email || !password) {
+    throw new AppError('Email and password are required', 400, 'MISSING_FIELDS');
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // Parse name if firstName / lastName not provided
+  if (!firstName && name) {
+    const parts = name.trim().split(/\s+/);
+    firstName = parts[0] || 'User';
+    lastName = parts.slice(1).join(' ') || '';
+  }
+  firstName = (firstName || 'User').trim();
+  lastName = (lastName || '').trim();
+
+  // Check if email is already in use
+  const existingUser = await prisma.user.findUnique({
+    where: { email: normalizedEmail },
   });
-  if (existing) {
-    if (existing.email === email) throw new AppError('Email already in use', 409, 'EMAIL_TAKEN');
-    throw new AppError('Employee ID already in use', 409, 'EMPLOYEE_ID_TAKEN');
+  if (existingUser) {
+    throw new AppError('Email already in use', 409, 'EMAIL_TAKEN');
+  }
+
+  // Generate unique employee ID if not provided or ensure uniqueness
+  if (!employeeId || !employeeId.trim()) {
+    let unique = false;
+    while (!unique) {
+      const code = crypto.randomBytes(3).toString('hex').toUpperCase();
+      const candidateId = `EMP-${new Date().getFullYear()}-${code}`;
+      const exists = await prisma.user.findUnique({ where: { employeeId: candidateId } });
+      if (!exists) {
+        employeeId = candidateId;
+        unique = true;
+      }
+    }
+  } else {
+    employeeId = employeeId.trim();
+    const existingEmpId = await prisma.user.findUnique({
+      where: { employeeId },
+    });
+    if (existingEmpId) {
+      const code = crypto.randomBytes(2).toString('hex').toUpperCase();
+      employeeId = `${employeeId}-${code}`;
+    }
   }
 
   const passwordHash = await hashPassword(password);
-  const verificationToken = crypto.randomBytes(32).toString('hex');
 
   const user = await prisma.$transaction(async (tx) => {
     const newUser = await tx.user.create({
       data: {
         employeeId,
-        email,
+        email: normalizedEmail,
         passwordHash,
-        role,
-        emailVerificationToken: verificationToken,
+        // Public registration never grants administrative access.
+        role: 'EMPLOYEE',
+        isEmailVerified: false,
       },
     });
 
@@ -58,55 +116,66 @@ export const signup = asyncHandler(async (req, res) => {
     return newUser;
   });
 
-  try {
-    const verifyUrl = `${env.FRONTEND_URL}/verify-email?token=${verificationToken}&email=${encodeURIComponent(email)}`;
-    await sendMail({
-      to: email,
-      subject: 'Verify your Dayflow account',
-      html: `
-        <h2>Welcome to Dayflow HRMS!</h2>
-        <p>Hi ${firstName}, please verify your email to activate your account.</p>
-        <a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:#6366f1;color:white;border-radius:8px;text-decoration:none;">Verify Email</a>
-      `,
-    });
-  } catch (err) {
-    console.error('[Auth] Email send failed (non-fatal):', err);
-  }
-
-  sendSuccess(res, { user: sanitizeUser(user) }, 'Account created. Please verify your email.', 201);
+  await sendVerificationEmail(user);
+  sendSuccess(res, { user: sanitizeUser(user) }, 'Account created. Check your inbox to verify your email address.', 201);
 });
 
-// 2. Verify Email
 export const verifyEmail = asyncHandler(async (req, res) => {
-  const { token, email } = req.body;
-  const user = await prisma.user.findUnique({ where: { email } });
-
-  if (!user || user.emailVerificationToken !== token) {
-    throw new AppError('Invalid or expired verification token', 400, 'INVALID_TOKEN');
-  }
-  if (user.isEmailVerified) {
-    throw new AppError('Email already verified', 400, 'ALREADY_VERIFIED');
-  }
+  const tokenHash = digestVerificationToken(req.body.token);
+  const user = await prisma.user.findFirst({
+    where: { emailVerificationToken: tokenHash, emailVerificationExpiresAt: { gt: new Date() } },
+  });
+  if (!user) throw new AppError('This verification link is invalid or has expired. Request a new one.', 400, 'INVALID_VERIFICATION_TOKEN');
 
   await prisma.user.update({
     where: { id: user.id },
-    data: { isEmailVerified: true, emailVerificationToken: null },
+    data: { isEmailVerified: true, emailVerificationToken: null, emailVerificationExpiresAt: null },
   });
-
-  sendSuccess(res, { message: 'Email verified successfully' });
+  sendSuccess(res, null, 'Email verified. You can now sign in.');
 });
 
-// 3. Login
+// Completes an HR-issued invitation. The token is the only credential that can
+// set the initial password, so employee records cannot be claimed by others.
+export const activateAccount = asyncHandler(async (req, res) => {
+  const tokenHash = digestVerificationToken(req.body.token);
+  const user = await prisma.user.findFirst({
+    where: { emailVerificationToken: tokenHash, emailVerificationExpiresAt: { gt: new Date() }, isEmailVerified: false },
+  });
+  if (!user) throw new AppError('This activation link is invalid or has expired. Ask HR to resend your invitation.', 400, 'INVALID_ACTIVATION_TOKEN');
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordHash: await hashPassword(req.body.password),
+      isEmailVerified: true,
+      emailVerificationToken: null,
+      emailVerificationExpiresAt: null,
+    },
+  });
+  sendSuccess(res, { employeeId: user.employeeId }, 'Account activated. You can now sign in.');
+});
+
+export const resendVerificationEmail = asyncHandler(async (req, res) => {
+  const email = req.body.email.trim().toLowerCase();
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (user && !user.isEmailVerified) await sendVerificationEmail(user);
+  sendSuccess(res, null, 'If an unverified account exists for this address, a new verification email has been sent.');
+});
+
+// 2. Login
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail = email ? email.trim().toLowerCase() : '';
 
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { email: normalizedEmail },
     include: { profile: true },
   });
 
   if (!user || !(await comparePassword(password, user.passwordHash))) {
     throw new AppError('Invalid email or password', 401, 'INVALID_CREDENTIALS');
+  }
+  if (!user.isEmailVerified) {
+    throw new AppError('Verify your email address before signing in.', 403, 'EMAIL_NOT_VERIFIED');
   }
 
   const accessToken = generateAccessToken({ id: user.id, role: user.role });
@@ -142,7 +211,7 @@ export const login = asyncHandler(async (req, res) => {
   );
 });
 
-// 4. Refresh Token
+// 3. Refresh Token
 export const refresh = asyncHandler(async (req, res) => {
   const incomingToken = req.cookies?.refreshToken || req.body?.refreshToken;
   if (!incomingToken) {
@@ -180,7 +249,7 @@ export const refresh = asyncHandler(async (req, res) => {
   sendSuccess(res, { accessToken }, 'Token refreshed');
 });
 
-// 5. Logout
+// 4. Logout
 export const logout = asyncHandler(async (req, res) => {
   if (req.user?.id) {
     await prisma.user.update({

@@ -13,7 +13,13 @@ export default function IntegrationsSection() {
   ];
 
   return (
-    <section id="integrations" className="py-32 px-6 bg-purple-section text-white relative overflow-hidden">
+    <section
+      id="integrations"
+      className="py-32 px-6 bg-purple-section text-white relative overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, #5B32E5 0%, #6B42EF 50%, #7950F8 100%)",
+      }}
+    >
       
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-white/15 rounded-full blur-[140px]" />

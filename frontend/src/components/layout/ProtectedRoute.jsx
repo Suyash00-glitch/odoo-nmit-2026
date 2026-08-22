@@ -8,12 +8,12 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 bg-primary-600/20 rounded-2xl flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-primary-400 animate-spin" />
+          <div className="w-14 h-14 bg-slate-900 text-[#D4FF00] rounded-2xl flex items-center justify-center shadow-xs">
+            <Loader2 className="w-7 h-7 animate-spin" />
           </div>
-          <p className="text-white/50 text-sm">Loading Dayflow...</p>
+          <p className="text-slate-500 text-xs font-bold tracking-wide">Loading Dayflow...</p>
         </div>
       </div>
     );
@@ -23,11 +23,11 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="card text-center max-w-md">
-          <p className="text-4xl mb-4">🚫</p>
-          <h1 className="text-xl font-bold text-white mb-2">Access Denied</h1>
-          <p className="text-white/50">You don't have permission to view this page.</p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="card text-center max-w-md w-full shadow-lg border border-slate-200">
+          <p className="text-4xl mb-3">🚫</p>
+          <h1 className="text-lg font-black text-slate-950 mb-1.5">Access Denied</h1>
+          <p className="text-xs text-slate-500 font-medium">You don't have permission to view this portal.</p>
         </div>
       </div>
     );

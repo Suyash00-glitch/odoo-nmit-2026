@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { authApi } from "../../api/auth.api.js";
-import { generateLoginId, calculatePasswordStrength } from "../../utils/idGenerator.js";
+import { calculatePasswordStrength } from "../../utils/idGenerator.js";
 import { AuthUI, CustomPillInput } from "@/components/ui/auth-ui";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
@@ -12,8 +12,7 @@ import { Loader2 } from "lucide-react";
 const schema = z.object({
   name: z.string().min(1, "Full name is required"),
   email: z.string().email("Valid email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  role: z.enum(["EMPLOYEE", "ADMIN"]).default("EMPLOYEE"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const SignUp = () => {
@@ -30,17 +29,10 @@ const SignUp = () => {
       name: "",
       email: "",
       password: "",
-      role: "EMPLOYEE",
     },
   });
 
-  const fullName = watch("name") || "";
   const password = watch("password") || "";
-
-  // Dynamic Login ID generation
-  const idBreakdown = useMemo(() => {
-    return generateLoginId("Dayflow Corp", fullName || "John Doe", 2026, 1);
-  }, [fullName]);
 
   const pwdStrength = useMemo(() => {
     return calculatePasswordStrength(password);
@@ -50,18 +42,17 @@ const SignUp = () => {
     try {
       const parts = data.name.trim().split(/\s+/);
       const firstName = parts[0] || "User";
-      const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "Member";
+      const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "";
 
       await authApi.signup({
+        name: data.name.trim(),
         firstName,
         lastName,
-        email: data.email,
-        employeeId: idBreakdown.fullId,
+        email: data.email.trim(),
         password: data.password,
-        role: data.role,
       });
-      toast.success("Account created! Please sign in.");
-      navigate("/signin");
+      toast.success("Account created. Check your inbox to verify your email.");
+      navigate("/verify-email", { state: { email: data.email.trim() } });
     } catch (err) {
       const msg =
         err?.response?.data?.error?.message ||
@@ -75,7 +66,7 @@ const SignUp = () => {
     <AuthUI
       isSignIn={false}
       title="Create New Account"
-      subtitle="Sign up and get a 30-day free trial"
+      subtitle="Sign up for your Dayflow workforce account"
     >
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="on" className="space-y-3.5" id="signup-form">
         
@@ -83,7 +74,7 @@ const SignUp = () => {
         <CustomPillInput
           label="Full Name"
           type="text"
-          placeholder="Habibur Rahman"
+          placeholder="Jane Doe"
           autoComplete="name"
           error={errors.name?.message}
           {...register("name")}
@@ -93,7 +84,7 @@ const SignUp = () => {
         <CustomPillInput
           label="Email"
           type="email"
-          placeholder="mdhabiburrhoman111@gmail.com"
+          placeholder="name@company.com"
           autoComplete="email"
           error={errors.email?.message}
           {...register("email")}
@@ -122,17 +113,11 @@ const SignUp = () => {
           )}
         </div>
 
-        {/* Dynamic Assigned System ID Badge */}
-        <div className="flex items-center justify-between px-4 py-2 rounded-full bg-white/80 border border-gray-200/80 text-xs shadow-2xs">
-          <span className="text-gray-500 font-medium">Assigned Login ID:</span>
-          <span className="font-mono font-black text-neutral-950">{idBreakdown.fullId}</span>
-        </div>
-
         {/* Lime Pill Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-4 rounded-full bg-[#D4FF00] hover:bg-[#C3EE00] text-black font-black text-sm shadow-lime transition-all active:scale-98 flex items-center justify-center gap-2 mt-2"
+          className="w-full py-4 rounded-full bg-[#D4FF00] hover:bg-[#C3EE00] text-black font-black text-sm shadow-lime transition-all active:scale-98 flex items-center justify-center gap-2 mt-4"
         >
           {isSubmitting ? (
             <>
@@ -140,27 +125,9 @@ const SignUp = () => {
               <span>Creating account...</span>
             </>
           ) : (
-            <span>Submit</span>
+            <span>Create Account</span>
           )}
         </button>
-
-        {/* Social Apple & Google Buttons */}
-        <div className="grid grid-cols-2 gap-3 pt-1">
-          <button
-            type="button"
-            className="py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 flex items-center justify-center gap-2 text-xs font-bold text-neutral-900 shadow-2xs transition-colors"
-          >
-            <span className="text-sm"></span>
-            <span>Apple</span>
-          </button>
-          <button
-            type="button"
-            className="py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 flex items-center justify-center gap-2 text-xs font-bold text-neutral-900 shadow-2xs transition-colors"
-          >
-            <span className="text-xs font-black text-blue-600">G</span>
-            <span>Google</span>
-          </button>
-        </div>
 
       </form>
     </AuthUI>

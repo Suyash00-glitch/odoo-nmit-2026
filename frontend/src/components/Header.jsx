@@ -24,14 +24,16 @@ export default function Header() {
   ];
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-xl border-b border-gray-200/80 shadow-sm py-3 px-6"
-          : "bg-transparent pt-5 pb-3 px-6"
-      }`}
-    >
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6 pointer-events-none transition-all duration-300">
+      
+      {/* Floating Capsule Container (Not full-width) */}
+      <div
+        className={`max-w-6xl mx-auto flex items-center justify-between pointer-events-auto transition-all duration-300 ${
+          scrolled
+            ? "bg-white/95 backdrop-blur-xl border border-gray-200/90 shadow-lg px-6 py-2.5 rounded-full"
+            : "bg-transparent px-2 py-1"
+        }`}
+      >
         
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
@@ -52,11 +54,11 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Center Pill Capsule Navbar */}
+        {/* Center Nav Links: Inner BG removed on scroll */}
         <nav
-          className={`hidden md:flex items-center gap-1 px-4 py-2 rounded-full transition-all ${
+          className={`hidden md:flex items-center gap-1 px-3 py-1.5 rounded-full transition-all ${
             scrolled
-              ? "bg-gray-100/90 border border-gray-200/80 shadow-xs"
+              ? "bg-transparent border-none shadow-none"
               : "glass-pill shadow-lg shadow-black/5"
           }`}
         >
@@ -66,7 +68,7 @@ export default function Header() {
               href={link.href}
               className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${
                 scrolled
-                  ? "text-neutral-700 hover:text-neutral-950 hover:bg-white shadow-2xs"
+                  ? "text-neutral-700 hover:text-neutral-950 hover:bg-gray-100/80"
                   : "text-white/90 hover:text-white hover:bg-white/20"
               }`}
             >
@@ -115,7 +117,7 @@ export default function Header() {
 
       {/* Mobile Dropdown */}
       {mobileOpen && (
-        <div className="md:hidden mt-3 max-w-sm mx-auto p-5 rounded-3xl bg-white text-neutral-900 border border-gray-200 shadow-2xl space-y-3 animate-fade-in">
+        <div className="md:hidden mt-3 max-w-sm mx-auto p-5 rounded-3xl bg-white text-neutral-900 border border-gray-200 shadow-2xl space-y-3 pointer-events-auto animate-fade-in">
           {navLinks.map((link) => (
             <a
               key={link.label}

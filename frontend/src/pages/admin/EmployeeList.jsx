@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { employeesApi } from '../../api/employees.api.js';
 import { SkeletonRow } from '../../components/common/Loader.jsx';
 import { ErrorState, EmptyState } from '../../components/common/ErrorState.jsx';
 import { Link } from 'react-router-dom';
-import { Users, Search, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { Users, Search, ChevronLeft, ChevronRight, ArrowUpRight, UserPlus, Loader2 } from 'lucide-react';
+import Modal from '../../components/common/Modal.jsx';
+import toast from 'react-hot-toast';
 
 const DEPARTMENTS = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'];
 
@@ -13,6 +15,15 @@ const AdminEmployeeList = () => {
   const [search, setSearch] = useState('');
   const [dept, setDept] = useState('');
   const [debouncedSearch, setDebSearch] = useState('');
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviting, setInviting] = useState(false);
+  const queryClient = useQueryClient();
+  const inviteEmployee = useMutation({
+    mutationFn: (payload) => employeesApi.create(payload),
+    onSuccess: () => { toast.success('Employee added and invitation email sent.'); setShowInvite(false); queryClient.invalidateQueries({ queryKey: ['employees'] }); },
+    onError: (err) => toast.error(err?.response?.data?.error?.message || 'Could not create employee.'),
+    onSettled: () => setInviting(false),
+  });
 
   React.useEffect(() => {
     const t = setTimeout(() => setDebSearch(search), 400);
@@ -30,9 +41,9 @@ const AdminEmployeeList = () => {
 
   return (
     <div className="space-y-7 animate-slide-up pb-14 font-sans">
-      <div>
-        <h1 className="text-3xl font-black text-slate-950 tracking-tight">Employees Directory</h1>
-        <p className="text-sm text-slate-500 font-semibold mt-1">Manage, search, and view employee profiles and records</p>
+      <div className="flex items-start justify-between gap-4">
+        <div><h1 className="text-3xl font-black text-slate-950 tracking-tight">Employees Directory</h1><p className="text-sm text-slate-500 font-semibold mt-1">Manage, search, and view employee profiles and records</p></div>
+        <button onClick={() => setShowInvite(true)} className="btn-primary py-2.5 px-4 text-xs font-black shrink-0 flex items-center gap-2"><UserPlus size={16} />Add employee</button>
       </div>
 
       <div className="flex gap-3 flex-wrap">
@@ -133,6 +144,14 @@ const AdminEmployeeList = () => {
           </div>
         )}
       </div>
+      <Modal isOpen={showInvite} onClose={() => !inviting && setShowInvite(false)} title="Add employee & send invitation" size="lg">
+        <p className="text-xs text-slate-500 mb-4">Dayflow assigns the employee ID, creates the employment record, and emails a secure activation link.</p>
+        <form className="grid grid-cols-1 sm:grid-cols-2 gap-3" onSubmit={(e) => { e.preventDefault(); const data = Object.fromEntries(new FormData(e.currentTarget)); setInviting(true); inviteEmployee.mutate(data); }}>
+          {[['firstName', 'First name'], ['lastName', 'Last name'], ['email', 'Work email', 'email'], ['jobTitle', 'Job title'], ['department', 'Department'], ['employmentType', 'Employment type'], ['phone', 'Phone'], ['dateOfJoining', 'Joining date', 'date']].map(([name, label, type = 'text']) => <label key={name} className="text-xs font-bold text-slate-600">{label}<input name={name} type={type} required={['firstName','lastName','email'].includes(name)} className="input-field mt-1 text-xs" /></label>)}
+          <label className="sm:col-span-2 text-xs font-bold text-slate-600">Address<input name="address" className="input-field mt-1 text-xs" /></label>
+          <button disabled={inviting} className="sm:col-span-2 btn-primary py-3 text-xs font-black flex justify-center gap-2">{inviting && <Loader2 className="animate-spin" size={15} />}Create employee & send invite</button>
+        </form>
+      </Modal>
     </div>
   );
 };

@@ -73,9 +73,8 @@ const AdminAnalytics = () => {
   const monthlyData = leaveData?.monthlyData ?? [];
 
   // Calculate high-level summary KPIs
-  const avgRate = attendanceChartData.length
-    ? Math.round(attendanceChartData.reduce((acc, curr) => acc + (curr.rate || 0), 0) / attendanceChartData.length)
-    : 94;
+  const metrics = attendanceData?.metrics ?? {};
+  const avgRate = metrics.averageRate ?? 0;
 
   const totalLeaves = leaveTypeData.reduce((acc, curr) => acc + (curr.count || 0), 0);
 
@@ -135,9 +134,7 @@ const AdminAnalytics = () => {
           </div>
           <div className="mt-4">
             <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">{avgRate}%</p>
-            <div className="flex items-center gap-1.5 mt-1.5">
-              <span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+2.4% vs last period</span>
-            </div>
+            <div className="flex items-center gap-1.5 mt-1.5"><span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">From recorded attendance</span></div>
           </div>
         </div>
 
@@ -150,9 +147,9 @@ const AdminAnalytics = () => {
             </div>
           </div>
           <div className="mt-4">
-            <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">100%</p>
+            <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">{attendanceData?.totalEmployees ?? 0}</p>
             <div className="flex items-center gap-1.5 mt-1.5">
-              <span className="text-[11px] font-extrabold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">All departments synced</span>
+              <span className="text-[11px] font-extrabold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">Active employee records</span>
             </div>
           </div>
         </div>
@@ -166,9 +163,9 @@ const AdminAnalytics = () => {
             </div>
           </div>
           <div className="mt-4">
-            <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">{totalLeaves}</p>
+            <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">{metrics.pendingLeaves ?? 0}</p>
             <div className="flex items-center gap-1.5 mt-1.5">
-              <span className="text-[11px] font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">Paid & Sick quotas</span>
+              <span className="text-[11px] font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">Currently awaiting review</span>
             </div>
           </div>
         </div>
@@ -182,9 +179,9 @@ const AdminAnalytics = () => {
             </div>
           </div>
           <div className="mt-4">
-            <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">98.2%</p>
+            <p className="text-3xl font-black text-slate-950 font-mono tracking-tight">{metrics.onTimeRate ?? 0}%</p>
             <div className="flex items-center gap-1.5 mt-1.5">
-              <span className="text-[11px] font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">On-time check-in index</span>
+              <span className="text-[11px] font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">{metrics.recordedCheckIns ?? 0} recorded check-ins</span>
             </div>
           </div>
         </div>

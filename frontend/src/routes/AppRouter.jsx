@@ -6,6 +6,7 @@ import LandingPage from '../pages/landing/LandingPage.jsx';
 import SignIn from '../pages/auth/SignIn.jsx';
 import SignUp from '../pages/auth/SignUp.jsx';
 import VerifyEmail from '../pages/auth/VerifyEmail.jsx';
+import ActivateAccount from '../pages/auth/ActivateAccount.jsx';
 
 import ProtectedRoute from '../components/layout/ProtectedRoute.jsx';
 import DashboardLayout from '../components/layout/DashboardLayout.jsx';
@@ -41,6 +42,7 @@ const AppRouter = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/activate-account" element={<ActivateAccount />} />
 
         {/* Protected Employee Portal Routes */}
         <Route element={<ProtectedRoute allowedRoles={['EMPLOYEE']} />}>

@@ -34,6 +34,29 @@
   }
 }
 
+/* SAASI Brand Background Gradients */
+.bg-hero-gradient {
+  background: radial-gradient(130% 90% at 50% 0%, #764DF6 0%, #683EE8 32%, #8561F6 65%, #BFABFF 88%, #F2F4FF 100%) !important;
+}
+
+.bg-purple-section {
+  background: linear-gradient(180deg, #5B32E5 0%, #6B42EF 50%, #7950F8 100%) !important;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
 @layer components {
   /* Clean White Card System */
   .card {

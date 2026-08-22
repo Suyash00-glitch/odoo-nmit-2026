@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X, Eye, EyeOff } from "lucide-react";
 
@@ -178,13 +178,10 @@ export function AuthUI({
   );
 }
 
-export function CustomPillInput({
-  label,
-  error,
-  type = "text",
-  placeholder,
-  ...props
-}) {
+export const CustomPillInput = forwardRef(function CustomPillInput(
+  { label, error, type = "text", placeholder, ...props },
+  ref
+) {
   const [showPwd, setShowPwd] = useState(false);
   const isPassword = type === "password";
 
@@ -193,6 +190,7 @@ export function CustomPillInput({
       {label && <label className="text-xs font-bold text-gray-600 pl-3">{label}</label>}
       <div className="relative">
         <input
+          ref={ref}
           type={isPassword ? (showPwd ? "text" : "password") : type}
           placeholder={placeholder}
           className="w-full px-6 py-3.5 rounded-full bg-white text-sm text-neutral-900 placeholder:text-gray-400 border border-gray-200/80 shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#6B42EF]/40 font-medium transition-all"
@@ -211,4 +209,5 @@ export function CustomPillInput({
       {error && <p className="text-red-500 text-xs pl-3 font-semibold">{error}</p>}
     </div>
   );
-}
+});
+

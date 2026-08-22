@@ -32,21 +32,22 @@ enum LeaveStatus {
 }
 
 model User {
-  id                     String    @id @default(uuid())
-  employeeId             String    @unique
-  email                  String    @unique
-  passwordHash           String
-  role                   Role      @default(EMPLOYEE)
-  isEmailVerified        Boolean   @default(false)
-  emailVerificationToken String?
-  refreshToken           String?
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
+  id                         String    @id @default(uuid())
+  employeeId                 String    @unique
+  email                      String    @unique
+  passwordHash               String
+  role                       Role      @default(EMPLOYEE)
+  isEmailVerified            Boolean   @default(false)
+  emailVerificationToken     String?
+  emailVerificationExpiresAt DateTime?
+  refreshToken               String?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
 
   profile        EmployeeProfile?
   attendances    Attendance[]
-  leaves         LeaveRequest[]  @relation("EmployeeLeaves")
-  reviewedLeaves LeaveRequest[]  @relation("ReviewerLeaves")
+  leaves         LeaveRequest[]   @relation("EmployeeLeaves")
+  reviewedLeaves LeaveRequest[]   @relation("ReviewerLeaves")
   payroll        Payroll?
   notifications  Notification[]
 }

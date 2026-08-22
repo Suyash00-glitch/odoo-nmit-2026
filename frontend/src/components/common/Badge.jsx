@@ -10,17 +10,17 @@ const variantClass = {
 };
 
 const dotClass = {
-  green: 'bg-emerald-400',
-  amber: 'bg-amber-400',
-  red: 'bg-red-400',
-  gray: 'bg-white/40',
-  blue: 'bg-blue-400',
-  purple: 'bg-purple-400',
+  green: 'bg-emerald-500',
+  amber: 'bg-amber-500',
+  red: 'bg-rose-500',
+  gray: 'bg-slate-400',
+  blue: 'bg-blue-500',
+  purple: 'bg-purple-500',
 };
 
 const Badge = ({ variant, children, dot = true }) => (
   <span className={variantClass[variant] || 'badge-gray'}>
-    {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotClass[variant] || 'bg-white/40'}`} />}
+    {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotClass[variant] || 'bg-slate-400'}`} />}
     {children}
   </span>
 );

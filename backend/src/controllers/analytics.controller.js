@@ -32,7 +32,23 @@ export const getAttendanceSummary = asyncHandler(async (_req, res) => {
     return { date, present, absent, halfDay, leave, rate };
   });
 
-  sendSuccess(res, { chartData, totalEmployees }, 'Attendance summary retrieved');
+  const completedCheckIns = await prisma.attendance.findMany({
+    where: { date: { gte: thirtyDaysAgo }, checkIn: { not: null } },
+    select: { checkIn: true },
+  });
+  const onTimeCheckIns = completedCheckIns.filter(({ checkIn }) => checkIn.getHours() < 9 || (checkIn.getHours() === 9 && checkIn.getMinutes() === 0)).length;
+  const averageRate = chartData.length ? Math.round(chartData.reduce((sum, day) => sum + day.rate, 0) / chartData.length) : 0;
+  const pendingLeaves = await prisma.leaveRequest.count({ where: { status: 'PENDING' } });
+
+  sendSuccess(res, {
+    chartData, totalEmployees,
+    metrics: {
+      averageRate,
+      onTimeRate: completedCheckIns.length ? Math.round((onTimeCheckIns / completedCheckIns.length) * 100) : 0,
+      recordedCheckIns: completedCheckIns.length,
+      pendingLeaves,
+    },
+  }, 'Attendance summary retrieved');
 });
 
 // GET /api/analytics/leave-summary (Admin)
