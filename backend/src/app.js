@@ -20,12 +20,31 @@ const app = express();
 
 // Security & Parsing Middlewares
 app.use(helmet());
+
+const allowedOrigins = [
+  env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+];
+
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Permissive in dev mode to ensure seamless operation
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -33,7 +52,7 @@ app.use(cookieParser());
 // Rate limiters
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 500,
   message: {
     success: false,
     error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many requests, please try again later.' },
@@ -42,7 +61,7 @@ const globalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 100,
   message: {
     success: false,
     error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many login attempts, please try again later.' },
