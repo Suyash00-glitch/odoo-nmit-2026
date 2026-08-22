@@ -13,10 +13,10 @@ export function AuthUI({
   return (
     <div className="min-h-screen w-full bg-[#EDF3EF] flex items-center justify-center p-4 sm:p-8 font-sans">
       
-      {/* Outer Floating Modal Card */}
+      {/* Outer Floating Modal clean Card */}
       <div className="w-full max-w-5xl rounded-[36px] sm:rounded-[44px] bg-gradient-to-br from-[#E6F8EE] via-[#F4F7FE] to-[#E9EFF8] border border-white/80 shadow-2xl overflow-hidden relative grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
         
-        {/* Top-Right Close Button */}
+        {/* Top-Right Close Button clean*/}
         <button
           onClick={() => navigate("/")}
           className="absolute top-6 right-6 z-30 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-neutral-800 shadow-sm flex items-center justify-center transition-all hover:scale-105 border border-gray-100"
@@ -25,7 +25,7 @@ export function AuthUI({
           <X size={18} className="stroke-[2.5]" />
         </button>
 
-        {/* Left Side: Form Area (6 cols) */}
+        {/* Left Side: new Form Area (6 cols) */}
         <div className="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-between space-y-8 relative z-10">
           
           {/* Brand Header */}
