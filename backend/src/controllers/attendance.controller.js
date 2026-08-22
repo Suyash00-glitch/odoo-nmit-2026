@@ -90,7 +90,7 @@ export const getMyAttendance = asyncHandler(async (req, res) => {
 
   sendSuccess(res, { records, todayRecord, view: req.query.view || 'daily' }, 'Attendance retrieved');
 });
-
+//Get/api for admin --employee id
 // GET /api/attendance/:employeeId (Admin)
 export const getEmployeeAttendance = asyncHandler(async (req, res) => {
   const today = new Date();
