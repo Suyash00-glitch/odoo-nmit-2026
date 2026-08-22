@@ -38,12 +38,13 @@ A production-ready, full-stack **Human Resource Management System (HRMS)** with 
 Before running the project locally, ensure you have:
 - **Node.js**: `v18.0.0` or higher ([Download Node.js](https://nodejs.org/))
 - **NPM**: `v9.0.0` or higher
-- **Git**: Installed on your system ([Download Git](https://git-scm.com/))
-- **Neon Cloud Account**: Free serverless PostgreSQL ([Sign up at Neon](https://neon.tech/))
+- **Git**: Installed on your machine ([Download Git](https://git-scm.com/))
+- **Neon Cloud Account**: Free PostgreSQL database ([Sign up at Neon](https://neon.tech/))
+- **Gmail Account (Optional)**: If you want to enable email notifications
 
 ---
 
-## 🚀 Step-by-Step Setup Guide
+## 🚀 Complete Step-by-Step Setup Guide
 
 ### 1. Clone the Repository
 
@@ -54,48 +55,65 @@ cd odoo-nmit-2026
 
 ---
 
-### 2. Set Up PostgreSQL Database on Neon
+### 2. How to Get Your PostgreSQL Database URL (Neon Cloud)
 
-1. Navigate to **[neon.tech](https://neon.tech/)** and sign up for a free account.
-2. Click **"New Project"**, name it `dayflow-hrms`, and select your preferred AWS region.
-3. In your project's **Dashboard**, locate the **Connection Details** widget.
-4. Select **Prisma** or **PostgreSQL (Connection string)** from the dropdown.
-5. Copy the connection URL. It will look like:
+1. Sign up / Log in to **[neon.tech](https://neon.tech/)** (Free tier available).
+2. Click **"New Project"**, name it `dayflow-hrms`, and select your nearest region.
+3. Once created, go to the **Dashboard** and look for the **"Connection Details"** widget.
+4. Select **Prisma** or **PostgreSQL (Connection String)**.
+5. Copy the connection string. It will look like:
    ```
    postgresql://<username>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require
    ```
+   *(Keep this URL for Step 4).*
 
 ---
 
-### 3. Configure Environment Files
+### 3. How to Set Up SMTP Email (Gmail App Password)
 
-#### A. Backend Configuration (`backend/.env`)
-Create a file named `.env` inside the `backend/` directory:
+Dayflow HRMS uses Nodemailer to send automated notifications (welcome emails, leave receipts, and approval alerts).
+
+> 💡 **Note:** Google does not accept your regular Gmail password for SMTP. You must create an **App Password**.
+
+#### Step-by-step Gmail App Password setup:
+1. Open your **[Google Account Security](https://myaccount.google.com/security)** page.
+2. Under **"How you sign in to Google"**, verify that **2-Step Verification** is turned **ON**.
+3. Go directly to **[Google App Passwords](https://myaccount.google.com/apppasswords)**.
+4. In the **"App name"** field, type: `Dayflow HRMS` and click **Create**.
+5. Google will display a **16-character code** (e.g., `xxxx xxxx xxxx xxxx`).
+6. Copy this 16-character password for your `.env` file.
+
+---
+
+### 4. Configure Environment Variables
+
+#### A. Backend Environment File (`backend/.env`)
+Create a file named `.env` inside the `backend/` directory and populate it with your own credentials:
 
 ```env
-# 1. Neon PostgreSQL Database URL
-DATABASE_URL="postgresql://<user>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require"
+# 1. Database Connection (From Step 2)
+DATABASE_URL="postgresql://<username>:<password>@<endpoint-pooler>.aws.neon.tech/neondb?sslmode=require"
 
 # 2. Server Configuration
 PORT=5000
 NODE_ENV=development
 
-# 3. JWT Authentication Secrets (Generate any 32+ character random strings)
-JWT_ACCESS_SECRET="dayflow-hrms-access-token-secret-key-super-secure-2026"
-JWT_REFRESH_SECRET="dayflow-hrms-refresh-token-secret-key-super-secure-2026"
+# 3. JWT Secrets (Any random 32+ character strings)
+JWT_ACCESS_SECRET="generate-a-secure-random-access-token-secret-key-2026"
+JWT_REFRESH_SECRET="generate-a-secure-random-refresh-token-secret-key-2026"
 
-# 4. Frontend Origin URL
+# 4. Frontend Client URL (For CORS)
 FRONTEND_URL="http://localhost:5173"
 
-# 5. SMTP Email Configuration (Optional)
+# 5. SMTP Email Configuration (From Step 3 — Optional)
 SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
-SMTP_USER=""
-SMTP_PASS=""
-SMTP_FROM="Dayflow HRMS <noreply@dayflow.dev>"
+SMTP_USER="your-email-address@gmail.com"
+SMTP_PASS="your-16-character-app-password"
+SMTP_FROM="Dayflow HRMS <your-email-address@gmail.com>"
 ```
 
-#### B. Frontend Configuration (`frontend/.env`)
+#### B. Frontend Environment File (`frontend/.env`)
 Create a file named `.env` inside the `frontend/` directory:
 
 ```env
@@ -104,9 +122,9 @@ VITE_API_URL="http://localhost:5000/api"
 
 ---
 
-### 4. Install Dependencies
+### 5. Install Dependencies
 
-Install all root, backend, and frontend packages with one command from the project root:
+Install all dependencies across the entire monorepo with one root command:
 
 ```bash
 npm install
@@ -114,7 +132,7 @@ npm install
 
 ---
 
-### 5. Initialize Database Schema & Seed Demo Data
+### 6. Initialize Database Schema & Seed Demo Data
 
 Push the database models to your Neon PostgreSQL instance and populate all demo users, departments, 14 days of attendance, and sample leave requests:
 
@@ -128,7 +146,7 @@ npm --prefix backend run db:seed
 
 ---
 
-### 6. Run the Application
+### 7. Start the Development Server
 
 Launch both the backend API server and frontend client concurrently:
 
@@ -136,10 +154,10 @@ Launch both the backend API server and frontend client concurrently:
 npm run dev
 ```
 
-Your system is now live at:
+Your system is now live:
 - 🌐 **Frontend Application**: [http://localhost:5173](http://localhost:5173)
 - 🔌 **Backend REST API**: [http://localhost:5000/api](http://localhost:5000/api)
-- 🩺 **Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
+- 🩺 **API Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
 
 ---
 
@@ -168,7 +186,7 @@ odoo-nmit-2026/
 │   │   ├── schema.prisma         # Prisma ORM Database Models
 │   │   └── seed.js               # Database Seeder (Users, Attendance, Leaves)
 │   ├── src/
-│   │   ├── config/               # Database, Environment & Mailer Config
+│   │   ├── config/               # Database, Environment & Nodemailer Mailer Config
 │   │   ├── controllers/          # Business Logic (Auth, Employees, Leaves, Payroll, Analytics)
 │   │   ├── middlewares/          # JWT Verification, Role Authorization, Zod Validation
 │   │   ├── routes/               # Express API Route Definitions
@@ -205,7 +223,7 @@ odoo-nmit-2026/
 ## 🔌 API Reference Overview
 
 ### 🔐 Authentication (`/api/auth`)
-- `POST /api/auth/signup` — Register new account.
+- `POST /api/auth/signup` — Register new employee account.
 - `POST /api/auth/login` — Sign in with email and password (returns JWT & sets refresh cookie).
 - `POST /api/auth/refresh` — Refresh expired access token.
 - `POST /api/auth/logout` — Revoke refresh token and clear session cookies.
@@ -258,12 +276,21 @@ Or change `PORT=5001` in `backend/.env` and update `VITE_API_URL="http://localho
 </details>
 
 <details>
-<summary><b>2. Prisma Database Connection Timeout</b></summary>
+<summary><b>2. SMTP Error: "535 5.7.8 Username and Password not accepted"</b></summary>
+Google rejects normal account passwords for automated SMTP. To fix:
+1. Ensure **2-Step Verification** is turned ON at https://myaccount.google.com/security
+2. Generate an **App Password** from https://myaccount.google.com/apppasswords
+3. Copy the 16-character code and paste into `SMTP_PASS` in `backend/.env`.
+4. Ensure `SMTP_USER` matches the exact Gmail address.
+</details>
+
+<details>
+<summary><b>3. Prisma Database Connection Timeout</b></summary>
 Ensure your Neon PostgreSQL connection string ends with `?sslmode=require`. If you are using a pooled connection, verify you are using the pooled endpoint URL provided in the Neon console.
 </details>
 
 <details>
-<summary><b>3. How to inspect the database visually?</b></summary>
+<summary><b>4. How to inspect the database visually?</b></summary>
 Run the built-in Prisma Studio GUI:
 
 ```bash
