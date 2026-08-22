@@ -7,17 +7,19 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { TrendingUp, CalendarDays, BarChart3 } from 'lucide-react';
+import { TrendingUp, CalendarDays, BarChart3, PieChart as PieIcon } from 'lucide-react';
 
-const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+const COLORS = ['#6B42EF', '#10B981', '#F59E0B', '#EF4444', '#06B6D4'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-surface-200 border border-white/10 rounded-xl p-3 shadow-2xl">
-      <p className="text-white/60 text-xs mb-2">{label}</p>
+    <div className="bg-white border border-gray-200 rounded-2xl p-3.5 shadow-xl">
+      <p className="text-gray-400 text-xs font-bold mb-2">{label}</p>
       {payload.map((p, i) => (
-        <p key={i} className="text-sm font-medium" style={{ color: p.color }}>{p.name}: {p.value}{p.name === 'rate' ? '%' : ''}</p>
+        <p key={i} className="text-xs font-extrabold" style={{ color: p.color }}>
+          {p.name}: {p.value}{p.name === 'rate' || p.name === 'Attendance %' ? '%' : ''}
+        </p>
       ))}
     </div>
   );
@@ -37,7 +39,7 @@ const AdminAnalytics = () => {
   const isLoading = aLoading || lLoading;
   const isError = aError || lError;
 
-  if (isLoading) return <Loader text="Loading analytics..." />;
+  if (isLoading) return <Loader text="Loading workforce analytics..." />;
   if (isError) return <ErrorState onRetry={() => { aRefetch(); lRefetch(); }} />;
 
   const attendanceChartData = (attendanceData?.chartData ?? []).slice(-14).map((d) => ({
@@ -50,125 +52,158 @@ const AdminAnalytics = () => {
   const monthlyData = leaveData?.monthlyData ?? [];
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-7 animate-slide-up pb-14 font-sans">
       <div>
-        <h1 className="text-2xl font-bold text-white">Analytics</h1>
-        <p className="text-white/50 text-sm mt-1">Attendance and leave trends across your organization</p>
+        <h1 className="text-3xl font-black text-neutral-950 tracking-tight">Analytics & Reports</h1>
+        <p className="text-sm text-gray-500 font-semibold mt-1">Real-time attendance rates, leave quotas, and workforce trends</p>
       </div>
 
-      <div className="card">
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-8 h-8 bg-primary-600/20 rounded-xl flex items-center justify-center">
-            <TrendingUp size={16} className="text-primary-400" />
+      {/* 1. Line Chart: 14-Day Attendance Rate */}
+      <div className="card space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-purple-100 text-[#6B42EF] rounded-2xl flex items-center justify-center shadow-2xs">
+            <TrendingUp size={18} />
           </div>
           <div>
-            <h2 className="font-semibold text-white">Attendance Rate — Last 14 Days</h2>
-            <p className="text-white/40 text-xs">Daily attendance % across all employees</p>
+            <h2 className="text-base font-extrabold text-neutral-950">Attendance Rate (Last 14 Days)</h2>
+            <p className="text-xs text-gray-400 font-medium">Organization-wide daily attendance percentage</p>
           </div>
         </div>
-        <div className="h-72">
+
+        <div className="h-72 pt-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={attendanceChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="date" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+              <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} domain={[0, 100]} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }} />
-              <Line type="monotone" dataKey="rate" name="Attendance %" stroke="#6366f1" strokeWidth={2.5} dot={{ fill: '#6366f1', r: 4 }} activeDot={{ r: 6 }} />
+              <Legend wrapperStyle={{ color: '#475569', fontSize: 12, fontWeight: 700 }} />
+              <Line type="monotone" dataKey="rate" name="Attendance %" stroke="#6B42EF" strokeWidth={3} dot={{ fill: '#6B42EF', r: 4 }} activeDot={{ r: 7 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="card">
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-8 h-8 bg-emerald-500/10 rounded-xl flex items-center justify-center">
-            <BarChart3 size={16} className="text-emerald-400" />
+      {/* 2. Bar Chart: Daily Attendance Breakdown */}
+      <div className="card space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center shadow-2xs">
+            <BarChart3 size={18} />
           </div>
-          <h2 className="font-semibold text-white">Daily Attendance Breakdown</h2>
+          <div>
+            <h2 className="text-base font-extrabold text-neutral-950">Daily Attendance Breakdown</h2>
+            <p className="text-xs text-gray-400 font-medium">Present, Absent, and Half-Day status distribution</p>
+          </div>
         </div>
-        <div className="h-64">
+
+        <div className="h-64 pt-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={attendanceChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="date" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+              <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }} />
-              <Bar dataKey="present" name="Present" fill="#10b981" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="absent" name="Absent" fill="#ef4444" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="halfDay" name="Half Day" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+              <Legend wrapperStyle={{ color: '#475569', fontSize: 12, fontWeight: 700 }} />
+              <Bar dataKey="present" name="Present" fill="#10B981" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="absent" name="Absent" fill="#EF4444" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="halfDay" name="Half Day" fill="#F59E0B" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="card">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-amber-500/10 rounded-xl flex items-center justify-center">
-              <CalendarDays size={16} className="text-amber-400" />
+      {/* 3. Grid: Pie Chart & Leave Status Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Pie: Leave Type Distribution */}
+        <div className="card space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center shadow-2xs">
+              <PieIcon size={18} />
             </div>
-            <h2 className="font-semibold text-white">Leave Type Distribution</h2>
+            <div>
+              <h2 className="text-base font-extrabold text-neutral-950">Leave Type Distribution</h2>
+              <p className="text-xs text-gray-400 font-medium">Paid vs. Sick vs. Unpaid</p>
+            </div>
           </div>
+
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={leaveTypeData.filter((d) => d.count > 0)} cx="50%" cy="50%" outerRadius={80} dataKey="count" nameKey="type" label={(props) => `${props.type} ${((props.percent ?? 0) * 100).toFixed(0)}%`} labelLine={false}>
+                <Pie
+                  data={leaveTypeData.filter((d) => d.count > 0)}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  dataKey="count"
+                  nameKey="type"
+                  label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
+                >
                   {leaveTypeData.map((_, i) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(val, name) => [val, name]} contentStyle={{ background: '#1e1e30', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, color: 'white' }} />
+                <Tooltip formatter={(val, name) => [val, name]} contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 16, fontWeight: 700 }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex justify-center gap-4 mt-2">
+
+          <div className="flex justify-center gap-5 pt-2">
             {leaveTypeData.map((d, i) => (
-              <div key={d.type} className="flex items-center gap-1.5 text-xs text-white/60">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
-                {d.type}: {d.count}
+              <div key={d.type} className="flex items-center gap-2 text-xs font-bold text-gray-600">
+                <span className="w-3 h-3 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
+                <span>{d.type}: {d.count}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center gap-2 mb-6">
-            <h2 className="font-semibold text-white">Leave Status (Last 90 Days)</h2>
+        {/* Bar: Leave Status */}
+        <div className="card space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center shadow-2xs">
+              <CalendarDays size={18} />
+            </div>
+            <div>
+              <h2 className="text-base font-extrabold text-neutral-950">Leave Status (Last 90 Days)</h2>
+              <p className="text-xs text-gray-400 font-medium">Resolution breakdown</p>
+            </div>
           </div>
-          <div className="h-56">
+
+          <div className="h-56 pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leaveStatusData} layout="vertical" margin={{ left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-                <XAxis type="number" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis type="category" dataKey="status" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
+                <XAxis type="number" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="status" tick={{ fill: '#64748B', fontSize: 12, fontWeight: 700 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="count" name="Count" fill="#6366f1" radius={[0, 6, 6, 0]}>
+                <Bar dataKey="count" name="Total Requests" fill="#6B42EF" radius={[0, 8, 8, 0]}>
                   {leaveStatusData.map((entry, i) => (
-                    <Cell key={i} fill={entry.status === 'APPROVED' ? '#10b981' : entry.status === 'REJECTED' ? '#ef4444' : '#f59e0b'} />
+                    <Cell key={i} fill={entry.status === 'APPROVED' ? '#10B981' : entry.status === 'REJECTED' ? '#EF4444' : '#F59E0B'} />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
+
       </div>
 
+      {/* 4. Monthly Leave Trends */}
       {monthlyData.length > 0 && (
-        <div className="card">
-          <h2 className="font-semibold text-white mb-6">Monthly Leave Trends</h2>
+        <div className="card space-y-4">
+          <h2 className="text-base font-extrabold text-neutral-950">Monthly Leave Trends</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                <XAxis dataKey="month" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }} />
-                <Bar dataKey="PAID" name="Paid" fill="#10b981" stackId="a" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="SICK" name="Sick" fill="#f59e0b" stackId="a" />
-                <Bar dataKey="UNPAID" name="Unpaid" fill="#6366f1" stackId="a" radius={[4, 4, 0, 0]} />
+                <Legend wrapperStyle={{ color: '#475569', fontSize: 12, fontWeight: 700 }} />
+                <Bar dataKey="PAID" name="Paid" fill="#10B981" stackId="a" />
+                <Bar dataKey="SICK" name="Sick" fill="#F59E0B" stackId="a" />
+                <Bar dataKey="UNPAID" name="Unpaid" fill="#6B42EF" stackId="a" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

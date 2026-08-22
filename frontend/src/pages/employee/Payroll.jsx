@@ -11,79 +11,87 @@ const EmployeePayroll = () => {
     queryFn: () => payrollApi.getMyPayroll().then(r => r.data.data),
   });
 
-  if (isLoading) return <Loader text="Loading payroll..." />;
-  if (isError) return <ErrorState message="Payroll record not found or not yet set up by admin." onRetry={refetch} />;
+  if (isLoading) return <Loader text="Loading payroll structure..." />;
+  if (isError) return <ErrorState message="Payroll structure has not yet been configured by HR." onRetry={refetch} />;
 
   const allowances = data.allowances ?? {};
   const deductions = data.deductions ?? {};
-  const totalAllowances = Object.values(allowances).reduce((s, v) => s + v, 0);
-  const totalDeductions = Object.values(deductions).reduce((s, v) => s + v, 0);
+  const totalAllowances = Object.values(allowances).reduce((s, v) => s + Number(v), 0);
+  const totalDeductions = Object.values(deductions).reduce((s, v) => s + Number(v), 0);
 
-  const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v);
+  const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Number(v));
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-6 animate-slide-up pb-12 font-sans">
       <div>
-        <h1 className="text-2xl font-bold text-white">Payroll</h1>
-        <p className="text-white/50 text-sm mt-1">Your current salary structure (read-only)</p>
+        <h1 className="text-3xl font-black text-neutral-950 tracking-tight">My Compensation & Payroll</h1>
+        <p className="text-sm text-gray-500 font-semibold mt-1">Itemized transparent breakdown of salary and deductions</p>
       </div>
 
-      <div className="card bg-gradient-to-br from-emerald-900/30 to-surface-200 border-emerald-500/20">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
-            <DollarSign size={28} className="text-emerald-400" />
+      {/* Hero Net Salary Card */}
+      <div className="card bg-white border border-gray-200 shadow-sm p-6">
+        <div className="flex items-center gap-5">
+          <div className="w-14 h-14 bg-purple-100 text-[#6B42EF] rounded-2xl flex items-center justify-center shadow-2xs">
+            <DollarSign size={28} />
           </div>
           <div>
-            <p className="text-white/50 text-sm">Net Monthly Salary</p>
-            <p className="text-4xl font-bold text-white">{fmt(Number(data.netSalary))}</p>
-            <p className="text-white/40 text-xs mt-1">Effective: {new Date(data.effectiveDate).toLocaleDateString()}</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Net Monthly Salary</p>
+            <p className="text-4xl font-black text-neutral-950 font-mono mt-0.5">{fmt(Number(data.netSalary))}</p>
+            <p className="text-xs text-gray-500 font-medium mt-1">Effective Date: {new Date(data.effectiveDate).toLocaleDateString()}</p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* 3 Metric Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="stat-card">
-          <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Base Salary</p>
-          <p className="text-2xl font-bold text-white">{fmt(Number(data.baseSalary))}</p>
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Base Salary</p>
+          <p className="text-2xl font-black text-neutral-950 font-mono">{fmt(Number(data.baseSalary))}</p>
         </div>
-        <div className="stat-card border-emerald-500/20">
-          <div className="flex items-center gap-1.5 text-emerald-400 mb-2">
-            <TrendingUp size={14} />
-            <span className="text-xs uppercase tracking-wider">Total Allowances</span>
+        <div className="stat-card">
+          <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-1">
+            <TrendingUp size={15} />
+            <span>Total Allowances</span>
           </div>
-          <p className="text-2xl font-bold text-emerald-400">+{fmt(totalAllowances)}</p>
+          <p className="text-2xl font-black text-emerald-700 font-mono">+{fmt(totalAllowances)}</p>
         </div>
-        <div className="stat-card border-red-500/20">
-          <div className="flex items-center gap-1.5 text-red-400 mb-2">
-            <TrendingDown size={14} />
-            <span className="text-xs uppercase tracking-wider">Total Deductions</span>
+        <div className="stat-card">
+          <div className="flex items-center gap-1.5 text-red-600 font-bold text-xs uppercase tracking-wider mb-1">
+            <TrendingDown size={15} />
+            <span>Total Deductions</span>
           </div>
-          <p className="text-2xl font-bold text-red-400">-{fmt(totalDeductions)}</p>
+          <p className="text-2xl font-black text-red-600 font-mono">-{fmt(totalDeductions)}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Allowances & Deductions Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {Object.keys(allowances).length > 0 && (
-          <div className="card">
-            <h3 className="font-semibold text-white mb-4 flex items-center gap-2"><TrendingUp size={16} className="text-emerald-400" /> Allowances</h3>
-            <div className="space-y-2">
+          <div className="card space-y-3">
+            <h3 className="text-base font-extrabold text-neutral-950 flex items-center gap-2">
+              <TrendingUp size={18} className="text-emerald-600" /> Allowances
+            </h3>
+            <div className="space-y-2 pt-2 divide-y divide-gray-100">
               {Object.entries(allowances).map(([key, val]) => (
-                <div key={key} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
-                  <span className="text-white/60 capitalize">{key.replace(/_/g, ' ')}</span>
-                  <span className="text-emerald-400 font-medium">+{fmt(val)}</span>
+                <div key={key} className="flex justify-between items-center py-2.5 text-xs">
+                  <span className="text-gray-600 font-bold capitalize">{key.replace(/_/g, ' ')}</span>
+                  <span className="text-emerald-700 font-extrabold font-mono text-sm">+{fmt(val)}</span>
                 </div>
               ))}
             </div>
           </div>
         )}
+
         {Object.keys(deductions).length > 0 && (
-          <div className="card">
-            <h3 className="font-semibold text-white mb-4 flex items-center gap-2"><TrendingDown size={16} className="text-red-400" /> Deductions</h3>
-            <div className="space-y-2">
+          <div className="card space-y-3">
+            <h3 className="text-base font-extrabold text-neutral-950 flex items-center gap-2">
+              <TrendingDown size={18} className="text-red-600" /> Deductions
+            </h3>
+            <div className="space-y-2 pt-2 divide-y divide-gray-100">
               {Object.entries(deductions).map(([key, val]) => (
-                <div key={key} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
-                  <span className="text-white/60 capitalize">{key.replace(/_/g, ' ')}</span>
-                  <span className="text-red-400 font-medium">-{fmt(val)}</span>
+                <div key={key} className="flex justify-between items-center py-2.5 text-xs">
+                  <span className="text-gray-600 font-bold capitalize">{key.replace(/_/g, ' ')}</span>
+                  <span className="text-red-600 font-extrabold font-mono text-sm">-{fmt(val)}</span>
                 </div>
               ))}
             </div>

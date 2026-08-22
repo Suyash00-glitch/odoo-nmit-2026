@@ -58,23 +58,28 @@ const AdminLeaveApprovals = () => {
   const leaves = data?.leaves ?? [];
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-6 animate-slide-up pb-12 font-sans">
       <div>
-        <h1 className="text-2xl font-bold text-white">Leave Approvals</h1>
-        <p className="text-white/50 text-sm mt-1">Review and action employee leave requests</p>
+        <h1 className="text-3xl font-black text-neutral-950 tracking-tight">Leave Approvals</h1>
+        <p className="text-sm text-gray-500 font-semibold mt-1">Review and manage employee leave applications</p>
       </div>
 
-      <div className="flex gap-1 bg-surface-300 rounded-xl p-1 w-fit">
+      {/* Filter Tabs */}
+      <div className="flex gap-1.5 bg-gray-100 p-1.5 rounded-2xl w-fit border border-gray-200">
         {[
           { value: 'PENDING', label: '⏳ Pending' },
           { value: 'APPROVED', label: '✅ Approved' },
           { value: 'REJECTED', label: '❌ Rejected' },
-          { value: '', label: 'All' },
+          { value: '', label: 'All Requests' },
         ].map(opt => (
           <button
             key={opt.value}
             onClick={() => setStatusFilter(opt.value)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${statusFilter === opt.value ? 'bg-primary-600 text-white' : 'text-white/50 hover:text-white'}`}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              statusFilter === opt.value
+                ? 'bg-white text-neutral-950 shadow-xs font-black'
+                : 'text-gray-500 hover:text-neutral-950'
+            }`}
             id={`filter-${opt.label.replace(/\s+/g, '-').toLowerCase()}`}
           >
             {opt.label}
@@ -89,21 +94,21 @@ const AdminLeaveApprovals = () => {
       >
         {selectedLeave && (
           <div className="space-y-4">
-            <div className="p-4 bg-surface-300/50 rounded-xl space-y-2">
-              <p className="text-white font-medium">{selectedLeave.employee.profile?.firstName} {selectedLeave.employee.profile?.lastName}</p>
-              <p className="text-white/50 text-sm">{selectedLeave.leaveType} leave · {new Date(selectedLeave.startDate).toLocaleDateString()} → {new Date(selectedLeave.endDate).toLocaleDateString()}</p>
-              {selectedLeave.remarks && <p className="text-white/40 text-sm italic">"{selectedLeave.remarks}"</p>}
+            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-1.5">
+              <p className="text-sm font-extrabold text-neutral-950">{selectedLeave.employee.profile?.firstName} {selectedLeave.employee.profile?.lastName}</p>
+              <p className="text-xs text-gray-500 font-medium">{selectedLeave.leaveType} leave · {new Date(selectedLeave.startDate).toLocaleDateString()} → {new Date(selectedLeave.endDate).toLocaleDateString()}</p>
+              {selectedLeave.remarks && <p className="text-xs text-gray-600 italic mt-1">"{selectedLeave.remarks}"</p>}
             </div>
             <form onSubmit={handleSubmit(onDecisionSubmit)} className="space-y-4" id="decision-form">
               <div>
-                <label className="label">Comments (optional)</label>
-                <textarea {...register('reviewComments')} rows={3} placeholder="Add a comment for the employee..." className="input-field resize-none" id="review-comments" />
+                <label className="label text-xs font-bold text-neutral-700">Review Comments (optional)</label>
+                <textarea {...register('reviewComments')} rows={3} placeholder="Add feedback or reason for the employee..." className="input-field text-xs resize-none" id="review-comments" />
               </div>
               <button
                 type="submit"
                 id="confirm-decision-btn"
                 disabled={isSubmitting || decisionMut.isPending}
-                className={decisionType === 'APPROVED' ? 'btn-success w-full' : 'btn-danger w-full'}
+                className={decisionType === 'APPROVED' ? 'btn-success w-full py-2.5 text-xs font-bold' : 'btn-danger w-full py-2.5 text-xs font-bold'}
               >
                 {decisionMut.isPending ? <Loader2 size={14} className="animate-spin" /> : decisionType === 'APPROVED' ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
                 {decisionType === 'APPROVED' ? 'Confirm Approval' : 'Confirm Rejection'}
@@ -117,7 +122,7 @@ const AdminLeaveApprovals = () => {
         {isLoading ? <SkeletonRow rows={8} /> : isError ? (
           <ErrorState onRetry={refetch} />
         ) : leaves.length === 0 ? (
-          <EmptyState icon={<CheckSquare size={24} />} title="No leave requests" description={`No ${statusFilter.toLowerCase() || ''} leave requests found`} />
+          <EmptyState icon={<CheckSquare size={28} />} title="No leave requests" description={`No ${statusFilter.toLowerCase() || ''} leave requests found`} />
         ) : (
           <div className="table-container">
             <table className="table">
@@ -139,29 +144,43 @@ const AdminLeaveApprovals = () => {
                     <tr key={leave.id}>
                       <td>
                         <div>
-                          <p className="text-white font-medium">{leave.employee.profile?.firstName} {leave.employee.profile?.lastName}</p>
-                          <p className="text-white/40 text-xs">{leave.employee.profile?.department}</p>
+                          <p className="text-sm font-extrabold text-neutral-950">{leave.employee.profile?.firstName} {leave.employee.profile?.lastName}</p>
+                          <p className="text-gray-400 text-xs font-mono">{leave.employee.profile?.department || leave.employee.employeeId}</p>
                         </div>
                       </td>
                       <td>{leaveTypeBadge(leave.leaveType)}</td>
-                      <td className="text-white/60 text-xs">
-                        {new Date(leave.startDate).toLocaleDateString()} →<br/>{new Date(leave.endDate).toLocaleDateString()}
+                      <td className="text-gray-600 text-xs font-mono">
+                        {new Date(leave.startDate).toLocaleDateString()} → {new Date(leave.endDate).toLocaleDateString()}
                       </td>
-                      <td><span className="badge-gray">{days}d</span></td>
+                      <td><span className="badge-gray font-bold">{days}d</span></td>
                       <td>{leaveStatusBadge(leave.status)}</td>
-                      <td className="text-white/50 text-xs max-w-xs truncate">{leave.remarks ?? '—'}</td>
+                      <td className="text-gray-500 text-xs max-w-xs truncate">{leave.remarks ?? '—'}</td>
                       <td>
                         {leave.status === 'PENDING' && (
-                          <div className="flex gap-1.5">
-                            <button id={`approve-${leave.id}`} onClick={() => openDecision(leave, 'APPROVED')} className="btn-success px-2.5 py-1.5 text-xs">
-                              <CheckCircle2 size={12} />
+                          <div className="flex gap-2">
+                            <button
+                              id={`approve-${leave.id}`}
+                              onClick={() => openDecision(leave, 'APPROVED')}
+                              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1 shadow-2xs transition-colors"
+                            >
+                              <CheckCircle2 size={13} />
+                              <span>Approve</span>
                             </button>
-                            <button id={`reject-${leave.id}`} onClick={() => openDecision(leave, 'REJECTED')} className="btn-danger px-2.5 py-1.5 text-xs">
-                              <XCircle size={12} />
+                            <button
+                              id={`reject-${leave.id}`}
+                              onClick={() => openDecision(leave, 'REJECTED')}
+                              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center gap-1 shadow-2xs transition-colors"
+                            >
+                              <XCircle size={13} />
+                              <span>Reject</span>
                             </button>
                           </div>
                         )}
-                        {leave.status !== 'PENDING' && <span className="text-white/30 text-xs">—</span>}
+                        {leave.status !== 'PENDING' && (
+                          <span className="text-gray-400 text-xs font-medium">
+                            {leave.reviewedBy?.profile ? `By ${leave.reviewedBy.profile.firstName}` : 'Resolved'}
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );
