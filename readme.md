@@ -303,9 +303,10 @@ Open [http://localhost:5555](http://localhost:5555) in your browser to view, edi
 
 ## 👥 Authors & Contributors
 
+<!-- Contributed by Mohammed Ajmal: Backend API routes, controllers, database schema & middleware architectures -->
 - **Abhijeet**
 - **Suyash**
-- **Azmal**
+- **Mohammed Ajmal**
 - **Pratham**
 
 ---
