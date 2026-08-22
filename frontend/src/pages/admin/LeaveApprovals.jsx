@@ -58,14 +58,14 @@ const AdminLeaveApprovals = () => {
   const leaves = data?.leaves ?? [];
 
   return (
-    <div className="space-y-6 animate-slide-up pb-12 font-sans">
+    <div className="space-y-7 animate-slide-up pb-14 font-sans">
       <div>
-        <h1 className="text-3xl font-black text-neutral-950 tracking-tight">Leave Approvals</h1>
-        <p className="text-sm text-gray-500 font-semibold mt-1">Review and manage employee leave applications</p>
+        <h1 className="text-3xl font-black text-slate-950 tracking-tight">Leave Approvals</h1>
+        <p className="text-sm text-slate-500 font-semibold mt-1">Review and manage employee leave applications</p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-1.5 bg-gray-100 p-1.5 rounded-2xl w-fit border border-gray-200">
+      <div className="flex gap-1 bg-white p-1 rounded-2xl w-fit border border-slate-200 shadow-2xs">
         {[
           { value: 'PENDING', label: '⏳ Pending' },
           { value: 'APPROVED', label: '✅ Approved' },
@@ -77,8 +77,8 @@ const AdminLeaveApprovals = () => {
             onClick={() => setStatusFilter(opt.value)}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
               statusFilter === opt.value
-                ? 'bg-white text-neutral-950 shadow-xs font-black'
-                : 'text-gray-500 hover:text-neutral-950'
+                ? 'bg-slate-950 text-white shadow-xs font-black'
+                : 'text-slate-500 hover:text-slate-950'
             }`}
             id={`filter-${opt.label.replace(/\s+/g, '-').toLowerCase()}`}
           >
@@ -94,14 +94,14 @@ const AdminLeaveApprovals = () => {
       >
         {selectedLeave && (
           <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-1.5">
-              <p className="text-sm font-extrabold text-neutral-950">{selectedLeave.employee.profile?.firstName} {selectedLeave.employee.profile?.lastName}</p>
-              <p className="text-xs text-gray-500 font-medium">{selectedLeave.leaveType} leave · {new Date(selectedLeave.startDate).toLocaleDateString()} → {new Date(selectedLeave.endDate).toLocaleDateString()}</p>
-              {selectedLeave.remarks && <p className="text-xs text-gray-600 italic mt-1">"{selectedLeave.remarks}"</p>}
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+              <p className="text-sm font-extrabold text-slate-950">{selectedLeave.employee.profile?.firstName} {selectedLeave.employee.profile?.lastName}</p>
+              <p className="text-xs text-slate-500 font-medium">{selectedLeave.leaveType} leave · {new Date(selectedLeave.startDate).toLocaleDateString()} → {new Date(selectedLeave.endDate).toLocaleDateString()}</p>
+              {selectedLeave.remarks && <p className="text-xs text-slate-600 italic mt-1">"{selectedLeave.remarks}"</p>}
             </div>
             <form onSubmit={handleSubmit(onDecisionSubmit)} className="space-y-4" id="decision-form">
               <div>
-                <label className="label text-xs font-bold text-neutral-700">Review Comments (optional)</label>
+                <label className="label text-xs font-bold text-slate-700">Review Comments (optional)</label>
                 <textarea {...register('reviewComments')} rows={3} placeholder="Add feedback or reason for the employee..." className="input-field text-xs resize-none" id="review-comments" />
               </div>
               <button
@@ -144,17 +144,17 @@ const AdminLeaveApprovals = () => {
                     <tr key={leave.id}>
                       <td>
                         <div>
-                          <p className="text-sm font-extrabold text-neutral-950">{leave.employee.profile?.firstName} {leave.employee.profile?.lastName}</p>
-                          <p className="text-gray-400 text-xs font-mono">{leave.employee.profile?.department || leave.employee.employeeId}</p>
+                          <p className="text-sm font-extrabold text-slate-950">{leave.employee.profile?.firstName} {leave.employee.profile?.lastName}</p>
+                          <p className="text-slate-400 text-xs font-mono">{leave.employee.profile?.department || leave.employee.employeeId}</p>
                         </div>
                       </td>
                       <td>{leaveTypeBadge(leave.leaveType)}</td>
-                      <td className="text-gray-600 text-xs font-mono">
+                      <td className="text-slate-600 text-xs font-mono">
                         {new Date(leave.startDate).toLocaleDateString()} → {new Date(leave.endDate).toLocaleDateString()}
                       </td>
                       <td><span className="badge-gray font-bold">{days}d</span></td>
                       <td>{leaveStatusBadge(leave.status)}</td>
-                      <td className="text-gray-500 text-xs max-w-xs truncate">{leave.remarks ?? '—'}</td>
+                      <td className="text-slate-500 text-xs max-w-xs truncate">{leave.remarks ?? '—'}</td>
                       <td>
                         {leave.status === 'PENDING' && (
                           <div className="flex gap-2">
@@ -169,7 +169,7 @@ const AdminLeaveApprovals = () => {
                             <button
                               id={`reject-${leave.id}`}
                               onClick={() => openDecision(leave, 'REJECTED')}
-                              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center gap-1 shadow-2xs transition-colors"
+                              className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1 shadow-2xs transition-colors"
                             >
                               <XCircle size={13} />
                               <span>Reject</span>
@@ -177,7 +177,7 @@ const AdminLeaveApprovals = () => {
                           </div>
                         )}
                         {leave.status !== 'PENDING' && (
-                          <span className="text-gray-400 text-xs font-medium">
+                          <span className="text-slate-400 text-xs font-medium">
                             {leave.reviewedBy?.profile ? `By ${leave.reviewedBy.profile.firstName}` : 'Resolved'}
                           </span>
                         )}

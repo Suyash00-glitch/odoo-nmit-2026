@@ -33,27 +33,29 @@ const EmployeeAttendance = () => {
   const isCheckedOut = !!today?.checkOut;
 
   return (
-    <div className="space-y-6 animate-slide-up pb-12 font-sans">
+    <div className="space-y-7 animate-slide-up pb-14 font-sans">
       <div>
-        <h1 className="text-3xl font-black text-neutral-950 tracking-tight">Attendance Tracking</h1>
-        <p className="text-sm text-gray-500 font-semibold mt-1">Daily clock-in and weekly working hours history</p>
+        <h1 className="text-3xl font-black text-slate-950 tracking-tight">Attendance Tracking</h1>
+        <p className="text-sm text-slate-500 font-semibold mt-1">Daily clock-in and weekly working hours history</p>
       </div>
 
       {/* Action Banner */}
-      <div className="card bg-white border border-gray-200 shadow-sm p-6">
+      <div className="card">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="space-y-1">
-            <p className="text-xs font-extrabold uppercase tracking-wider text-[#6B42EF]">Today's Shift</p>
-            <p className="text-lg font-black text-neutral-950">
+            <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider">
+              Today's Shift
+            </span>
+            <p className="text-lg font-black text-slate-950 pt-1">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             </p>
             {today ? (
               <div className="flex gap-6 pt-1 text-xs sm:text-sm font-semibold">
-                <span className="text-gray-500">In: <span className="text-neutral-950 font-mono font-bold">{today.checkIn ? new Date(today.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</span></span>
-                <span className="text-gray-500">Out: <span className="text-neutral-950 font-mono font-bold">{today.checkOut ? new Date(today.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</span></span>
+                <span className="text-slate-400">In: <span className="text-slate-950 font-mono font-bold">{today.checkIn ? new Date(today.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</span></span>
+                <span className="text-slate-400">Out: <span className="text-slate-950 font-mono font-bold">{today.checkOut ? new Date(today.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</span></span>
               </div>
             ) : (
-              <p className="text-xs text-gray-400 font-medium">No clock-in record for today yet.</p>
+              <p className="text-xs text-slate-400 font-medium">No clock-in record for today yet.</p>
             )}
           </div>
 
@@ -62,10 +64,10 @@ const EmployeeAttendance = () => {
               id="attendance-checkin"
               onClick={() => checkInMut.mutate()}
               disabled={checkInMut.isPending || isCheckedIn}
-              className={`px-5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-2xs transition-all ${
+              className={`px-5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-xs transition-all ${
                 isCheckedIn
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                  : 'btn-lime'
               }`}
             >
               {checkInMut.isPending ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
@@ -75,10 +77,10 @@ const EmployeeAttendance = () => {
               id="attendance-checkout"
               onClick={() => checkOutMut.mutate()}
               disabled={checkOutMut.isPending || !isCheckedIn || isCheckedOut}
-              className={`px-5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-2xs transition-all ${
+              className={`px-5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-xs transition-all ${
                 !isCheckedIn || isCheckedOut
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-neutral-950 hover:bg-neutral-800 text-white'
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                  : 'btn-primary'
               }`}
             >
               {checkOutMut.isPending ? <Loader2 size={14} className="animate-spin" /> : <XCircle size={14} />}
@@ -89,14 +91,14 @@ const EmployeeAttendance = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-black text-neutral-950">Attendance History</h2>
-        <div className="flex gap-1.5 bg-gray-100 p-1.5 rounded-2xl border border-gray-200">
+        <h2 className="text-lg font-black text-slate-950">Attendance History</h2>
+        <div className="flex gap-1 bg-white p-1 rounded-2xl border border-slate-200 shadow-2xs">
           {['daily', 'weekly'].map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
               className={`px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
-                view === v ? 'bg-white text-neutral-950 shadow-xs' : 'text-gray-500 hover:text-neutral-950'
+                view === v ? 'bg-slate-950 text-white shadow-xs' : 'text-slate-500 hover:text-slate-950'
               }`}
             >
               {v.charAt(0).toUpperCase() + v.slice(1)} Log
@@ -129,16 +131,16 @@ const EmployeeAttendance = () => {
                     : null;
                   return (
                     <tr key={record.id}>
-                      <td className="font-extrabold text-neutral-950 text-sm">
+                      <td className="font-extrabold text-slate-950 text-sm">
                         {new Date(record.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                       </td>
                       <td className="text-xs font-mono font-semibold text-emerald-700">
                         {record.checkIn ? new Date(record.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
                       </td>
-                      <td className="text-xs font-mono font-semibold text-neutral-800">
+                      <td className="text-xs font-mono font-semibold text-slate-700">
                         {record.checkOut ? new Date(record.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
                       </td>
-                      <td className="text-xs font-mono font-bold text-neutral-900">{duration ? `${duration}h` : '—'}</td>
+                      <td className="text-xs font-mono font-bold text-slate-900">{duration ? `${duration}h` : '—'}</td>
                       <td>{attendanceStatusBadge(record.status)}</td>
                     </tr>
                   );

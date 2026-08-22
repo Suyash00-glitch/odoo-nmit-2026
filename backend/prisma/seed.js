@@ -103,6 +103,13 @@ async function main() {
             dateOfJoining: randomDate(730),
             employmentType: employmentTypes[i % employmentTypes.length],
             managerId: admin.id,
+            documents: {
+              create: [
+                { name: 'Signed Employment Contract', url: 'https://dayflow.dev/docs/contract.pdf' },
+                { name: 'Government ID Verification', url: 'https://dayflow.dev/docs/id_proof.pdf' },
+                { name: 'Non-Disclosure Agreement (NDA)', url: 'https://dayflow.dev/docs/nda.pdf' },
+              ],
+            },
           },
         },
         payroll: {

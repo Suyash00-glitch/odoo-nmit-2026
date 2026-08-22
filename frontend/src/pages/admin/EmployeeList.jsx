@@ -29,15 +29,15 @@ const AdminEmployeeList = () => {
   const totalPages = pagination?.totalPages || 1;
 
   return (
-    <div className="space-y-6 animate-slide-up pb-12 font-sans">
+    <div className="space-y-7 animate-slide-up pb-14 font-sans">
       <div>
-        <h1 className="text-3xl font-black text-neutral-950 tracking-tight">Employees Directory</h1>
-        <p className="text-sm text-gray-500 font-semibold mt-1">Manage, search, and view employee profiles and records</p>
+        <h1 className="text-3xl font-black text-slate-950 tracking-tight">Employees Directory</h1>
+        <p className="text-sm text-slate-500 font-semibold mt-1">Manage, search, and view employee profiles and records</p>
       </div>
 
       <div className="flex gap-3 flex-wrap">
         <div className="relative flex-1 min-w-56">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
           <input
             id="employee-search"
             value={search}
@@ -68,7 +68,7 @@ const AdminEmployeeList = () => {
               <thead>
                 <tr>
                   <th>Employee</th>
-                  <th>ID</th>
+                  <th>Employee ID</th>
                   <th>Department</th>
                   <th>Job Title</th>
                   <th>Employment Type</th>
@@ -81,26 +81,26 @@ const AdminEmployeeList = () => {
                   <tr key={emp.id}>
                     <td>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 flex items-center justify-center text-[#6B42EF] font-black text-xs shrink-0 shadow-2xs">
+                        <div className="w-10 h-10 rounded-2xl bg-slate-950 text-[#D4FF00] flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
                           {emp.profile?.firstName?.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-sm font-extrabold text-neutral-950">{emp.profile?.firstName} {emp.profile?.lastName}</p>
-                          <p className="text-gray-400 text-xs font-mono">{emp.email}</p>
+                          <p className="text-sm font-extrabold text-slate-950">{emp.profile?.firstName} {emp.profile?.lastName}</p>
+                          <p className="text-slate-400 text-xs font-mono">{emp.email}</p>
                         </div>
                       </div>
                     </td>
                     <td><span className="badge-gray font-mono text-xs font-bold">{emp.employeeId}</span></td>
-                    <td className="text-gray-700 font-semibold text-xs">{emp.profile?.department ?? 'General'}</td>
-                    <td className="text-gray-700 font-semibold text-xs">{emp.profile?.jobTitle ?? 'Staff'}</td>
-                    <td className="text-gray-600 text-xs font-medium">{emp.profile?.employmentType ?? 'Full Time'}</td>
-                    <td className="text-gray-500 text-xs font-mono">{emp.profile?.dateOfJoining ? new Date(emp.profile.dateOfJoining).toLocaleDateString() : '—'}</td>
+                    <td className="text-slate-700 font-semibold text-xs">{emp.profile?.department ?? 'General'}</td>
+                    <td className="text-slate-700 font-semibold text-xs">{emp.profile?.jobTitle ?? 'Staff'}</td>
+                    <td className="text-slate-600 text-xs font-medium">{emp.profile?.employmentType ?? 'Full Time'}</td>
+                    <td className="text-slate-500 text-xs font-mono">{emp.profile?.dateOfJoining ? new Date(emp.profile.dateOfJoining).toLocaleDateString() : '—'}</td>
                     <td className="text-right">
                       <Link
                         to={`/admin/employees/${emp.id}`}
-                        className="px-3.5 py-1.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-white font-bold text-xs inline-flex items-center gap-1 shadow-2xs transition-colors"
+                        className="btn-primary py-1.5 px-3 text-xs font-bold inline-flex items-center gap-1 shadow-2xs"
                       >
-                        <span>Details</span>
+                        <span>Inspect</span>
                         <ArrowUpRight size={13} />
                       </Link>
                     </td>
@@ -112,7 +112,7 @@ const AdminEmployeeList = () => {
         )}
 
         {pagination && totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs text-gray-500 font-semibold">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 text-xs text-slate-500 font-semibold">
             <p>Showing {(page - 1) * 10 + 1}–{Math.min(page * 10, pagination.total)} of {pagination.total} employees</p>
             <div className="flex gap-2">
               <button

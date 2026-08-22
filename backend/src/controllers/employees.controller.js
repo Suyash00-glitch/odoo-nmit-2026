@@ -9,7 +9,11 @@ const selectSafeUser = {
   isEmailVerified: true,
   createdAt: true,
   updatedAt: true,
-  profile: true,
+  profile: {
+    include: {
+      documents: true,
+    },
+  },
   payroll: true,
 };
 

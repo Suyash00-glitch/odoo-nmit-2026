@@ -30,6 +30,8 @@ export default {
         },
       },
       boxShadow: {
+        '2xs': '0 1px 2px 0 rgba(15, 23, 42, 0.03)',
+        'xs': '0 1px 2px 0 rgba(15, 23, 42, 0.05)',
         'lime': '0 8px 24px -4px rgba(212, 255, 0, 0.4)',
         'glow': '0 12px 36px -6px rgba(107, 66, 239, 0.35)',
         'card': '0 16px 40px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04)',

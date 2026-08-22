@@ -46,13 +46,13 @@ const EmployeeLeaves = () => {
   const leaves = data?.leaves ?? [];
 
   return (
-    <div className="space-y-6 animate-slide-up pb-12 font-sans">
+    <div className="space-y-7 animate-slide-up pb-14 font-sans">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black text-neutral-950 tracking-tight">Leave Management</h1>
-          <p className="text-sm text-gray-500 font-semibold mt-1">Apply for leave and track your quota status</p>
+          <h1 className="text-3xl font-black text-slate-950 tracking-tight">Leave Management</h1>
+          <p className="text-sm text-slate-500 font-semibold mt-1">Apply for time off and track your quota status</p>
         </div>
-        <button id="apply-leave-btn" onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-1.5 py-2.5 px-5 text-xs font-bold shadow-sm">
+        <button id="apply-leave-btn" onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-1.5 py-2.5 px-5 text-xs font-bold shadow-xs">
           <Plus size={16} />
           <span>Apply for Leave</span>
         </button>
@@ -61,7 +61,7 @@ const EmployeeLeaves = () => {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Apply for Leave">
         <form onSubmit={handleSubmit(v => mutation.mutate(v))} className="space-y-4" id="leave-form">
           <div>
-            <label className="label text-xs font-bold text-neutral-700">Leave Type</label>
+            <label className="label text-xs font-bold text-slate-700">Leave Type</label>
             <select {...register('leaveType')} className="input-field text-xs" id="leave-type">
               <option value="PAID">Paid Leave (Annual Quota)</option>
               <option value="SICK">Sick / Medical Leave</option>
@@ -70,28 +70,28 @@ const EmployeeLeaves = () => {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="label text-xs font-bold text-neutral-700">Start Date</label>
+              <label className="label text-xs font-bold text-slate-700">Start Date</label>
               <input type="date" {...register('startDate')} className="input-field text-xs" id="leave-start" />
-              {errors.startDate && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.startDate.message}</p>}
+              {errors.startDate && <p className="text-rose-500 text-xs mt-1 font-semibold">{errors.startDate.message}</p>}
             </div>
             <div>
-              <label className="label text-xs font-bold text-neutral-700">End Date</label>
+              <label className="label text-xs font-bold text-slate-700">End Date</label>
               <input type="date" {...register('endDate')} className="input-field text-xs" id="leave-end" />
-              {errors.endDate && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.endDate.message}</p>}
+              {errors.endDate && <p className="text-rose-500 text-xs mt-1 font-semibold">{errors.endDate.message}</p>}
             </div>
           </div>
           <div>
-            <label className="label text-xs font-bold text-neutral-700">Reason / Remarks (optional)</label>
+            <label className="label text-xs font-bold text-slate-700">Reason / Remarks (optional)</label>
             <textarea {...register('remarks')} rows={3} placeholder="Provide details regarding your leave request..." className="input-field text-xs resize-none" id="leave-remarks" />
           </div>
-          <button type="submit" disabled={isSubmitting || mutation.isPending} className="btn-primary w-full py-3 text-xs font-bold shadow-sm" id="submit-leave-btn">
+          <button type="submit" disabled={isSubmitting || mutation.isPending} className="btn-primary w-full py-3 text-xs font-bold shadow-xs" id="submit-leave-btn">
             {mutation.isPending ? <><Loader2 size={14} className="animate-spin" /> Submitting...</> : 'Submit Leave Request'}
           </button>
         </form>
       </Modal>
 
       <div className="card">
-        <h2 className="text-lg font-black text-neutral-950 mb-4">My Leave History</h2>
+        <h2 className="text-lg font-black text-slate-950 mb-4">My Leave Applications History</h2>
         {isLoading ? <SkeletonRow rows={5} /> : isError ? (
           <ErrorState onRetry={refetch} />
         ) : leaves.length === 0 ? (
@@ -120,11 +120,11 @@ const EmployeeLeaves = () => {
                   return (
                     <tr key={leave.id}>
                       <td>{leaveTypeBadge(leave.leaveType)}</td>
-                      <td className="text-neutral-950 font-mono text-xs font-semibold">{new Date(leave.startDate).toLocaleDateString()}</td>
-                      <td className="text-neutral-950 font-mono text-xs font-semibold">{new Date(leave.endDate).toLocaleDateString()}</td>
+                      <td className="text-slate-950 font-mono text-xs font-semibold">{new Date(leave.startDate).toLocaleDateString()}</td>
+                      <td className="text-slate-950 font-mono text-xs font-semibold">{new Date(leave.endDate).toLocaleDateString()}</td>
                       <td><span className="badge-gray font-bold">{days}d</span></td>
                       <td>{leaveStatusBadge(leave.status)}</td>
-                      <td className="text-gray-500 text-xs max-w-xs truncate">{leave.remarks ?? '—'}</td>
+                      <td className="text-slate-500 text-xs max-w-xs truncate">{leave.remarks ?? '—'}</td>
                     </tr>
                   );
                 })}

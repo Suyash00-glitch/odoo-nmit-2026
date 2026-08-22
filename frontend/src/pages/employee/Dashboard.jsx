@@ -8,6 +8,7 @@ import { SkeletonCard } from '../../components/common/Loader.jsx';
 import { ErrorState } from '../../components/common/ErrorState.jsx';
 import { attendanceStatusBadge } from '../../components/common/Badge.jsx';
 import { Link } from 'react-router-dom';
+import NotificationDropdown from '../../components/common/NotificationDropdown.jsx';
 import toast from 'react-hot-toast';
 import {
   MessageSquare,
@@ -113,12 +114,7 @@ const EmployeeDashboard = () => {
             )}
           </Link>
           
-          <div className="w-11 h-11 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-neutral-800 shadow-2xs relative">
-            <Bell size={18} />
-            {data.unreadNotifications > 0 && (
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 absolute top-2.5 right-2.5 ring-2 ring-white" />
-            )}
-          </div>
+          <NotificationDropdown />
 
           <div className="flex items-center gap-3 pl-2 border-l border-gray-200">
             <div className="w-11 h-11 rounded-full bg-neutral-950 text-[#D4FF00] font-black text-sm flex items-center justify-center shadow-xs">
@@ -138,60 +134,66 @@ const EmployeeDashboard = () => {
         {/* Left & Center Main Area (8 cols) */}
         <div className="lg:col-span-8 space-y-7">
           
-          {/* 3 Pastel Gradient Metric Cards */}
+          {/* 3 White KPI Metric Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             
-            {/* Card 1: Lavender (Net Salary) */}
+            {/* Card 1: Net Salary */}
             <Link
               to="/employee/payroll"
-              className="p-6 rounded-3xl bg-[#DDD6FE]/70 border border-[#C4B5FD]/60 shadow-2xs flex flex-col justify-between space-y-4 hover:scale-[1.02] transition-transform"
+              className="stat-card hover:scale-[1.01] transition-all group"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-neutral-950" />
-                  <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">Net Monthly Salary</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Net Monthly Salary</span>
+                <div className="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-2xs group-hover:bg-slate-950 group-hover:text-white transition-colors">
+                  <DollarSign size={16} />
                 </div>
-                <DollarSign size={16} className="text-neutral-900" />
               </div>
-              <div>
-                <p className="text-4xl font-black text-neutral-950 font-mono tracking-tight">{netSalaryFormatted}</p>
-                <p className="text-xs text-neutral-700 font-semibold mt-1">Disbursed on 1st of month</p>
+              <div className="mt-4">
+                <p className="text-4xl font-black text-slate-950 font-mono tracking-tight">{netSalaryFormatted}</p>
+                <p className="text-xs text-slate-500 font-semibold mt-1.5 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Disbursed on 1st of month
+                </p>
               </div>
             </Link>
 
-            {/* Card 2: Sky Blue (Attendance Rate) */}
+            {/* Card 2: Attendance Rate */}
             <Link
               to="/employee/attendance"
-              className="p-6 rounded-3xl bg-[#BFDBFE]/70 border border-[#93C5FD]/60 shadow-2xs flex flex-col justify-between space-y-4 hover:scale-[1.02] transition-transform"
+              className="stat-card hover:scale-[1.01] transition-all group"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-neutral-950" />
-                  <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">Attendance Rate</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Attendance Rate</span>
+                <div className="w-9 h-9 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-2xs group-hover:bg-slate-950 group-hover:text-white transition-colors">
+                  <Clock size={16} />
                 </div>
-                <Clock size={16} className="text-neutral-900" />
               </div>
-              <div>
-                <p className="text-4xl font-black text-neutral-950 font-mono tracking-tight">{data.attendanceRate}%</p>
-                <p className="text-xs text-neutral-700 font-semibold mt-1">Last 30-day tracking</p>
+              <div className="mt-4">
+                <p className="text-4xl font-black text-slate-950 font-mono tracking-tight">{data.attendanceRate}%</p>
+                <p className="text-xs text-indigo-700 font-bold mt-1.5 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                  Last 30-day tracking
+                </p>
               </div>
             </Link>
 
-            {/* Card 3: Mint Green (Pending Leaves) */}
+            {/* Card 3: Pending Leaves */}
             <Link
               to="/employee/leaves"
-              className="p-6 rounded-3xl bg-[#BBF7D0]/70 border border-[#86EFAC]/60 shadow-2xs flex flex-col justify-between space-y-4 hover:scale-[1.02] transition-transform"
+              className="stat-card hover:scale-[1.01] transition-all group"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-neutral-950" />
-                  <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">My Leave Requests</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Leave Applications</span>
+                <div className="w-9 h-9 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shadow-2xs group-hover:bg-slate-950 group-hover:text-white transition-colors">
+                  <CalendarDays size={16} />
                 </div>
-                <CalendarDays size={16} className="text-neutral-900" />
               </div>
-              <div>
-                <p className="text-4xl font-black text-neutral-950 font-mono tracking-tight">{data.pendingLeaves}</p>
-                <p className="text-xs text-emerald-900 font-bold mt-1">{data.totalLeaves} total applied in 2026</p>
+              <div className="mt-4">
+                <p className="text-4xl font-black text-slate-950 font-mono tracking-tight">{data.pendingLeaves}</p>
+                <p className="text-xs text-amber-700 font-bold mt-1.5 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  {data.totalLeaves} total applied in 2026
+                </p>
               </div>
             </Link>
 
@@ -201,15 +203,15 @@ const EmployeeDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             
             {/* Left: Dual Bar Chart (7 cols) */}
-            <div className="md:col-span-7 p-7 rounded-3xl bg-white border border-gray-200/90 shadow-2xs space-y-6">
+            <div className="md:col-span-7 card space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-black text-neutral-950">Logged Working Hours</h3>
-                  <p className="text-xs text-gray-400 font-medium">Daily check-in activity</p>
+                  <h3 className="text-lg font-black text-slate-950">Logged Working Hours</h3>
+                  <p className="text-xs text-slate-400 font-medium">Daily clock-in duration (Weekly view)</p>
                 </div>
                 <Link
                   to="/employee/attendance"
-                  className="px-4 py-1.5 rounded-full bg-[#D4FF00] hover:bg-[#C3EE00] text-black text-xs font-black shadow-2xs transition-colors"
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold transition-colors"
                 >
                   History
                 </Link>
@@ -217,7 +219,7 @@ const EmployeeDashboard = () => {
 
               {/* Dual Bar Chart */}
               <div className="relative pt-2">
-                <div className="flex justify-between items-end h-44 pb-6 border-b border-gray-100 px-2">
+                <div className="flex justify-between items-end h-44 pb-6 border-b border-slate-100 px-2">
                   {[
                     { day: 'Mon', h1: 85, h2: 70 },
                     { day: 'Tue', h1: 95, h2: 80 },
@@ -230,55 +232,55 @@ const EmployeeDashboard = () => {
                     <div key={idx} className="flex flex-col items-center gap-2">
                       <div className="flex items-end gap-1.5 h-32">
                         <div
-                          className="w-2.5 rounded-t-full bg-[#C4B5FD]"
+                          className="w-2.5 rounded-t-full bg-slate-900"
                           style={{ height: `${bar.h1}%` }}
                         />
                         <div
-                          className="w-2.5 rounded-t-full bg-[#86EFAC]"
+                          className="w-2.5 rounded-t-full bg-emerald-400"
                           style={{ height: `${bar.h2}%` }}
                         />
                       </div>
-                      <span className="text-xs font-bold text-gray-400">{bar.day}</span>
+                      <span className="text-xs font-bold text-slate-400">{bar.day}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-center gap-6 pt-3 text-xs font-bold text-gray-500">
+                <div className="flex items-center justify-center gap-6 pt-3 text-xs font-bold text-slate-500">
                   <span className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#C4B5FD]" /> Regular (8h)
+                    <span className="w-2.5 h-2.5 rounded-full bg-slate-900" /> Regular (8h)
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#86EFAC]" /> Overtime Log
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> Overtime Log
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Right: Live Clock Action Widget (5 cols) */}
-            <div className="md:col-span-5 p-7 rounded-3xl bg-white border border-gray-200/90 shadow-2xs flex flex-col justify-between space-y-4">
+            <div className="md:col-span-5 card flex flex-col justify-between space-y-4">
               <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-neutral-950">Daily Attendance</h3>
-                <p className="text-xs text-gray-400 font-semibold">1-click clock action</p>
+                <h3 className="text-lg font-black text-slate-950">Daily Shift Status</h3>
+                <p className="text-xs text-slate-400 font-semibold">1-click clock action</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-3">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-gray-500 font-bold">Status:</span>
+                  <span className="text-slate-500 font-bold">Shift:</span>
                   <span className={`font-black px-2.5 py-1 rounded-full text-xs ${
-                    isCheckedIn ? 'bg-emerald-100 text-emerald-800' : isCheckedOut ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-700'
+                    isCheckedIn ? 'bg-emerald-100 text-emerald-800' : isCheckedOut ? 'bg-blue-100 text-blue-800' : 'bg-slate-200 text-slate-700'
                   }`}>
-                    {isCheckedIn ? 'Checked In' : isCheckedOut ? 'Checked Out' : 'Not Checked In'}
+                    {isCheckedIn ? 'Checked In' : isCheckedOut ? 'Checked Out' : 'Not Clocked In'}
                   </span>
                 </div>
 
                 {today?.checkIn && (
-                  <p className="text-xs font-mono text-neutral-900 font-bold">
-                    In Time: {new Date(today.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <p className="text-xs font-mono text-slate-900 font-bold">
+                    Check In: {new Date(today.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 )}
                 {today?.checkOut && (
-                  <p className="text-xs font-mono text-neutral-900 font-bold">
-                    Out Time: {new Date(today.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <p className="text-xs font-mono text-slate-900 font-bold">
+                    Check Out: {new Date(today.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 )}
               </div>
@@ -288,7 +290,7 @@ const EmployeeDashboard = () => {
                   <button
                     onClick={() => checkOutMutation.mutate()}
                     disabled={checkOutMutation.isPending}
-                    className="w-full py-3.5 rounded-2xl bg-neutral-950 hover:bg-neutral-800 text-white font-extrabold text-xs shadow-xs transition-all active:scale-98"
+                    className="btn-primary w-full py-3.5 text-xs font-black shadow-xs"
                   >
                     {checkOutMutation.isPending ? 'Checking Out...' : 'Check Out Now'}
                   </button>
@@ -296,9 +298,9 @@ const EmployeeDashboard = () => {
                   <button
                     onClick={() => checkInMutation.mutate()}
                     disabled={checkInMutation.isPending || isCheckedOut}
-                    className={`w-full py-3.5 rounded-2xl font-black text-xs shadow-lime transition-all active:scale-98 ${
+                    className={`w-full py-3.5 rounded-2xl font-black text-xs shadow-xs transition-all active:scale-98 ${
                       isCheckedOut
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                         : 'btn-lime'
                     }`}
                   >
@@ -311,43 +313,43 @@ const EmployeeDashboard = () => {
           </div>
 
           {/* Bottom Table: Recent Logs */}
-          <div className="p-7 rounded-3xl bg-white border border-gray-200/90 shadow-2xs space-y-5">
+          <div className="card space-y-5">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-black text-neutral-950">Recent Attendance History</h3>
-                <p className="text-xs text-gray-400 font-medium">Your recent check-in and check-out logs</p>
+                <h3 className="text-lg font-black text-slate-950">Recent Attendance Logs</h3>
+                <p className="text-xs text-slate-400 font-medium">Your recent check-in and check-out logs</p>
               </div>
-              <Link to="/employee/attendance" className="px-4 py-2 rounded-full bg-[#D4FF00] hover:bg-[#C3EE00] text-black text-xs font-extrabold shadow-2xs transition-colors">
-                View All Logs
+              <Link to="/employee/attendance" className="btn-secondary py-2 px-4 text-xs font-extrabold shadow-2xs">
+                View All History
               </Link>
             </div>
 
             {recentLogs.length === 0 ? (
-              <p className="text-xs text-gray-400 py-6 text-center">No attendance history records yet.</p>
+              <p className="text-xs text-slate-400 py-6 text-center">No attendance history records yet.</p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+              <div className="table-container">
+                <table className="table">
                   <thead>
-                    <tr className="text-gray-400 font-bold border-b border-gray-100 pb-3">
-                      <th className="py-3 font-bold">Date</th>
-                      <th className="py-3 font-bold">Check-In</th>
-                      <th className="py-3 font-bold">Check-Out</th>
-                      <th className="py-3 font-bold text-right">Status</th>
+                    <tr>
+                      <th>Date</th>
+                      <th>Check-In</th>
+                      <th>Check-Out</th>
+                      <th className="text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50 font-medium">
+                  <tbody>
                     {recentLogs.map((log) => (
-                      <tr key={log.id} className="hover:bg-gray-50/70 transition-colors">
-                        <td className="py-3.5 font-extrabold text-neutral-950">
+                      <tr key={log.id}>
+                        <td className="font-extrabold text-slate-950">
                           {new Date(log.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                         </td>
-                        <td className="py-3.5 text-gray-600 font-mono">
+                        <td className="text-slate-600 font-mono">
                           {log.checkIn ? new Date(log.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
                         </td>
-                        <td className="py-3.5 text-gray-600 font-mono">
+                        <td className="text-slate-600 font-mono">
                           {log.checkOut ? new Date(log.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
                         </td>
-                        <td className="py-3.5 text-right font-semibold">
+                        <td className="text-right">
                           {attendanceStatusBadge(log.status)}
                         </td>
                       </tr>
@@ -363,18 +365,23 @@ const EmployeeDashboard = () => {
         {/* Right Column: 3 Widgets */}
         <div className="lg:col-span-4 space-y-7">
           
-          {/* Widget 1: Leave Application Banner */}
-          <div className="p-7 rounded-3xl bg-[#0D7477] text-white shadow-md relative overflow-hidden space-y-5">
-            <div className="space-y-2">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#D4FF00]">Leave Quota Active</span>
-              <h3 className="text-xl font-black text-white">Apply for Time Off</h3>
-              <p className="text-xs text-white/80 leading-relaxed font-medium">
-                Submit your Paid, Sick, or Unpaid leave request in 1 click with automated notifications.
+          {/* Widget 1: Leave Application Banner in Clean White Card */}
+          <div className="card space-y-4 border-slate-200">
+            <div className="flex items-center justify-between">
+              <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase tracking-wider">
+                Leave Quota Active
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-slate-950 tracking-tight">Apply for Time Off</h3>
+              <p className="text-xs text-slate-500 leading-relaxed font-medium mt-1">
+                Submit your Paid, Sick, or Unpaid leave request in 1 click with automated reviewer routing.
               </p>
             </div>
             <Link
               to="/employee/leaves"
-              className="inline-flex w-full py-3 rounded-2xl bg-[#D4FF00] hover:bg-[#C3EE00] text-black font-black text-xs shadow-lime justify-center items-center gap-1.5 transition-all"
+              className="btn-primary w-full py-3 text-xs font-black flex items-center justify-center gap-1.5"
             >
               <span>Apply for Leave</span>
               <Plus size={15} />
@@ -382,51 +389,51 @@ const EmployeeDashboard = () => {
           </div>
 
           {/* Widget 2: Standup Meeting */}
-          <div className="p-7 rounded-3xl bg-white border border-gray-200/90 shadow-2xs space-y-4">
+          <div className="card space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-purple-100 text-[#6B42EF] flex items-center justify-center shadow-2xs">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shadow-2xs">
                 <Video size={18} />
               </div>
               <div>
-                <h4 className="text-sm font-black text-neutral-950 leading-tight">Daily Standup</h4>
-                <p className="text-xs text-gray-400 font-semibold">10:00 AM • Google Meet</p>
+                <h4 className="text-sm font-black text-slate-950 leading-tight">Daily Standup</h4>
+                <p className="text-xs text-slate-400 font-semibold">10:00 AM • Google Meet</p>
               </div>
             </div>
 
-            <p className="text-xs text-gray-500 font-medium">
+            <p className="text-xs text-slate-500 font-medium">
               Join your team's sync call to coordinate daily tasks and blockers.
             </p>
 
-            <button className="w-full py-3 rounded-2xl bg-neutral-950 hover:bg-neutral-800 text-white font-extrabold text-xs shadow-xs transition-colors">
-              Click for Meeting Link
+            <button className="btn-secondary w-full py-2.5 text-xs font-bold">
+              Meeting Link Active
             </button>
           </div>
 
           {/* Widget 3: Quick Navigation Shortcuts */}
-          <div className="p-7 rounded-3xl bg-white border border-gray-200/90 shadow-2xs space-y-4">
-            <h4 className="text-base font-black text-neutral-950">Quick Portals</h4>
+          <div className="card space-y-4">
+            <h4 className="text-base font-black text-slate-950">Quick Portals</h4>
 
             <div className="space-y-2.5">
               <Link
                 to="/employee/profile"
-                className="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-100 text-xs font-bold text-neutral-900 transition-colors group"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-100 text-xs font-bold text-slate-900 transition-colors group"
               >
                 <span>My Profile & Documents</span>
-                <ChevronRight size={16} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 to="/employee/payroll"
-                className="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-100 text-xs font-bold text-neutral-900 transition-colors group"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-100 text-xs font-bold text-slate-900 transition-colors group"
               >
                 <span>View Monthly Payslips</span>
-                <ChevronRight size={16} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 to="/employee/leaves"
-                className="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-100 text-xs font-bold text-neutral-900 transition-colors group"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-100 text-xs font-bold text-slate-900 transition-colors group"
               >
                 <span>Leave Balance Quotas</span>
-                <ChevronRight size={16} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
           </div>

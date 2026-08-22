@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { AuthUI, Label, Input, PasswordInput, Button } from "@/components/ui/auth-ui";
+import { AuthUI, CustomPillInput } from "@/components/ui/auth-ui";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 
@@ -55,81 +55,90 @@ const SignIn = () => {
   };
 
   return (
-    <AuthUI isSignIn={true}>
-      <form onSubmit={handleSubmit(onSubmit)} autoComplete="on" className="flex flex-col gap-5" id="signin-form">
-        {/* Centered Heading */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-xl font-bold tracking-tight text-neutral-900">Sign in to Dayflow</h1>
-          <p className="text-xs text-gray-500">Enter your credentials below to access your workspace</p>
+    <AuthUI
+      isSignIn={true}
+      title="Sign In to Dayflow"
+      subtitle="Welcome back! Enter your credentials to access your portal."
+    >
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="on" className="space-y-4" id="signin-form">
+        
+        {/* Email Pill Input */}
+        <CustomPillInput
+          label="Email Address"
+          type="email"
+          placeholder="name@company.com"
+          autoComplete="email"
+          error={errors.email?.message}
+          {...register("email")}
+        />
+
+        {/* Password Pill Input */}
+        <CustomPillInput
+          label="Password"
+          type="password"
+          placeholder="••••••••••••"
+          autoComplete="current-password"
+          error={errors.password?.message}
+          {...register("password")}
+        />
+
+        {/* Lime Pill Submit Button */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full py-4 rounded-full bg-[#D4FF00] hover:bg-[#C3EE00] text-black font-black text-sm shadow-lime transition-all active:scale-98 flex items-center justify-center gap-2 mt-2"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Signing in...</span>
+            </>
+          ) : (
+            <span>Submit</span>
+          )}
+        </button>
+
+        {/* Social Apple & Google Buttons */}
+        <div className="grid grid-cols-2 gap-3 pt-1">
+          <button
+            type="button"
+            className="py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 flex items-center justify-center gap-2 text-xs font-bold text-neutral-900 shadow-2xs transition-colors"
+          >
+            <span className="text-sm"></span>
+            <span>Apple</span>
+          </button>
+          <button
+            type="button"
+            className="py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 flex items-center justify-center gap-2 text-xs font-bold text-neutral-900 shadow-2xs transition-colors"
+          >
+            <span className="text-xs font-black text-blue-600">G</span>
+            <span>Google</span>
+          </button>
         </div>
 
-        {/* Inputs */}
-        <div className="grid gap-3.5">
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="text"
-              {...register("email")}
-              placeholder="name@company.com"
-              autoComplete="email"
-            />
-            {errors.email && (
-              <p className="text-red-600 text-xs mt-0.5">{errors.email.message}</p>
-            )}
-          </div>
-
-          <PasswordInput
-            id="password"
-            label="Password"
-            {...register("password")}
-            placeholder="Password"
-            autoComplete="current-password"
-            error={errors.password?.message}
-          />
-
-          <Button type="submit" variant="default" className="mt-1 w-full py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white font-medium shadow-xs" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Signing in...
-              </>
-            ) : (
-              "Sign In"
-            )}
-          </Button>
-        </div>
-
-        {/* Switch Link */}
-        <div className="text-center text-xs text-gray-500">
-          Don't have an account?{" "}
-          <Link to="/signup" className="text-neutral-900 hover:underline font-semibold">
-            Sign up
-          </Link>
-        </div>
-
-        {/* Fast-Fill Demo Credentials */}
-        <div className="pt-3 border-t border-gray-100">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-center mb-2">
+        {/* Fast-Fill Demo Credentials Pill */}
+        <div className="pt-2 border-t border-gray-200/70">
+          <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider text-center mb-2">
             Quick Fill Demo Accounts:
           </p>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => handleDemoFill("admin")}
-              className="flex-1 py-1.5 px-2 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 text-xs font-medium text-neutral-700 transition-colors shadow-2xs"
+              className="flex-1 py-2 px-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 text-xs font-bold text-neutral-800 shadow-2xs transition-colors"
             >
               Admin Demo
             </button>
             <button
               type="button"
               onClick={() => handleDemoFill("employee")}
-              className="flex-1 py-1.5 px-2 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 text-xs font-medium text-neutral-700 transition-colors shadow-2xs"
+              className="flex-1 py-2 px-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 text-xs font-bold text-neutral-800 shadow-2xs transition-colors"
             >
               Employee Demo
             </button>
           </div>
         </div>
+
       </form>
     </AuthUI>
   );
